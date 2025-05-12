@@ -35,3 +35,9 @@ export const updateConversation = async (id: number, conversation: Conversation)
 export const deleteConversation = async (id: number): Promise<void> => {
     await apiClient.delete(`/delete/conversation/${id}`);
 }
+
+
+export const resetConversation = async (id: number) => {
+    const response = await apiClient.put(`/reset/conversation/${id}`);
+    return response.data;
+}

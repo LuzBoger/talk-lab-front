@@ -4,7 +4,8 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Conversation } from '../types/Conversation';
 import type { ConversationContent } from '../types/ConversationContent';
-import { sendMessage, createConversation, getConversationById, updateConversation } from '../api/conversation';
+import { sendMessage, createConversation, getConversationById, resetConversation } from '../api/conversation';
+import defaultAvatar from '../assets/images/defaultAvatar.png';
 
 const route = useRoute();
 const props = defineProps<{ categories: number; conversationId?: number }>();
@@ -26,9 +27,9 @@ const content = ref<ConversationContent>({
   interlocutor_username: '',
   interlocutor_avatar: '',
   startTime: '',
-  batteryLevel: 100,
+  batteryLevel: 0,
   reseau: '',
-  signal: 100,
+  signal: 0,
   messages: []
 })
 
@@ -85,6 +86,21 @@ const sendInterlocutorMessage = async () => {
 
   messageInterlocutor.value = '';
 };
+
+const resetAllConversation = async( conversationId: number | undefined) => {
+
+  if (!conversationId) {return}
+  try {
+    await resetConversation(conversationId);
+
+  } catch (error) {
+    console.error('Error resetting conversation:', error);
+  }
+}
+
+
+
+
 
 onMounted(async () => {
   if (conversationId.value) {
@@ -178,43 +194,42 @@ onMounted(async () => {
       </div>
 
       <div class="flex justify-between space-x-2">
-        <button type="reset" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Annuler les modifications</button>
+        <button type="reset" @click="resetAllConversation(conversationId)" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Annuler les modifications</button>
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Publier</button>
       </div>
     </form>
 
     <!-- Prévisualisation -->
-    <div class="w-full md:w-1/2 bg-white rounded-lg shadow p-4">
+    <div class="w-full md:w-1/2 bg-white rounded-lg shadow p-4 flex flex-col h-full">
       <h2 class="text-lg font-semibold text-gray-800 mb-4">Instagram</h2>
       <div class="bg-gray-100 p-4 rounded space-y-2 text-sm">
-        <div class="flex justify-between text-xs text-gray-500">
+        <div class="flex justify-between item-center text-xs text-gray-500 border-b pb-2 mb-4">
           <span>{{ content.startTime }}</span>
-          <span>{{ content.reseau }} </span>
-
-          <div class="flex items-center space-x-1">
-            <div class="h-full" :class="{
+          <div class="flex items-center gap-1">
+            <div class="w-16 h-2 rounded bg-gray-300 relative overflow-hidden">
+            <div class="h-full rounded transition-all" :class="{
               'bg-red-500': content.batteryLevel <= 20,
               'bg-yellow-400': content.batteryLevel > 20 && content.batteryLevel <= 50,
               'bg-green-500': content.batteryLevel > 50
-            }" :style="{ width: Math.max(0, Math.min(content.batteryLevel, 100)) + '%' }"></div>
-            <div class="absolute right-[-4px] top[1px] w-[2px] h-[5px] bg-gray-500 rounded-sm"></div>
-          </div>
-          <span class="text-xs text-gray-500">{{ content.batteryLevel }}</span>
-
-
-
+            }" 
+            :style="{ width: Math.max(0, Math.min(content.batteryLevel, 100)) + '%' }"></div>
+            </div>   
+             <span class="text-xs text-gray-500">{{ content.batteryLevel }}%</span>
+                   <span>{{ content.reseau }} </span>
+            </div>
         </div>
-        <div class="flex items-center space-x-2">
-          <img :src="content.interlocutor_avatar" alt="Avatar" class="w-8 h-8 rounded-full">
-          <div class="font-bold">{{ content.interlocutor_name }}</div>
+        <div class="flex items-center gap-3 mb-4">
+          <img :src="content.interlocutor_avatar || defaultAvatar" alt="Avatar" class="w-8 h-8 rounded-full">
+          <div class="font-semibold text-sm">{{ content.interlocutor_name }}</div>
           <div class="text-xs text-gray-400">@{{ content.interlocutor_username }}</div>
         </div>
-
+        <div class="flex flex-col gap-2 max-h-[400px] overflow-y-auto">
         <div v-for="(msg, index) in content.messages" :key="index" class="mt-2">
           <div :class="msg.author === 'Vous' ? 'bg-white text-right' : 'bg-gray-200 text-left'"
             class="p-2 rounded shadow text-gray-700">
             <strong>{{ msg.author }}:</strong> {{ msg.message }}
           </div>
+        </div>
         </div>
         <button class="mt-4 w-full bg-gray-300 text-gray-700 px-3 py-2 rounded">Télécharger la conversation</button>
       </div>
