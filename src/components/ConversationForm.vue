@@ -5,7 +5,6 @@ import { useRoute } from 'vue-router';
 import type { Conversation } from '../types/Conversation';
 import type { ConversationContent } from '../types/ConversationContent';
 import { sendMessage, createConversation, getConversationById, updateConversation } from '../api/conversation';
-import { useMercure } from '../composables/useMercure';
 
 const route = useRoute();
 const props = defineProps<{ categories: number; conversationId?: number }>();
@@ -14,7 +13,7 @@ const conversationId = ref<number | undefined>(props.conversationId ?? parseInt(
 const title = ref<string>('');
 const description = ref<string | undefined>(undefined);
 const categories = ref<number>(props.categories)
-const categoriesSelected = ref<number>(1); 
+const categoriesSelected = ref<number>(1);
 const status = ref<'draft' | 'published'>('draft')
 const isPublic = ref(true)
 const messageUser = ref<string>('')
@@ -32,19 +31,6 @@ const content = ref<ConversationContent>({
   signal: 100,
   messages: []
 })
-
-const initializeMercure = () => {
-  if (conversationId.value) {
-    useMercure(
-      conversationId.value,
-      (newMessage) => {
-        console.log('Nouveau message reçu:', newMessage);
-        content.value.messages?.push(newMessage);
-      },
-    );
-  }
-} 
-
 
 
 const submitForm = async () => {
@@ -64,7 +50,6 @@ const submitForm = async () => {
     const response = await createConversation(conversationData);
     conversationId.value = response.id;
     console.log('Conversation créée:', response);
-    initializeMercure();
   } catch (error) {
     console.error('Error creating conversation:', error);
   }
@@ -89,7 +74,7 @@ const sendInterlocutorMessage = async () => {
 
   if (!messageInterlocutor.value || !conversationId.value) return;
 
-    const newMessage = {
+  const newMessage = {
     author: 'Interlocuteur',
     message: messageInterlocutor.value,
   };
@@ -102,15 +87,14 @@ const sendInterlocutorMessage = async () => {
 };
 
 onMounted(async () => {
-      initializeMercure();
-      if(conversationId.value) {
-        try {
-          const repsonse = await getConversationById(conversationId.value);
-          content.value = repsonse.content;
-        } catch (error) {
-          console.error('Error fetching conversation:', error);
-        }
-      }
+  if (conversationId.value) {
+    try {
+      const repsonse = await getConversationById(conversationId.value);
+      content.value = repsonse.content;
+    } catch (error) {
+      console.error('Error fetching conversation:', error);
+    }
+  }
 })
 </script>
 
@@ -169,7 +153,7 @@ onMounted(async () => {
       <!-- Photo de profil -->
       <div>
         <label class="text-sm font-medium text-gray-600">Photo de profil</label>
-        <input type="text" class="w-full border px-3 py-2 rounded" />
+        <input type="text" v-model="content.interlocutor_avatar" class="w-full border px-3 py-2 rounded" />
       </div>
 
       <div class="grid grid-cols-2 gap-4">
@@ -201,19 +185,34 @@ onMounted(async () => {
 
     <!-- Prévisualisation -->
     <div class="w-full md:w-1/2 bg-white rounded-lg shadow p-4">
-      <h2 class="text-lg font-semibold text-gray-800 mb-4">Aperçu Instagram</h2>
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Instagram</h2>
       <div class="bg-gray-100 p-4 rounded space-y-2 text-sm">
         <div class="flex justify-between text-xs text-gray-500">
           <span>{{ content.startTime }}</span>
-          <span>4G {{ content.batteryLevel }}%</span>
+          <span>{{ content.reseau }} </span>
+
+          <div class="flex items-center space-x-1">
+            <div class="h-full" :class="{
+              'bg-red-500': content.batteryLevel <= 20,
+              'bg-yellow-400': content.batteryLevel > 20 && content.batteryLevel <= 50,
+              'bg-green-500': content.batteryLevel > 50
+            }" :style="{ width: Math.max(0, Math.min(content.batteryLevel, 100)) + '%' }"></div>
+            <div class="absolute right-[-4px] top[1px] w-[2px] h-[5px] bg-gray-500 rounded-sm"></div>
+          </div>
+          <span class="text-xs text-gray-500">{{ content.batteryLevel }}</span>
+
+
+
         </div>
-        <div class="font-bold">{{ content.interlocutor_name }}</div>
-        <div class="text-xs text-gray-400">@{{ content.interlocutor_username }}</div>
+        <div class="flex items-center space-x-2">
+          <img :src="content.interlocutor_avatar" alt="Avatar" class="w-8 h-8 rounded-full">
+          <div class="font-bold">{{ content.interlocutor_name }}</div>
+          <div class="text-xs text-gray-400">@{{ content.interlocutor_username }}</div>
+        </div>
+
         <div v-for="(msg, index) in content.messages" :key="index" class="mt-2">
-          <div
-            :class="msg.author === 'Vous' ? 'bg-white text-right' : 'bg-gray-200 text-left'"
-            class="p-2 rounded shadow text-gray-700"
-          >
+          <div :class="msg.author === 'Vous' ? 'bg-white text-right' : 'bg-gray-200 text-left'"
+            class="p-2 rounded shadow text-gray-700">
             <strong>{{ msg.author }}:</strong> {{ msg.message }}
           </div>
         </div>
