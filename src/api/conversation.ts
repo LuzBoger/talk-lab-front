@@ -36,8 +36,11 @@ export const deleteConversation = async (id: number): Promise<void> => {
     await apiClient.delete(`/delete/conversation/${id}`);
 }
 
-
-export const resetConversation = async (id: number) => {
+export const publishConversation = async (id: number, updateConversation : any): Promise<void> => {
+    await apiClient.put(`/publish/conversation/${id}`, updateConversation); 
+}
+export const resetConversation = async (id: number,) => {
     const response = await apiClient.put(`/reset/conversation/${id}`);
+    console.log(response.data);
     return response.data;
 }
