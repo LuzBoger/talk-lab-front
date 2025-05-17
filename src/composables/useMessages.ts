@@ -30,6 +30,15 @@ export function useMessages(
             reaction: '',
         };
 
+        if(author === 'interlocutor') {
+            for(let i = messages.value.length - 1; i >= 0; i-- ) {
+                if(messages.value[i].author === 'user') {
+                    messages.value[i].isSeen = true;
+                    break;
+                }
+            }
+        }
+
         messages.value = [...messages.value, newMessage];
         setFieldValue('content.messages', messages.value);
     };

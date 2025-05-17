@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import {useForm, useField} from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/yup';
@@ -272,6 +272,10 @@ onMounted(async () => {
 
              <div>{{ msg.message }}</div>
               <div v-if="msg.reaction" class="text-xs mt-1">Réaction : {{ msg.reaction }}</div>
+
+          </div>
+          <div v-if="msg.author === 'user' && msg.isSeen" class="text-xs text-gray-400 mt-1 text-right">
+            <span class="text-black-500">Vu</span>
           </div>
         </div>
         </div>
