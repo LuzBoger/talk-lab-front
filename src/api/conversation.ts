@@ -5,18 +5,6 @@ export const createConversation = async (conversation:Conversation) => {
     const response = await apiClient.post('/conversation', conversation);
     return response.data;
 }
-
-export const sendMessage = async (
-    conversationId: number,
-    data: { author: string; message: string }
-) => {
-    const response = await apiClient.post(
-        `/conversation/${conversationId}/message`,
-        data
-    );
-    return response.data;
-};
-
 export const getConversations = async (): Promise<Conversation[]> => {
     const response = await apiClient.get('/conversations');
     return response.data;
@@ -36,7 +24,7 @@ export const deleteConversation = async (id: number): Promise<void> => {
     await apiClient.delete(`/delete/conversation/${id}`);
 }
 
-export const publishConversation = async (id: number, updateConversation : any): Promise<void> => {
+export const publishedConversation = async (id: number, updateConversation : any): Promise<void> => {
     await apiClient.put(`/publish/conversation/${id}`, updateConversation); 
 }
 export const resetConversation = async (id: number,) => {

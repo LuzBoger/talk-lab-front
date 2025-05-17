@@ -7,9 +7,12 @@ import { toTypedSchema } from '@vee-validate/yup';
 import { conversationSchema } from '../validation/conversationSchema';
 import type { Conversation } from '../types/Conversation';
 import type { Messages } from '../types/Messages';
-import {createConversation, getConversationById, resetConversation, updateConversation, publishConversation } from '../api/conversation';
+import {createConversation, getConversationById, resetConversation, updateConversation, publishedConversation } from '../api/conversation';
 import defaultAvatar from '../assets/images/defaultAvatar.png';
 import EmojiPicker from 'vue3-emoji-picker';
+import { useMessages } from '../composables/useMessages';
+import { useConversation } from '../composables/useConversation';
+import { useConversationUtils } from '../utils/useConversationUtils';
 
 const route = useRoute();
 const props = defineProps<{ categories: number; conversationId?: number }>();
@@ -17,18 +20,13 @@ const conversationId = ref<number | undefined>(props.conversationId ?? parseInt(
 
 const dropdownOpen = ref(false);
 const categories = ref<number>(props.categories)
-const categoriesSelected = ref<number>(1);
-const status = ref<'draft' | 'published'>('draft')
-const isPublic = ref(true)
 const messageUser = ref('')
 const messageInterlocutor = ref<string>('')
 const target = ref<'user' | 'interlocutor'>('user')
 const targetIndex = ref<number | null>(null)
 const showEmojiPicker = ref(false)
 
-
-
-const { handleSubmit, errors, setFieldValue } = useForm({
+const { handleSubmit, errors, setFieldValue, values } = useForm({
   validationSchema: toTypedSchema(conversationSchema),
   
   initialValues: {
@@ -49,9 +47,7 @@ const { handleSubmit, errors, setFieldValue } = useForm({
     messages: [],
   }
   }
-  
 });
-
 
 const { value: title } = useField<string>('title');
 const { value: description } = useField<string>('description');
@@ -62,52 +58,49 @@ const { value: signal } = useField<number>('content.signal');
 const { value: interlocutor_name } = useField<string>('content.interlocutor_name');
 const { value: interlocutor_username } = useField<string>('content.interlocutor_username');
 const { value: interlocutor_avatar } = useField<string>('content.interlocutor_avatar');
-const { value: messages} = useField<Messages[]>('content.messages');
+const { value: messagesUsers} = useField<Messages[]>('content.messages');
 
-
-const toggleDropdown = () => {
-  dropdownOpen.value = !dropdownOpen.value;
-};
-
-const getCurrentTime = () : string => {
-  return new Date().toLocaleString();
-}
-
-
+const { getCurrentTime } = useConversationUtils();
+const { messages, sendMessage } = useMessages(messagesUsers, setFieldValue, getCurrentTime)
+const {
+        status,
+      isPublic,
+      categoriesSelected,
+      createFakeConversation,
+      saveConversationChanges,
+      publishConversationToPublic,
+      resetConversationData,
+} = useConversation(conversationId, values, setFieldValue);
 
 const sendUserMessage = async () => {
-
-  if (!messageUser.value) return;
-
-  const newMessage: Messages = {
-    author: 'user',
-    message: messageUser.value,
-    time: getCurrentTime(),
-    isSeen: true,
-    reaction: '',
-  };
-
-  const updatedMessages = [...(messages.value || []), newMessage];
-  setFieldValue('content.messages', updatedMessages);
+  if(!messageUser.value) return;
+  
+  await sendMessage('user', messageUser.value)
   messageUser.value = '';
-};
+}
 
 const sendInterlocutorMessage = async () => {
-
-  if (!messageInterlocutor.value) return;
-
-  const newMessage: Messages = {
-    author: 'interlocutor',
-    message: messageInterlocutor.value,
-    time: getCurrentTime(),
-    isSeen: false,
-    reaction: '',
-  };
-
-  const updatedMessages = [...(messages.value || []), newMessage];
-  setFieldValue('content.messages', updatedMessages);
+  if(!messageInterlocutor.value) return;
+  
+  await sendMessage('interlocutor', messageInterlocutor.value)
   messageInterlocutor.value = '';
-};
+}
+
+const submitForm = handleSubmit(async (formValues) => {
+  await createFakeConversation(formValues);
+})
+
+const saveChanges = async () => {
+  await saveConversationChanges();
+}
+
+const publishConversation = async () => {
+  await publishConversationToPublic();
+}
+
+const resetAllConversation = async (conversationId: number | undefined) => {
+  await resetConversationData(conversationId);
+}
 
 const addReaction = (index: number, reactions: string) => {
   const updatedMessages = [...(messages.value || [])]
@@ -119,7 +112,6 @@ const addReaction = (index: number, reactions: string) => {
 }
 
 const emojiSelected = (event: any) => {
-   
   const emoji = event.i
   
   if( targetIndex.value !== null) {
@@ -133,119 +125,6 @@ const emojiSelected = (event: any) => {
     }
   showEmojiPicker.value = false;
 };
-
-const submitForm = handleSubmit(async (formValues) => {
-  
-  if(!formValues.content.messages) {
-    formValues.content.messages = []
-  }
-
-  
-  const conversationData: Conversation = {
-    title: formValues.title,
-    description: formValues.description,
-    category_id: [categoriesSelected.value],
-    creator_id: 1,
-    status: 'draft',
-    content: formValues.content,
-    isPublic: isPublic.value,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  try {
-    const response = await createConversation(conversationData);
-    conversationId.value = response.id;
-    status.value = 'draft';
-    console.log('Conversation créée:', response);
-  } catch (error) {
-    console.error('Error creating conversation:', error);
-  }
-});
-
-
-const saveChanges = async () => {
-  if (!conversationId.value) {return}
-
-  const updatedConversation: Conversation = {
-    title: title.value,
-    description: description.value,
-    category_id: [categoriesSelected.value],
-    creator_id: 1,
-    status: 'draft',
-    content: {
-      interlocutor_name: interlocutor_name.value,
-      interlocutor_username: interlocutor_username.value,
-      interlocutor_avatar: interlocutor_avatar.value,
-      startTime: startTime.value,
-      batteryLevel: batteryLevel.value,
-      reseau: reseau.value,
-      signal: signal.value,
-      messages: messages.value,
-    },
-    isPublic: isPublic.value,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  try 
-  {
-      await updateConversation(conversationId.value, updatedConversation)
-    } catch (error) {
-        console.error('Erreur lors de la sauvegarde de la conversation:', error);
-      }
-};
-
-const publishedConversation = async () => {
-  if (!conversationId.value) {return}
-
-  const updatedConversation: Conversation = {
-
-     title: title.value,
-    description: description.value,
-    category_id: [categoriesSelected.value],
-    creator_id: 1,
-    status: 'draft',
-    content: {
-      interlocutor_name: interlocutor_name.value,
-      interlocutor_username: interlocutor_username.value,
-      interlocutor_avatar: interlocutor_avatar.value,
-      startTime: startTime.value,
-      batteryLevel: batteryLevel.value,
-      reseau: reseau.value,
-      signal: signal.value,
-      messages: messages.value,
-    },
-    isPublic: isPublic.value,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  try {
-      await publishConversation(conversationId.value, updatedConversation)
-      status.value = 'published';
-  } catch (error) {
-    console.error('Erreur lors de la publication de la conversation:', error);
-  }
-};
-
-
-const resetAllConversation = async( conversationId: number | undefined) => {
-
-  if (!conversationId) {return}
-  try {
-    const refreshConversationData = await resetConversation(conversationId);
-    setFieldValue('title', refreshConversationData.title);
-    setFieldValue('description', refreshConversationData.description);
-    setFieldValue('content', refreshConversationData.content);
-    status.value = refreshConversationData.status;
-    isPublic.value = refreshConversationData.isPublic;
-    console.log('Conversation réinitialisée:', refreshConversationData);
-
-  } catch (error) {
-    console.error('Erreur lors de la réinitialisation:', error);
-  }
-}
 
 
 onMounted(async () => {
