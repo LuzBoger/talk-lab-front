@@ -32,8 +32,8 @@ const { handleSubmit, errors, setFieldValue, values } = useForm({
   initialValues: {
   title: '',
   description: '',
-  category_id: [1],
-  creator_id: 1,
+  categoriesId: [1],
+  creatorId: 1,
   status: 'draft',
   isPublic: true,
   content: {

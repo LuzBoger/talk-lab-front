@@ -3,8 +3,8 @@ import * as yup from 'yup';
 export const conversationSchema = yup.object({
     title: yup.string().required('Veuillez saisir un titre pour votre conversation'),
     description: yup.string().optional(),
-    category_id: yup.array().of(yup.number().required()).min(1),
-    creator_id: yup.number().required(),
+    categoriesId: yup.array().of(yup.number().required()).min(1),
+    creatorId: yup.number().required(),
     status: yup.string().oneOf(['draft', 'published']).required(),
     isPublic: yup.boolean().required(),
     content: yup.object({

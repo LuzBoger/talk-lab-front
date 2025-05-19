@@ -14,20 +14,18 @@ export function useConversation(
     const conversationData = (formValues: any): Conversation => ({
       title: formValues.title,
       description: formValues.description,
-      category_id: [categoriesSelected.value],
-      creator_id: 1,
+      categoriesId: [categoriesSelected.value],
+      creatorId: 1,
       status: 'draft',
       content: formValues.content,
       isPublic: isPublic.value,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     });
 
     const updatedConversationData = () : Conversation => ({
       title: formFields.title,
       description: formFields.description,
-      category_id: [categoriesSelected.value],
-      creator_id: 1,
+      categoriesId: [categoriesSelected.value],
+      creatorId: 1,
       status: 'draft',
       content: {
         interlocutor_name: formFields.content.interlocutor_name,
@@ -40,8 +38,6 @@ export function useConversation(
         messages: formFields.content.messages,
       },
       isPublic: isPublic.value,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
    });
 
     const createFakeConversation = async (formValues :any) => {
