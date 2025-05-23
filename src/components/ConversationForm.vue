@@ -1,30 +1,38 @@
 <script setup lang="ts">
 
-import { onMounted, ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { onMounted, ref, watch} from 'vue';
+import { useRoute, useRouter, onBeforeRouteLeave} from 'vue-router';
 import {useForm, useField} from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/yup';
 import { conversationSchema } from '../validation/conversationSchema';
-import type { Conversation } from '../types/Conversation';
 import type { Messages } from '../types/Messages';
-import {createConversation, getConversationById, resetConversation, updateConversation, publishedConversation } from '../api/conversation';
-import defaultAvatar from '../assets/images/defaultAvatar.png';
-import EmojiPicker from 'vue3-emoji-picker';
+import {getConversationById } from '../api/conversation';
 import { useMessages } from '../composables/useMessages';
 import { useConversation } from '../composables/useConversation';
 import { useConversationUtils } from '../utils/useConversationUtils';
+import PublishConversationPopUp from './PublishConversationPopUp.vue';
+import defaultAvatar from '../assets/images/defaultAvatar.png';
+import EmojiPicker from 'vue3-emoji-picker';
+import SaveConversationPopUp from './SaveConversationPopUp.vue';
+
 
 const route = useRoute();
+const router = useRouter();
 const props = defineProps<{ categories: number; conversationId?: number }>();
-const conversationId = ref<number | undefined>(props.conversationId ?? parseInt(route.params.id as string));
 
-const dropdownOpen = ref(false);
-const categories = ref<number>(props.categories)
-const messageUser = ref('')
+const conversationId = ref<number | null>(props.conversationId ?? parseInt(route.params.id as string));
+const messageUser = ref<string>('')
 const messageInterlocutor = ref<string>('')
 const target = ref<'user' | 'interlocutor'>('user')
 const targetIndex = ref<number | null>(null)
 const showEmojiPicker = ref(false)
+const showPublishModal = ref(false)
+const showSaveModal = ref(false)
+const isDropdownOpen = ref(false)
+const isConversationModified = ref(false)
+const initialvalues = ref(null)
+let nextRoute: any = null
+
 
 const { handleSubmit, errors, setFieldValue, values } = useForm({
   validationSchema: toTypedSchema(conversationSchema),
@@ -69,8 +77,11 @@ const {
       createFakeConversation,
       saveConversationChanges,
       publishConversationToPublic,
-      resetConversationData,
+      deleteFakeConversation
 } = useConversation(conversationId, values, setFieldValue);
+
+
+
 
 const sendUserMessage = async () => {
   if(!messageUser.value) return;
@@ -92,17 +103,37 @@ const submitForm = handleSubmit(async (formValues) => {
 
 const saveChanges = async () => {
   await saveConversationChanges();
+  isConversationModified.value = false
+  showSaveModal.value = false
+
+  if(nextRoute) {
+    await router.push(nextRoute)
+  }
 }
+
+const cancelSave = () => {
+  showSaveModal.value = false
+}
+
 
 const publishConversation = async () => {
+  if(!conversationId) {return}
   await publishConversationToPublic();
+  showPublishModal.value = false
+  isConversationModified.value = false
 }
 
-const resetAllConversation = async (conversationId: number | undefined) => {
-  await resetConversationData(conversationId);
+const cancelPublish = () => {
+  showPublishModal.value = false
 }
 
-const addReaction = (index: number, reactions: string) => {
+const deleteConversaiton = async () => {
+  await deleteFakeConversation()
+  router.push('/')
+
+}
+
+const addEmoji = (index: number, reactions: string) => {
   const updatedMessages = [...(messages.value || [])]
 
   if (updatedMessages[index]) {
@@ -115,7 +146,7 @@ const emojiSelected = (event: any) => {
   const emoji = event.i
   
   if( targetIndex.value !== null) {
-    addReaction(targetIndex.value, emoji)
+    addEmoji(targetIndex.value, emoji)
    } else {
       if (target.value === 'user') {
         messageUser.value += emoji
@@ -125,6 +156,36 @@ const emojiSelected = (event: any) => {
     }
   showEmojiPicker.value = false;
 };
+
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value
+}
+
+const openSaveModal = () => {
+  showSaveModal.value = true;
+  isDropdownOpen.value = false;
+};
+
+const openPublishModal = () => {
+  showPublishModal.value = true;
+  isDropdownOpen.value = false;
+};
+
+onBeforeRouteLeave((to, from, next) => {
+  if (isConversationModified.value) {
+    nextRoute = to
+    showSaveModal.value = true
+    next(false)
+  } else {
+    next()
+  }
+})
+
+watch(values, (newVal) => {
+  if(!initialvalues.value) { return}
+  const isModified = JSON.stringify(newVal) !== JSON.stringify(initialvalues.value)
+  isConversationModified.value = isModified
+}, {deep: true})
 
 
 onMounted(async () => {
@@ -137,6 +198,8 @@ onMounted(async () => {
       setFieldValue('content', response.content);
       status.value = response.status;
       isPublic.value = response.isPublic;
+      initialvalues.value = JSON.parse(JSON.stringify(values))
+      isConversationModified.value = false;
       console.log('Conversation récupérée:', response);
     } catch (error) {
       console.error('Error fetching conversation:', error);
@@ -224,17 +287,70 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="flex justify-between space-x-2">
-        <button type="reset" @click="resetAllConversation(conversationId)" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Annuler les modifications</button>
+   
       
       <div class="flex justify-between space-x-2">
+
         <button 
-          @click="conversationId ? saveChanges() : submitForm()" 
+          v-if="conversationId"
           type="button" 
+          @click="deleteConversaiton"
           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-          {{ conversationId ? 'Enregistrer les modifications' : 'Créer la conversation' }}
+          Supprimer la conversation
         </button>
+
+        <button 
+          v-if="!conversationId"
+          type="submit" 
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Créer la conversation
+        </button>
+
+
+      <div v-else-if="status === 'draft'" class="relative inline-block text-left">
+        <button 
+          type="button"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2 transition-colors duration-200"
+          @click="toggleDropdown">
+            Plus d'options
+          <div 
+            class="w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-white transition-transform duration-200"
+            :class="{ 'rotate-180': isDropdownOpen }"
+          ></div>
+        </button>
+        
+        <div 
+          class="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-10 overflow-hidden transition-all duration-200"
+          :class="isDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'">
+          <button 
+            type="button"
+            @click="openSaveModal" 
+            class="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-150 border-b border-gray-100 flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            Enregistrer les modifications
+          </button>
+          <button 
+            type="button"
+            @click="openPublishModal" 
+            class="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-150 flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            </svg>
+            Publier la conversation
+          </button>
+        </div>
       </div>
+            <button
+              v-else-if="status === 'published'"
+              type="button"
+              @click="saveChanges"
+              class="bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Enregistrer les modifications
+            </button>
+
      
       </div>
     </form>
@@ -293,5 +409,15 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+    <PublishConversationPopUp
+      :is-visible="showPublishModal"
+      @confirm="publishConversation"
+      @cancel="cancelPublish"
+    />
+    <SaveConversationPopUp
+      :is-visible="showSaveModal"
+      @confirm="saveChanges"
+      @cancel="cancelSave"
+    />
   </div>
 </template>

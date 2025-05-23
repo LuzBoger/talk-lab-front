@@ -1,9 +1,10 @@
 import {ref} from 'vue';
-import {createConversation, resetConversation, updateConversation, publishedConversation } from '../api/conversation';
+import type {Ref} from 'vue';
+import {createConversation, updateConversation, deleteConversation } from '../api/conversation';
 import type { Conversation } from '../types/Conversation';
 
 export function useConversation(
-  conversationId: any,
+  conversationId: Ref<number | null>,
   formFields: any,
   setFieldValue: (field: any, value:any)=> void){
 
@@ -16,17 +17,18 @@ export function useConversation(
       description: formValues.description,
       categoriesId: [categoriesSelected.value],
       creatorId: 1,
-      status: 'draft',
+      status: status.value,
       content: formValues.content,
       isPublic: isPublic.value,
     });
 
     const updatedConversationData = () : Conversation => ({
+      id: conversationId.value!,
       title: formFields.title,
       description: formFields.description,
       categoriesId: [categoriesSelected.value],
       creatorId: 1,
-      status: 'draft',
+      status: status.value,
       content: {
         interlocutor_name: formFields.content.interlocutor_name,
         interlocutor_username: formFields.content.interlocutor_username,
@@ -46,13 +48,11 @@ export function useConversation(
         formValues.content.messages = []
       }
 
-      try {
-        const response = await createConversation(conversationData(formValues));
-        conversationId.value = response.id;
-        status.value = 'draft';
-        console.log('Conversation créée:', response);
-      } catch (error) {
-        console.error('Erreur lors de la création conversation:', error);
+      try{
+        const response = await createConversation(conversationData(formValues))
+        return response
+      } catch(error) {
+        console.error('Erreur lors de la création de la conversation:', error);
       }
     };
 
@@ -68,34 +68,29 @@ export function useConversation(
       };
 
     const publishConversationToPublic = async () => {
-      if (!conversationId.value) {return}
+      if (!conversationId.value) {console.log("erreur"); return}
 
       try {
-          await publishedConversation(conversationId.value, updatedConversationData())
-          status.value = 'published';
+          status.value = 'published'
           isPublic.value = true;
+
+          await updateConversation(conversationId.value!, updatedConversationData())
+          console.log('DEBUG: status set to', status.value);
       } catch (error) {
         console.error('Erreur lors de la publication de la conversation:', error);
       }
     };
 
+    const deleteFakeConversation = async () => {
+      if(!conversationId.value) {return}
 
-    const resetConversationData = async( conversationId: number | undefined) => {
-
-      if (!conversationId) {return}
       try {
-        const refreshConversationData = await resetConversation(conversationId);
-        setFieldValue('title', refreshConversationData.title);
-        setFieldValue('description', refreshConversationData.description);
-        setFieldValue('content', refreshConversationData.content);
-        status.value = refreshConversationData.status;
-        isPublic.value = refreshConversationData.isPublic;
-        console.log('Conversation réinitialisée:', refreshConversationData);
-
-      } catch (error) {
-        console.error('Erreur lors de la réinitialisation:', error);
+        await deleteConversation(conversationId.value!)
+      } catch(error) {
+        console.error("Erreur de suppresion de la conversation", error)
       }
-    };
+    }
+
 
     return {
       status,
@@ -104,6 +99,6 @@ export function useConversation(
       createFakeConversation,
       saveConversationChanges,
       publishConversationToPublic,
-      resetConversationData,
+      deleteFakeConversation
     }
 }
