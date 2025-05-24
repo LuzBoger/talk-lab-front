@@ -209,7 +209,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row gap-6 p-6 bg-gray-50 min-h-screen">
+  <div class="flex flex-col md:flex-row gap-6 p-6 min-h-auto">
     <form @submit.prevent="submitForm" class="w-full md:w-1/2 bg-white p-6 rounded-lg shadow space-y-4">
       <h2 class="text-xl font-semibold text-gray-800">Simulateur</h2>
 

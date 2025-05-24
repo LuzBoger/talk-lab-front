@@ -1,4 +1,4 @@
-import apiClient from './apiClient';
+import { apiClient } from "../utils/apiClient";
 
 interface LoginCredentials {
   email: string;
@@ -16,7 +16,7 @@ const authService = {
   async login(credentials: LoginCredentials) {
     try {
       console.log('Tentative de connexion avec:', credentials);
-      const response = await apiClient.post('/api/login', credentials);
+      const response = await apiClient.post('/login', credentials);
       console.log('Réponse du serveur:', response.data);
       if (response.data.token) {
         localStorage.setItem('auth_token', response.data.token);
@@ -40,7 +40,7 @@ const authService = {
   async register(userData: RegisterData) {
     try {
       console.log('Tentative d\'inscription avec:', userData);
-      const response = await apiClient.post('/api/register', userData);
+      const response = await apiClient.post('/register', userData);
       console.log('Réponse du serveur:', response.data);
       return response.data;
     } catch (error: any) {

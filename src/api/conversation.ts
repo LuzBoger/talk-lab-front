@@ -5,14 +5,19 @@ export const createConversation = async (conversation:Conversation) => {
     const response = await apiClient.post('/conversation', conversation);
     return response.data;
 }
-export const getConversations = async (): Promise<Conversation[]> => {
-    const response = await apiClient.get('/conversations');
-    return response.data;
-}
+// export const getConversations = async (): Promise<Conversation[]> => {
+//     const response = await apiClient.get('/conversations');
+//     return response.data;
+// }
 
 export const getConversationById = async (id: number): Promise<Conversation> => {
     const response = await apiClient.get(`/conversation/${id}`);
     return response.data;
+}
+
+export const getConversationsByUser = async (): Promise<Conversation[]> => {
+    const response = await apiClient.get('/conversations');
+    return response.data
 }
 
 export const updateConversation = async (id: number, conversation: Conversation): Promise<Conversation> => {

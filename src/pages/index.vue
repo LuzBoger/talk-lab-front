@@ -1,19 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue';
-import { useRouter } from 'vue-router';
-import authService from '../api/authService';
-import Sidebar from '../components/Sidebar.vue';
+import { ref, nextTick } from 'vue';
 import Card from '../components/ui/Card.vue';
 
-interface User {
-  name: string;
-  email: string;
-  id: number;
-}
 
-const user = ref<User | null>(null);
-const router = useRouter();
-const sidebarCollapsed = ref(false);
 const isSearchOpen = ref(false);
 const searchQuery = ref('');
 const sampleImage = 'https://picsum.photos/350/236';
@@ -24,26 +13,6 @@ const sampleTags = [
   { text: 'CYB', color: 'blue' }
 ];
 
-onMounted(() => {
-  const currentUser = authService.getCurrentUser();
-  if (currentUser) {
-    user.value = currentUser;
-  }
-});
-
-const logout = () => {
-  authService.logout();
-  user.value = null;
-  router.push('/login');
-};
-
-const createConversation = () => {
-  router.push('/conversation/create');
-};
-
-const handleSidebarToggle = (collapsed: boolean) => {
-  sidebarCollapsed.value = collapsed;
-};
 
 const toggleSearch = () => {
   isSearchOpen.value = !isSearchOpen.value;
@@ -54,17 +23,11 @@ const toggleSearch = () => {
     });
   }
 };
+
 </script>
 
 <template>
-  <div class="flex min-h-screen bg-dark">
-    <Sidebar 
-      @sidebar-toggle="handleSidebarToggle" 
-      @logout="logout"
-      :isLoggedIn="!!user"
-    />
     
-    <div class="flex-1" :class="{ 'ml-20': sidebarCollapsed, 'ml-305': !sidebarCollapsed }">
       <div class="home-container">
         <header class="top-header">
           <div class="welcome-message">Bienvenue sur <span class="username">TalkLabs</span></div>
@@ -113,22 +76,10 @@ const toggleSearch = () => {
           </div>
         </section>
       </div>
-    </div>
-  </div>
 </template>
 
 <style scoped>
-.ml-305 {
-  margin-left: 305px;
-}
 
-.ml-20 {
-  margin-left: 80px;
-}
-
-.bg-dark {
-  background-color: #1D1C31;
-}
 
 .home-container {
   padding-top: 30px;
