@@ -13,6 +13,6 @@ onMounted(() => {
 
 <template>
   <div class="flex justify-center items-center p-6">
-    <ConversationForm  />
+    <ConversationForm   />
   </div>
 </template>

@@ -29,3 +29,23 @@ export const deleteConversation = async (id: number): Promise<void> => {
     await apiClient.delete(`/delete/conversation/${id}`);
 }
 
+export const uploadMedia = async (media: {image?: Blob; audio?: Blob}) => {
+    const formData = new FormData();
+
+    if(media.image) {
+        formData.append('image', media.image);
+    }
+
+    if(media.audio) {
+        formData.append('audio', media.audio)
+    }
+
+    const response = await apiClient.post('/messages/upload', formData, {
+        headers: {
+            'Content-Type' : 'multipart/form-data'
+        },
+    });
+    console.log(response.data)
+    return response;
+}
+

@@ -4,7 +4,6 @@ export const conversationSchema = yup.object({
     title: yup.string().required('Veuillez saisir un titre pour votre conversation'),
     description: yup.string().optional(),
     categoriesId: yup.array().of(yup.number().required()).min(1),
-    creatorId: yup.number().required(),
     status: yup.string().oneOf(['draft', 'published']).required(),
     isPublic: yup.boolean().required(),
     content: yup.object({
@@ -18,11 +17,12 @@ export const conversationSchema = yup.object({
         messages: yup.array().of(
             yup.object({
                 author: yup.string().oneOf(['user', 'interlocutor']).required('Veuillez définir l\'auteur du message'),
-                message: yup.string().required('Veuillez définir le message'),
+                message: yup.string().notRequired(),
                 time: yup.string().notRequired(),
                 isSeen: yup.boolean().notRequired(),
                 reaction: yup.string().notRequired(),
-
+                image: yup.string().notRequired(),
+                audio: yup.string().notRequired()
             })
         ).required()
     })

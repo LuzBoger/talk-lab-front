@@ -1,6 +1,7 @@
 import { ref, watch} from 'vue';
 import type { Ref } from 'vue';
 import type { Messages } from '../types/Messages';
+import { uploadMedia } from '../api/conversation';
 
 export function useMessages(
     message: Ref<Messages[]>,
@@ -19,8 +20,23 @@ export function useMessages(
     
     const sendMessage = async (
         author: 'user' | 'interlocutor',
-        messageContent: string   
+        messageContent: string,
+        otherContent? : {
+            image?: Blob
+            audio?: Blob;
+        } 
     ) => {
+        let urls: { image?: string; audio?: string } = {};
+
+        if(otherContent && (otherContent.image || otherContent.audio)) {
+            try {
+                const res = await uploadMedia(otherContent);
+                if (res.data.imageUrl) urls.image = res.data.imageUrl;
+                if (res.data.audioUrl) urls.audio = res.data.audioUrl;
+            } catch(error) {
+                console.error('Erreur lors de l\'upload', error);
+            }
+        }
 
         const newMessage: Messages = {
             author,
@@ -28,6 +44,7 @@ export function useMessages(
             time: getCurrentTime(),
             isSeen: false,
             reaction: '',
+            ...urls
         };
 
         if(author === 'interlocutor') {
