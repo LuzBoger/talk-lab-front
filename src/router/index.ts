@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import authService from '../api/authService'
-import ConversationForm from '../components/ConversationForm.vue'
+import ConversationSimulator  from '../components/ConversationSimulator.vue'
+import ConversationPublic from '../components/ConversationPublic.vue'
 import ConversationList from '../components/ConversationList.vue'
 import DefaultLayout from '../layout/DefaultLayout.vue'
+import FavoriteConversation from '../components/FavoriteConversation.vue'
 
 const HomePage = () => import('../pages/index.vue')
 const LoginPage = () => import('../pages/LoginPage.vue')
@@ -19,17 +21,14 @@ const routes = [
         component: HomePage,
       },
       {
-        path: '/mes-conversations',
-        name: 'Mes conversations',
-        component: ConversationList,
-        meta: {
-          requiresAuth: true,
-        },
+        path: '/decouverte',
+        name: 'Découverte de conversation',
+        component: ConversationPublic,
       },
       {
         path: '/conversation/nouvelle',
         name: 'Conversation',
-        component: ConversationForm,
+        component: ConversationSimulator ,
         meta: {
           requiresAuth: true,
         },
@@ -38,10 +37,37 @@ const routes = [
       {
         path: '/conversation/:id',
         name: 'Conversation',
-        component: ConversationForm,
+        component: ConversationSimulator ,
+      },
+      {
+        path: '/profil',
+        component: FavoriteConversation,
+        children: [
+          {
+            path: 'mes-favoris',
+            name: 'Mes Favoris',
+            component: FavoriteConversation,
+            meta: {
+              requiresAuth: true,
+            },
+          },
+          {
+            path: 'mes-conversations',
+            name: 'Mes conversations',
+            component: ConversationList,
+            meta: {
+              requiresAuth: true,
+            },
+          },
+        ],
       },
     ],
   },
+
+
+
+
+
   {
     path: '/login',
     name: 'Login',

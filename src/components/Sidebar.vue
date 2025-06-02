@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import {ref, onMounted} from 'vue';
-import { RouterLink } from 'vue-router';
-import router from '../router';
+import {ref, onMounted, computed} from 'vue';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import logoUrl from '../../public/logo.svg';
-
+import defaultProfileImg from '../assets/images/defaultAvatar.png'
 
 const props = defineProps({
   isLoggedIn: {
@@ -14,8 +13,18 @@ const props = defineProps({
 
 const emit = defineEmits(['sidebar-toggle', 'logout']);
 
+const route = useRoute();
+const router = useRouter()
 const isCollapsed = ref<boolean>(false)
+const showProfileMenu = ref<boolean>(false)
 
+const routeActive  = computed(() => (path: string) => {
+  return route.path === path || route.path.startsWith(path)
+})
+
+const isProfileRoute  = computed(() => {
+  return route.path.startsWith('/profil')
+})
 
 const toggleSidebar = () =>  {
       console.log('toggleSidebar called');
@@ -28,6 +37,25 @@ const logout = () => {
   emit('logout');
   router.push('/login');
 };
+
+const toggleProfileMenu = () => {
+  showProfileMenu.value = !showProfileMenu.value
+}
+
+const navigateToProfile = () => {
+  router.push('/profil');
+  showProfileMenu.value = false
+}
+
+const navigateToHelp = () => {
+  router.push('/aide');
+  showProfileMenu.value = false
+}
+
+const handleLogout = () => {
+  showProfileMenu.value = false
+  logout()
+}
 
 onMounted(() => {
   console.log('Sidebar component mounted');
@@ -43,15 +71,44 @@ onMounted(() => {
         <path d="M4 6H20M4 12H20M4 18H20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
           v-if="isCollapsed" />
         <path d="M6 18L18 6M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          v-if="!isCollapsed" />
+          v-else="!isCollapsed" />
       </svg>
     </div>
 
     <div class="logo">
       <img :src="logoUrl" alt="TalkLabs Logo" />
     </div>
+
     <nav class="menu">
-      <div class="menu-item active">
+
+      <template v-if="isProfileRoute">
+        <div class="menu-item" :class="{ active: routeActive('/profil/mes-informations')}">
+          <RouterLink to="/profil/mes-informations">
+            <span>Mes informations</span>
+          </RouterLink>
+        </div>
+
+        <div class="menu-item" :class="{ active: routeActive('/profil/mes-conversations')}">
+          <RouterLink to="/profil/mes-conversations">
+            <span>Mes Créations</span>
+          </RouterLink>
+        </div>
+
+        <div class="menu-item" :class="{ active: routeActive('/profil/mes-favoris')}">
+          <RouterLink to="/profil/mes-favoris">
+            <span>Mes Favoris</span>
+          </RouterLink>
+        </div>
+
+        <div class="menu-item" :class="{ active: routeActive('/profil/parametres')}">
+          <RouterLink to="/profil/securite">
+            <span>Paramètres</span>
+          </RouterLink>
+        </div>
+      </template>
+    
+      <template v-else>
+      <div class="menu-item" :class="{ active: routeActive('/') && route.path === '/'}">
         <RouterLink to="/">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 24H7.5V15H16.5V24H21V10.5L12 3.75L3 10.5V24ZM0 27V9L12 0L24 9V27H13.5V18H10.5V27H0Z"
@@ -61,7 +118,7 @@ onMounted(() => {
         </RouterLink>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" :class="{active: routeActive('/categories')}">
         <RouterLink to="/categories">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -72,16 +129,16 @@ onMounted(() => {
         </RouterLink>
       </div>
 
-      <div v-if="props.isLoggedIn" class="menu-item">
-        <RouterLink to="/mes-conversations">
+      <div v-if="props.isLoggedIn" class="menu-item" :class="{active: routeActive('/decouverte')}">
+        <RouterLink to="/decouverte">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 21V3H21V21H3ZM18 17H6V18.5H18V17ZM6 15.5H18V14H6V15.5ZM6 12H18V6H6V12Z" fill="#E3E3E3" />
           </svg>
-          <span>Mes créations</span>
+          <span>Découverte de conversation</span>
         </RouterLink>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" :class="{active: routeActive('/conversation/nouvelle')}">
          <RouterLink to="/conversation/nouvelle">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -92,7 +149,7 @@ onMounted(() => {
         </RouterLink>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" :class="{active: routeActive('/forum')}">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_128_164)">
             <path
@@ -108,7 +165,7 @@ onMounted(() => {
         <span>Forum</span>
       </div>
 
-      <div class="menu-item">
+      <div class="menu-item" :class="{active: routeActive('/tarification')}">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M14 13C13.1667 13 12.4583 12.7083 11.875 12.125C11.2917 11.5417 11 10.8333 11 10C11 9.16667 11.2917 8.45833 11.875 7.875C12.4583 7.29167 13.1667 7 14 7C14.8333 7 15.5417 7.29167 16.125 7.875C16.7083 8.45833 17 9.16667 17 10C17 10.8333 16.7083 11.5417 16.125 12.125C15.5417 12.7083 14.8333 13 14 13ZM7 16C6.45 16 5.97917 15.8042 5.5875 15.4125C5.19583 15.0208 5 14.55 5 14V6C5 5.45 5.19583 4.97917 5.5875 4.5875C5.97917 4.19583 6.45 4 7 4H21C21.55 4 22.0208 4.19583 22.4125 4.5875C22.8042 4.97917 23 5.45 23 6V14C23 14.55 22.8042 15.0208 22.4125 15.4125C22.0208 15.8042 21.55 16 21 16H7ZM9 14H19C19 13.45 19.1958 12.9792 19.5875 12.5875C19.9792 12.1958 20.45 12 21 12V8C20.45 8 19.9792 7.80417 19.5875 7.4125C19.1958 7.02083 19 6.55 19 6H9C9 6.55 8.80417 7.02083 8.4125 7.4125C8.02083 7.80417 7.55 8 7 8V12C7.55 12 8.02083 12.1958 8.4125 12.5875C8.80417 12.9792 9 13.45 9 14ZM20 20H3C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V7H3V18H20V20Z"
@@ -116,12 +173,23 @@ onMounted(() => {
         </svg>
         <span>Tarification</span>
       </div>
+    </template>
+    
     </nav>
 
     <div class="auth-buttons">
       <template v-if="props.isLoggedIn">
-        <button class="btn-logout" @click="logout">Déconnexion</button>
+        <div class="dropdown" @click="toggleProfileMenu">
+          <img class="avatar" :src="defaultProfileImg" alt="Avatar utilisateur">
+          <span class="username">User</span>
+        </div>
+        <div v-if="showProfileMenu" class="profile-dropdown">
+          <button @click="navigateToProfile">Profil</button>
+          <button @click="navigateToHelp">Aide</button>
+          <button @click="logout">Déconnexion</button>
+        </div>
       </template>
+      
       <template v-else>
         <button class="btn-signup" @click="$router.push('/register')">S'inscrire</button>
         <button class="btn-login" @click="$router.push('/register')">Se connecter</button>
@@ -147,6 +215,7 @@ onMounted(() => {
   overflow-y: auto;
   transition: width 0.3s ease;
   z-index: 100;
+  color: #E3E3E3;
 }
 
 .sidebar-collapsed {
@@ -158,152 +227,198 @@ onMounted(() => {
   top: 10px;
   right: 10px;
   cursor: pointer;
-  z-index: 10;
+  z-index: 110;
   background-color: rgba(26, 25, 44, 0.8);
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  border-radius: 4px;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.3s ease;
 }
 
-.sidebar-collapsed .logo img {
-  width: 50px;
-  height: 50px;
-}
-
-.sidebar-collapsed .menu-item span,
-.sidebar-collapsed .auth-buttons {
-  display: none;
-}
-
-.sidebar-collapsed .menu-item {
-  display: flex;
-  justify-content: center;
-  padding: 10px 0;
-}
-
-.sidebar-collapsed .menu-item svg {
-  margin-left: 0;
+.toggle-button:hover {
+  background-color: rgba(26, 25, 44, 1);
 }
 
 .logo {
-  margin-top: 40px;
-  margin-bottom: 30px;
   display: flex;
   justify-content: center;
+  margin-bottom: 40px;
 }
 
 .logo img {
-  width: 70px;
-  height: 70px;
+  max-width: 100%;
+  height: auto;
+  user-select: none;
 }
 
+  .sidebar-collapsed .logo {
+    margin-top: 40px;
+  }
+
 .menu {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex: 1;
-  overflow-y: auto;
-  margin-bottom: 20px;
+  flex-grow: 1;
+  
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
-  border-radius: 8px;
+  padding: 12px 20px;
+  border-radius: 6px;
   cursor: pointer;
-  gap: 10px;
-}
-
-.menu-item span {
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-}
-
-.menu-item.active {
-  background-color: #2a2a36;
-}
-
-.menu-item.active span {
-  color: #23CE6B;
-}
-
-.menu-item:hover {
-  background-color: #2a2a36;
+  user-select: none;
+  transition: background-color 0.2s ease;
+  margin-bottom: 8px;
 }
 
 .menu-item svg {
-  min-width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 8px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  fill: #E3E3E3;
+  transition: fill 0.2s ease;
 }
 
-.menu-item a {
-  display: flex;
-  gap: 12px;
+.menu-item span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  font-size: 16px;
 }
+
+.menu-item:hover {
+  background-color: #2E2B55;
+}
+
+.menu-item.active,
+.menu-item.active:hover {
+  background-color: #444071;
+}
+
+.sidebar-collapsed .menu-item span {
+  display: none;
+}
+
+.sidebar-collapsed .menu-item svg {
+  margin-right: 0;
+ 
+}
+
+.sidebar-collapsed .menu-item a {
+  justify-items: center;
+}
+
+
 
 .auth-buttons {
-  margin: 15px 0;
+  padding-top: 20px;
+  border-top: 1px solid #2E2B55;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 10px;
-  width: 100%;
-  padding: 0 15px;
-  box-sizing: border-box;
 }
 
-.btn-signup,
-.btn-login,
-.btn-logout {
-  padding: 12px 15px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
+.auth-buttons button {
+  background-color: transparent;
+  border: 1px solid #E3E3E3;
+  color: #E3E3E3;
+  padding: 10px;
   font-weight: 600;
-  font-size: 16px;
-  width: 90%;
-  max-width: 250px;
-  text-align: center;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.auth-buttons button:hover {
+  background-color: #444071;
+  color: #fff;
 }
 
 .btn-signup {
-  background-color: #23CE6B;
+  border-color: #6C63FF;
+  color: #6C63FF;
+}
+
+.btn-signup:hover {
+  background-color: #6C63FF;
   color: white;
 }
 
 .btn-login {
-  background-color: transparent;
-  border: 1px solid #23CE6B;
-  color: #23CE6B;
+  border-color: #E3E3E3;
+  color: #E3E3E3;
 }
 
-.btn-logout {
-  background-color: #dc3545;
-  color: white;
+.dropdown {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  user-select: none;
+  background-color: #2E2B55;
+  transition: background-color 0.3s ease;
 }
 
-.sidebar-collapsed .auth-buttons {
+.dropdown:hover {
+  background-color: #444071;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid #6C63FF;
+}
+.sidebar-collapsed .avatar {
+  width: 100%;
+}
+
+.sidebar-collapsed .username {
   display: none;
 }
 
-.sidebar-buttons {
-  margin: 15px 0;
+.username {
+  font-weight: 600;
+  color: #E3E3E3;
+  white-space: nowrap;
 }
 
-.sidebar-button {
-  margin-bottom: 10px;
-  padding: 10px 15px;
-  width: calc(100% - 30px);
-  margin-left: 15px;
-  margin-right: 15px;
+.profile-dropdown {
+  margin-top: 8px;
+  background-color: #2E2B55;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  position: absolute;
+  bottom: 70px;
+  width: 150px;
+  z-index: 120;
 }
+
+.profile-dropdown button {
+  background: none;
+  border: none;
+  color: #E3E3E3;
+  padding: 10px 20px;
+  text-align: left;
+  width: 100%;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.profile-dropdown button:hover {
+  background-color: #444071;
+}
+
+
+
 </style>

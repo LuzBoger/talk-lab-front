@@ -6,7 +6,6 @@ import { uploadMedia } from '../api/conversation';
 export function useMessages(
     message: Ref<Messages[]>,
     setFieldValue: (field: any, value:any) => void,
-    getCurrentTime:() => string,
 ) {
 
     const messages = ref<Messages[]>( message.value || []);
@@ -41,7 +40,6 @@ export function useMessages(
         const newMessage: Messages = {
             author,
             message: messageContent,
-            time: getCurrentTime(),
             isSeen: false,
             reaction: '',
             ...urls

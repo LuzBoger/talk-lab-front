@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import ConversationForm from '../components/ConversationForm.vue';
+import ConversationSimulator  from '../components/ConversationSimulator .vue';
 
 const route = useRoute();
 const conversationId = ref<number>(parseInt(route.params.id as string));
@@ -13,6 +13,6 @@ onMounted(() => {
 
 <template>
   <div class="flex justify-center items-center p-6">
-    <ConversationForm   />
+    <ConversationSimulator    />
   </div>
 </template>

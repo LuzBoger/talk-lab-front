@@ -16,6 +16,7 @@ import EmojiPicker from 'vue3-emoji-picker';
 import 'vue3-emoji-picker/css';
 import SaveConversationPopUp from './SaveConversationPopUp.vue';
 import OtherMessageTypes from './OtherMessageTypes.vue';
+import { date } from 'yup';
 
 const route = useRoute();
 const router = useRouter();
@@ -80,7 +81,7 @@ const { value: interlocutor_username } = useField<string>('content.interlocutor_
 const { value: interlocutor_avatar } = useField<string>('content.interlocutor_avatar');
 const { value: messagesUsers} = useField<Messages[]>('content.messages');
 
-const { messages, sendMessage } = useMessages(messagesUsers, setFieldValue, getCurrentTime)
+const { messages, sendMessage } = useMessages(messagesUsers, setFieldValue)
 const { status, isPublic, createFakeConversation, saveConversationChanges, publishConversationToPublic, deleteFakeConversation } = useConversation(conversationId, values, setFieldValue);
 
 const sendUserMessage = async () => {
@@ -546,7 +547,7 @@ onMounted(async () => {
       
       <div class="bg-gray-100 p-4 rounded space-y-2 text-sm">
         <div class="flex justify-between item-center text-xs text-gray-500 border-b pb-2 mb-4">
-          <span>{{ startTime }}</span>
+          <span>{{ getCurrentTime(startTime) }}</span>
           <div class="flex items-center gap-1">
             <div class="w-16 h-2 rounded bg-gray-300 relative overflow-hidden">
             <div class="h-full rounded transition-all" :class="{

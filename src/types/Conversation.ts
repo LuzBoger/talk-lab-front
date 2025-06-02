@@ -7,6 +7,7 @@ export interface Conversation {
     categoriesId: number[]
     creatorId: number 
     isPublic: boolean
+    createdAt?: string
     status : 'draft' | 'published'
     content: ConversationContent
 }
