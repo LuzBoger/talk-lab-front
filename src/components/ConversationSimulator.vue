@@ -337,69 +337,59 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-col lg:flex-row gap-6 p-4 lg:p-6 min-h-screen">
-    <form @submit.prevent="submitForm" class="w-full lg:w-1/2 bg-white p-4 md:p-6 rounded-lg shadow space-y-4 flex-shrink-0">
-      <h2 class="text-xl font-semibold text-gray-800">Simulateur</h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="text-sm font-medium text-gray-600">Titre de la conversation</label>
-          <input type="text" v-model="title" class="w-full border px-3 py-2 rounded" />
-        </div>
-
-        <div>
-          <label class="text-sm font-medium text-gray-600">Description de la conversation</label>
-          <textarea v-model="description" class="w-full border px-3 py-2 rounded" rows="3"></textarea>
-        </div>
-
-
+  <div class="flex flex-col lg:flex-row gap-12 p-4 lg:p-6 min-h-screen bg-[#11101A] text-white">
+    <form @submit.prevent="submitForm" class="w-full space-y-4">
+        <input type="text" v-model="title" placeholder="Titre de la conversation" class="w-full bg-[#23233F] text-white p-2 rounded" />
+      <div class="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-6">
         <!-- Heure -->
         <div>
-          <label class="text-sm font-medium text-gray-600">L'heure</label>
-          <input type="datetime-local" v-model="startTime" class="w-full border px-3 py-2 rounded" />
+          <label class="text-sm font-medium text-white mb-1 block">L'heure</label>
+          <input type="datetime-local" v-model="startTime" class="bg-[#23233F] text-white p-2 rounded w-full" />
         </div>
         <!-- Batterie -->
         <div>
-          <label class="text-sm font-medium text-gray-600">La batterie</label>
-          <input type="number" v-model="batteryLevel" class="w-full border px-3 py-2 rounded" />
+          <label class="text-sm font-medium text-white mb-1 block">Batterie</label>
+          <input type="number" v-model="batteryLevel" class="bg-[#23233F] text-white p-2 rounded w-full" />
         </div>
         <!-- Réseau -->
         <div>
-          <label class="text-sm font-medium text-gray-600">Type de réseau</label>
-          <input type="text" v-model="reseau" class="w-full border px-3 py-2 rounded" />
+          <label class="text-sm font-medium text-white mb-1 block">Type de réseau</label>
+          <input type="text" v-model="reseau" class="bg-[#23233F] text-white p-2 rounded w-full" />
         </div>
         <!-- Signal -->
         <div>
-          <label class="text-sm font-medium text-gray-600">Qualité du signal</label>
-          <input type="number" v-model="signal" class="w-full border px-3 py-2 rounded" />
+          <label class="text-sm font-medium text-white mb-1 block">Qualité du signal</label>
+          <input type="number" v-model="signal" class="bg-[#23233F] text-white p-2 rounded w-full" />
         </div>
+      </div>
+      <div>
+        <label class="text-sm font-medium text-white">Description de la conversation</label>
+        <textarea v-model="description" class="w-full bg-[#23233F] text-white py-2 rounded h-24" rows="3"></textarea>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Nom de l’interlocuteur -->
         <div>
-          <label class="text-sm font-medium text-gray-600">Nom de l’interlocuteur</label>
-          <input type="text" v-model="interlocutor_name" class="w-full border px-3 py-2 rounded" />
+          <label class="text-sm font-medium text-white">Nom de l’interlocuteur</label>
+          <input type="text" v-model="interlocutor_name" class="w-full px-3 py-2 rounded bg-[#23233F]" />
         </div>
         <!-- Pseudo de l’interlocuteur -->
         <div>
-          <label class="text-sm font-medium text-gray-600">Pseudo de l’interlocuteur</label>
-          <input type="text" v-model="interlocutor_username" class="w-full border px-3 py-2 rounded" />
+          <label class="text-sm font-medium text-white">Pseudo de l’interlocuteur</label>
+          <input type="text" v-model="interlocutor_username" class="w-full px-3 py-2 rounded bg-[#23233F]" />
         </div>
       </div>
 
       <!-- Photo de profil -->
       <div>
-        <label class="text-sm font-medium text-gray-600">Photo de profil</label>
-        <input type="text" v-model="interlocutor_avatar" class="w-full border px-3 py-2 rounded" />
+        <label class="text-sm font-medium text-white">Photo de profil</label>
+        <input type="text" v-model="interlocutor_avatar" class="w-full px-3 py-2 rounded bg-[#23233F]" />
       </div>
 
-
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        
         <!-- message user -->
-        <div class="relative border p-4 rounded-lg shadow-sm">
-          <label class="block text-sm font-medium text-gray-600 mb-2">Votre message</label>
+        <div class="relative p-4 rounded-lg shadow-sm">
+          <label class="block text-sm font-medium text-white mb-2">Votre message</label>
 
           <div class="relative">
             <div v-if="imageUserSend" class="mb-2 w-16 h-16">
@@ -413,10 +403,9 @@ onMounted(async () => {
                 </button>
               </div>
             </div>      
-          
-            <textarea v-model="messageUser" rows="4" class="w-full resize-none outline-none border border-gray-300 rounded-md p-2 pt-6 focus:outline-none focus-ring-2 pl-2"></textarea>  
+            <textarea v-model="messageUser" rows="4" class="w-full resize-none outline-none border border-gray-300 rounded-md p-2 pt-6 focus:outline-none focus-ring-2 pl-2 bg-[#23233F]"></textarea>  
           </div>
-          <div class="mt-2 flex justify-end space-x-2">
+          <div class="mb-4 flex justify-end space-x-2">
             <OtherMessageTypes 
               @emoji="() => toggleEmojiPicker('user')"
               @image="onImageClickedUser"
@@ -429,14 +418,14 @@ onMounted(async () => {
           <input type="file" accept="image/*" @change="imageSelected($event, 'user')" ref="imgInputUser" style="display: none;">
 
           <button type="button" @click="sendUserMessage"
-            class="mt-4 w-full bg-blue-500 text-white py-2 rounded">
+            class="mt-4 w-full bg-[#23CE6B] text-black py-2 rounded cursor-pointer">
             Envoyer
           </button>
         </div>
 
         <!-- message interlocuteur -->
-        <div class="relative border p-4 rounded-lg shadow-sm">
-          <label class="block text-sm font-medium text-gray-600 mb-2">Son message</label>
+        <div class="relative p-4 rounded-lg shadow-sm">
+          <label class="block text-sm font-medium text-white mb-2">Son message</label>
           
           <div class="relative">
             <div v-if="imageInterlocutorSend" class="mb-2 w-16 h-16">
@@ -451,10 +440,10 @@ onMounted(async () => {
               </div>
             </div>      
           
-          <textarea v-model="messageInterlocutor" rows="4" class="w-full resize-none outline-none border border-gray-300 rounded-md p-2 pt-6 focus:outline-none focus-ring-2 pl-2"></textarea>
+          <textarea v-model="messageInterlocutor" rows="4" class="w-full resize-none outline-none border border-gray-300 rounded-md p-2 pt-6 focus:outline-none focus-ring-2 pl-2 bg-[#23233F]"></textarea>
           </div>
           
-           <div class="mt-2 flex justify-end space-x-2">
+           <div class="mb-4 flex justify-end space-x-2">
             <OtherMessageTypes 
               @emoji="() => toggleEmojiPicker('interlocutor')"
               @image="onImageClickedInterlocutor"
@@ -467,124 +456,120 @@ onMounted(async () => {
           <input type="file" accept="image/*" @change="imageSelected($event, 'interlocutor')" ref="imgInputInterlocutor" style="display: none;">
 
           <button type="button" @click="sendInterlocutorMessage"
-            class="mt-4 w-full bg-blue-500 text-white py-2 rounded">
+            class="mt-4 w-full bg-[#23CE6B] text-black py-2 rounded cursor-pointer">
             Envoyer
           </button>
         </div>
       </div>
 
-      <div class="flex justify-between space-x-2">
-
-
-          <button
-          v-if="!conversationId "
-          type="submit"
-          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-          Créer la conversation
-        </button>
-
-
-          <button 
-          v-else="conversationId"
-          type="button" 
-          @click="deleteConversaiton"
-          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-          Supprimer la conversation
-        </button>
-
-        <div v-if="status === 'draft' && conversationId" class="relative inline-block text-left">
-          <button 
-            type="button"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2 transition-colors duration-200"
-            @click="toggleDropdown">
-              Plus d'options
-            <div 
-              class="w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-white transition-transform duration-200"
-              :class="{ 'rotate-180': isDropdownOpen }"
-            ></div>
-          </button>
+      <div class="flex flex-wrap justify-between items-start gap-2 mt-4 flex-row sm:flex-col">
+        <div class="flex flex-wrap gap-2 flex-1">
           
-          <div 
-            class="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-10 overflow-hidden transition-all duration-200"
-            :class="isDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'">
-            <button 
-              type="button"
-              @click="openSaveModal" 
-              class="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-150 border-b border-gray-100 flex items-center">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"></path>
-              </svg>
-              Enregistrer les modifications
-            </button>
-            <button 
-              type="button"
-              @click="openPublishModal" 
-              class="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-150 flex items-center">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-              </svg>
-              Publier la conversation
-            </button>
+          <button
+            v-if="!conversationId "
+            type="submit"
+            class="bg-[#1E90FF] text-black px-4 py-2 rounded-md cursor-pointer">
+            Créer la conversation
+          </button>
+
+          <button 
+            v-else="conversationId"
+            type="button" 
+            @click="deleteConversaiton"
+            class="bg-[#EC221F] text-black px-4 py-2 rounded-md cursor-pointer">
+            Supprimer la conversation
+          </button>        
+        </div>
+
+        <div class="flex gap-2 flex-wrap mt-2 sm:mt-0">
+            <div v-if="status === 'draft' && conversationId" class="flex gap-2 flex-wrap">
+              <button 
+                type="button"
+                @click="openSaveModal" 
+                class="bg-[#23CE6B] text-black px-4 py-2 rounded-md cursor-pointer">
+                Enregistrer les modifications
+              </button>
+
+              <button 
+                type="button"
+                @click="openPublishModal" 
+                class="bg-[#1E90FF] px-4 py-2 rounded-md cursor-pointer">
+                Publier la conversation
+              </button>
+            </div>
+              <button
+                v-if="status === 'published' && conversationId"
+                type="button"
+                @click="saveChanges"
+                class="bg-[#23CE6B] px-4 py-2 rounded-md cursor-pointer">
+                Enregistrer les modifications
+              </button>
           </div>
-        </div>
-        <div>
-            <button
-              v-if="status === 'published' && conversationId"
-              type="button"
-              @click="saveChanges"
-              class="bg-blue-600 text-white px-4 py-2 rounded"
-            >
-              Enregistrer les modifications
-            </button>
-        </div>
-     
       </div>
     </form>
 
-    <!-- Prévisualisation -->
-    <div class="w-full md:w-1/2 bg-white rounded-lg shadow p-4 flex flex-col h-auto">
-      <h2 class="text-lg font-semibold text-gray-800 mb-4">TalksLab</h2>
-      
-      <div class="bg-gray-100 p-4 rounded space-y-2 text-sm">
-        <div class="flex justify-between item-center text-xs text-gray-500 border-b pb-2 mb-4">
+
+    <!-- Preview -->
+    <div  class="flex flex-col items-center space-y-2 w-full lg:1/2">
+    <div class="relative w-72 h-[600px] rounded-[45px] border-8 border-zinc-900 shadow-md bg-zinc-500 dark:bg-zinc-800 text-gray-800 dark:text-gray-100 transition-colors">
+    
+      <div class="absolute top-2 left-1/2 transform -translate-x-1/2 w-[90px] h-[22px] bg-zinc-900 rounded-full z-20"></div>
+        <div class="absolute -inset-[1px] border-[3px] border-zinc-700 border-opacity-40 rounded-[37px] pointer-events-none"></div>
+        <div class="relative w-full h-full  rounded-[37px] overflow-hidden bg-zinc-900/10">
+            
+        <div class="flex justify-between item-center text-xs text-white mt-12 mb-2 ml-2">
           <span>{{ getCurrentTime(startTime) }}</span>
           <div class="flex items-center gap-1">
-            <div class="w-16 h-2 rounded bg-gray-300 relative overflow-hidden">
-            <div class="h-full rounded transition-all" :class="{
-              'bg-red-500': batteryLevel <= 20,
-              'bg-yellow-400': batteryLevel > 20 && batteryLevel <= 50,
-              'bg-green-500': batteryLevel > 50
-            }" 
-            :style="{ width: Math.max(0, Math.min(batteryLevel, 100)) + '%' }"></div>
-            </div>   
-             <span class="text-xs text-gray-500">{{ batteryLevel }}%</span>
-                   <span>{{ reseau }} </span>
-            </div>
-        </div>
+            <div class="flex items-center gap-1">
+              <div class="flex items-end gap-1 ml-1">
+                <div v-for="i in 5" :key="i" class="w-[3px] rounded-full"
+                  :class="{
+                    'bg-white': i <= signal,
+                    'bg-gray-500': i> signal
+                  }"
+                  :style="{height: `${i * 2 + 3}px` }">
+                </div>
+                {{ reseau }}
+              </div>
 
-        <div class="flex items-center gap-3 mb-4">
+              <div class="relative w-6 h-3 border border-gray-500 rounded-sm flex items-center">
+                  <div class="h-full transition-all duration-300°" :class="{
+                    'bg-red-500': batteryLevel <= 20,
+                    'bg-yellow-400': batteryLevel > 20 && batteryLevel <= 50,
+                    'bg-green-500': batteryLevel > 50
+                    }" 
+                    :style="{ width: Math.max(0, Math.min(batteryLevel, 100)) * 0.22 + 'px' }">
+                  </div>
+                </div>
+            </div>  
+             <span>{{ batteryLevel }}%</span>
+          </div>
+        </div>
+      
+        <div class="flex items-center gap-3 mb-2">
           <img :src="interlocutor_avatar || defaultAvatar" alt="Avatar" class="w-8 h-8 rounded-full">
           <div class="font-semibold text-sm">{{ interlocutor_name }}</div>
           <div class="text-xs text-gray-400">@{{interlocutor_username }}</div>
         </div>
+
         <div class="flex flex-col gap-2 max-h-[400px] overflow-y-auto overflow-x-hidden flex-grow" >
-        <div v-for="(msg, index) in messages" :key="index" class="mt-2">
-          <div class="w-full p-2 rounded shadow text-gray-700 break-words">
+          <div v-for="(msg, index) in messages" :key="index" :class="['flex', msg.author === 'user' ? 'justify-end' : 'justify-start']">
+            <div class="w-full p-2 rounded shadow text-gray-700 break-words">
               <div v-if="msg.message" class="whitespace-pre-wrap break-all">
                 {{ msg.message }}
-
               </div>
-              <div v-if="msg.image">
+
+              <div v-if="msg.image" class="mt-1">
                 <img 
                   v-if="msg.image"
                   :src="`${baseUrl}${msg.image}`" 
                   alt="Image" 
-                  class="max-w-full max-h-20 mt-1 object-contain" 
+                  class="max-w-full max-h-24 object-contain rounded" 
                 />
-
               </div>
+
               <div v-if="msg.audio" class="text-sm rounded-2xl px-4 py-2 max-w-xs w-full flex items-center gap-3 shadow">
-                <audio controls :src="`${baseUrl}${msg.audio}`" :class="[msg.author === 'user' ? 'text-right self-end' : 'text-left self-start']" class="w-full h-10 [&::-webkit-media-controls-panel]:bg-green-100 [&::-webkit-media-controls-play-button]:hover:scale-110 transition-all"></audio>
+                <audio controls :src="`${baseUrl}${msg.audio}`" class="w-full h-10 [&::-webkit-media-controls-panel]:bg-gray-200 dark:[&::-webkit-media-controls-panel]:bg-zinc-700 transition-all"></audio>
               </div>
 
               <div v-if="msg.reaction" class="text-xs mt-1">Réaction : {{ msg.reaction }}</div>
@@ -596,10 +581,25 @@ onMounted(async () => {
         </div>
         </div>
         <button class="mt-4 w-full bg-gray-300 text-gray-700 px-3 py-2 rounded">Télécharger la conversation</button>
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-24 w-12 bg-zinc-600 blur-[80px]">
 
-
-      </div>
+            </div>
+        </div>
+        
+        <div class="absolute left-[-12px] top-20 w-[6px] h-8 bg-zinc-900 rounded-l-md shadow-md"></div>
+        
+        <div class="absolute left-[-12px] top-36 w-[6px] h-12 bg-zinc-900 rounded-l-md shadow-md"></div>
+        
+        <div class="absolute left-[-12px] top-52 w-[6px] h-12 bg-zinc-900 rounded-l-md shadow-md"></div>
+        
+        <div class="absolute right-[-12px] top-36 w-[6px] h-16 bg-zinc-900 rounded-r-md shadow-md"></div>
     </div>
+
+</div>
+
+
+
+
     <PublishConversationPopUp
       :is-visible="showPublishModal"
       @confirm="publishConversation"
@@ -610,5 +610,5 @@ onMounted(async () => {
       @confirm="saveChanges"
       @cancel="cancelSave"
     />
-  </div>
+    </div>
 </template>
