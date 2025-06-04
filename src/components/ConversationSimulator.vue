@@ -11,6 +11,7 @@ import { useMessages } from '../composables/useMessages';
 import { useConversation } from '../composables/useConversation';
 import { useConversationUtils } from '../utils/useConversationUtils';
 import PublishConversationPopUp from './PublishConversationPopUp.vue';
+import Reaction from './Reaction.vue';
 import defaultAvatar from '../assets/images/defaultAvatar.png';
 import EmojiPicker from 'vue3-emoji-picker';
 import 'vue3-emoji-picker/css';
@@ -156,6 +157,15 @@ const deleteConversaiton = async () => {
   await deleteFakeConversation()
   router.push('/')
 }
+const addReaction = (index: number, emoji: string) => {
+  const uptadedMessages = [...messages.value]
+  uptadedMessages[index].reaction = emoji
+  messages.value = uptadedMessages
+  setFieldValue('content.messages', uptadedMessages)
+}
+// const removeReaction = (index: number) => {
+//   addReaction(index, '')  
+// }
 
 const toggleEmojiPicker = (target: 'user' | 'interlocutor') => {
   currentTarget.value = target
@@ -182,10 +192,10 @@ const emojiSelected = (event: any) => {
   currentTarget.value = null
 }
 
-const onImageClickedUser = () => {
+const onImageClickedByUser = () => {
   imgInputUser.value?.click()
 }
-const onImageClickedInterlocutor = () => {
+const onImageClickedByInterlocutor = () => {
   imgInputInterlocutor.value?.click()
 }
 
@@ -280,11 +290,6 @@ if(target === 'user') {
 }
 }
 
-
-const toggleDropdown = () => {
-  isDropdownOpen.value = !isDropdownOpen.value
-}
-
 const openSaveModal = () => {
   showSaveModal.value = true;
   isDropdownOpen.value = false;
@@ -293,10 +298,6 @@ const openSaveModal = () => {
 const openPublishModal = () => {
   showPublishModal.value = true;
   isDropdownOpen.value = false;
-};
-
-const onSubmit = () => {
-  console.log("Submit simple déclenché");
 };
 
 onBeforeRouteLeave((to, from, next) => {
@@ -408,7 +409,7 @@ onMounted(async () => {
           <div class="mb-4 flex justify-end space-x-2">
             <OtherMessageTypes 
               @emoji="() => toggleEmojiPicker('user')"
-              @image="onImageClickedUser"
+              @image="onImageClickedByUser"
               @audio="onAudioClicked('user')"
               :is-recording="isRecordingUser"
             />
@@ -446,7 +447,7 @@ onMounted(async () => {
            <div class="mb-4 flex justify-end space-x-2">
             <OtherMessageTypes 
               @emoji="() => toggleEmojiPicker('interlocutor')"
-              @image="onImageClickedInterlocutor"
+              @image="onImageClickedByInterlocutor"
               @audio="onAudioClicked('interlocutor')"
               :is-recording="isRecordingInterlocutor"
             />
@@ -517,11 +518,11 @@ onMounted(async () => {
         <div class="absolute -inset-[1px] border-[3px] border-zinc-700 border-opacity-40 rounded-[37px] pointer-events-none"></div>
         <div class="relative w-full h-full  rounded-[37px] overflow-hidden bg-zinc-900/10">
             
-        <div class="flex justify-between item-center text-xs text-white mt-12 mb-2 ml-2">
-          <span>{{ getCurrentTime(startTime) }}</span>
+        <div class="flex justify-between item-center text-xs text-white mt-12 mb-8 ml-4">
+          <span>{{ startTime ? getCurrentTime(startTime) : '00:00'  }}</span>
           <div class="flex items-center gap-1">
             <div class="flex items-center gap-1">
-              <div class="flex items-end gap-1 ml-1">
+              <div class="flex items-end gap-1 mr-4">
                 <div v-for="i in 5" :key="i" class="w-[3px] rounded-full"
                   :class="{
                     'bg-white': i <= signal,
@@ -542,19 +543,22 @@ onMounted(async () => {
                   </div>
                 </div>
             </div>  
-             <span>{{ batteryLevel }}%</span>
+             <span class="mr-2">{{ batteryLevel }}%</span>
           </div>
         </div>
       
-        <div class="flex items-center gap-3 mb-2">
-          <img :src="interlocutor_avatar || defaultAvatar" alt="Avatar" class="w-8 h-8 rounded-full">
-          <div class="font-semibold text-sm">{{ interlocutor_name }}</div>
-          <div class="text-xs text-gray-400">@{{interlocutor_username }}</div>
+        <div class="flex items-center gap-4 mb-4 ml-4">
+          <img :src="interlocutor_avatar || defaultAvatar" alt="Avatar" class="w-10 h-10 rounded-full">
+          <div class="flex flex-col">
+            <div class="font-semibold text-sm">{{ interlocutor_name }}</div>
+            <div class="text-xs text-gray-400">@{{interlocutor_username }}</div>
+          </div>
         </div>
 
         <div class="flex flex-col gap-2 max-h-[400px] overflow-y-auto overflow-x-hidden flex-grow" >
-          <div v-for="(msg, index) in messages" :key="index" :class="['flex', msg.author === 'user' ? 'justify-end' : 'justify-start']">
-            <div class="w-full p-2 rounded shadow text-gray-700 break-words">
+          <div v-for="(msg, index) in messages" :key="index" class="flex w-full relative"  :class="msg.author === 'user' ? 'justify-end' : 'justify-start'">
+            <div class="relative p-4 rounded text-gray-700 break-words max-w-[60%]" :class="msg.author === 'user' ?  'text-right rounded-tr-none' : 'text-left rounded-tr-none'">
+              
               <div v-if="msg.message" class="whitespace-pre-wrap break-all">
                 {{ msg.message }}
               </div>
@@ -572,18 +576,19 @@ onMounted(async () => {
                 <audio controls :src="`${baseUrl}${msg.audio}`" class="w-full h-10 [&::-webkit-media-controls-panel]:bg-gray-200 dark:[&::-webkit-media-controls-panel]:bg-zinc-700 transition-all"></audio>
               </div>
 
-              <div v-if="msg.reaction" class="text-xs mt-1">Réaction : {{ msg.reaction }}</div>
-
+              <div v-if="msg.reaction" class="text-xs mt-2">{{ msg.reaction }}</div>
+              <!-- <div class="absolute top-1 right-1">
+                  <Reaction @selected="emoji => addReaction(index, emoji)"></Reaction> 
+              </div> -->
           </div>
-          <div v-if="msg.author === 'user' && msg.isSeen" class="text-xs text-gray-400 mt-1 text-right">
-            <span class="text-black-500">Vu</span>
+          <div v-if="msg.author === 'user' && msg.isSeen" class="absolute top-8 flex items-center right-2 text-gray-400 text-xs">
+            <span class="text-white">Vu</span>
           </div>
         </div>
         </div>
-        <button class="mt-4 w-full bg-gray-300 text-gray-700 px-3 py-2 rounded">Télécharger la conversation</button>
-            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-24 w-12 bg-zinc-600 blur-[80px]">
+              <input type="text" v-model="title" placeholder="Saisir votre message" class="absolute bottom-4 left-4 right-4 bg-[#23233F] text-white p-2 rounded" />
 
-            </div>
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-24 w-12 bg-zinc-600 blur-[80px]"></div>
         </div>
         
         <div class="absolute left-[-12px] top-20 w-[6px] h-8 bg-zinc-900 rounded-l-md shadow-md"></div>
@@ -594,12 +599,9 @@ onMounted(async () => {
         
         <div class="absolute right-[-12px] top-36 w-[6px] h-16 bg-zinc-900 rounded-r-md shadow-md"></div>
     </div>
+            <button class="mt-4 w-80 bg-[#23CE6B] text-black py-2 rounded cursor-pointer">Télécharger la conversation</button>
 
 </div>
-
-
-
-
     <PublishConversationPopUp
       :is-visible="showPublishModal"
       @confirm="publishConversation"
