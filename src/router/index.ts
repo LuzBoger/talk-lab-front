@@ -41,7 +41,7 @@ const routes = [
       },
       {
         path: '/profil',
-        component: FavoriteConversation,
+        redirect: '/profil/mes-favoris',
         children: [
           {
             path: 'mes-favoris',
