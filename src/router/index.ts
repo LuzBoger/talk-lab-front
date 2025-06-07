@@ -5,6 +5,7 @@ import ConversationPublic from '../components/ConversationPublic.vue'
 import ConversationList from '../components/ConversationList.vue'
 import DefaultLayout from '../layout/DefaultLayout.vue'
 import FavoriteConversation from '../components/FavoriteConversation.vue'
+import NotificationsList from '../components/NotificationsList.vue'
 
 const HomePage = () => import('../pages/index.vue')
 const LoginPage = () => import('../pages/LoginPage.vue')
@@ -41,7 +42,7 @@ const routes = [
       },
       {
         path: '/profil',
-        component: FavoriteConversation,
+        redirect: '/profil/mes-favoris',
         children: [
           {
             path: 'mes-favoris',
@@ -59,6 +60,7 @@ const routes = [
               requiresAuth: true,
             },
           },
+
         ],
       },
     ],
