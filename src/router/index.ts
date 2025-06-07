@@ -5,7 +5,6 @@ import ConversationPublic from '../components/ConversationPublic.vue'
 import ConversationList from '../components/ConversationList.vue'
 import DefaultLayout from '../layout/DefaultLayout.vue'
 import FavoriteConversation from '../components/FavoriteConversation.vue'
-import NotificationsList from '../components/NotificationsList.vue'
 
 const HomePage = () => import('../pages/index.vue')
 const LoginPage = () => import('../pages/LoginPage.vue')
@@ -42,7 +41,7 @@ const routes = [
       },
       {
         path: '/profil',
-        redirect: '/profil/mes-favoris',
+        component: FavoriteConversation,
         children: [
           {
             path: 'mes-favoris',
@@ -60,33 +59,34 @@ const routes = [
               requiresAuth: true,
             },
           },
-
         ],
+      },
+      {
+        path: '/login',
+        name: 'Login',
+        component: LoginPage,
+        meta: {
+          requiresGuest: true,
+        },
+      },
+      {
+        path: '/register',
+        name: 'Register',
+        component: RegisterPage,
+        meta: {
+          requiresGuest: true,
+        },
       },
     ],
   },
-
-
-
-
-
-  {
-    path: '/login',
-    name: 'Login',
-    component: LoginPage,
-    meta: {
-      requiresGuest: true,
-    },
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: RegisterPage,
-    meta: {
-      requiresGuest: true,
-    },
-  },
 ]
+
+
+
+
+
+
+
 
 const router = createRouter({
   history: createWebHistory(),
