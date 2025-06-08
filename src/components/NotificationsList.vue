@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {ref, onMounted, computed} from 'vue';
+import {ref, computed} from 'vue';
 import { useNotificationsStore } from '../stores/useNotificationsStore';
 import Pagination from './ui/Pagination.vue';
 
@@ -17,9 +17,6 @@ const formatedDate = (date: string) => {
     return new Date(date).toLocaleString()
 }
 
-onMounted(() => {
-    notifications.loadAllNotifications();
-})
 </script>
 
 <template>

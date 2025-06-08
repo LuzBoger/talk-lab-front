@@ -4,6 +4,11 @@ import { useRouter } from 'vue-router';
 import type { User } from '../types/User';
 import authService from '../api/authService';
 import Sidebar from '../components/Sidebar.vue';
+import { useNotificationsStore } from '../stores/useNotificationsStore';
+import { useFavoriteStore } from '../stores/useFavoritesStore';
+
+const notificationsStore = useNotificationsStore();
+const favoriteStore = useFavoriteStore();
 
 const user = ref<User | null>(null);
 const router = useRouter();
@@ -27,7 +32,11 @@ onMounted(() => {
   const currentUser = authService.getCurrentUser();
   if (currentUser) {
     user.value = currentUser;
+     notificationsStore.loadAllNotifications();
+    favoriteStore.fetchFavorites();
   }
+ 
+
 });
 </script>
 

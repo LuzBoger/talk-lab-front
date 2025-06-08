@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, onMounted } from 'vue';
+import {computed} from 'vue';
 import { useFavoriteStore } from '../stores/useFavoritesStore';
 import defaultAvatar from '../assets/images/defaultAvatar.png';
 import { useConversationUtils } from '../utils/useConversationUtils';
@@ -24,10 +24,6 @@ const toggleFavorite = async (conversationId: number) => {
     }
 }
 
-
-onMounted(async () => {
-    await favoriteStore.fetchFavorites()
-})
 </script>
 
 
