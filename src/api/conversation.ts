@@ -30,7 +30,8 @@ export const updateConversation = async (id: number, conversation: Conversation)
 }
 
 export const deleteConversation = async (id: number): Promise<void> => {
-    await apiClient.delete(`/delete/conversation/${id}`);
+    const response = await apiClient.delete(`/delete/conversation/${id}`);
+    return response.data;
 }
 
 export const uploadMedia = async (media: {image?: Blob; audio?: Blob}) => {

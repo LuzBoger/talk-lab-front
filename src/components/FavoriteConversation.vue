@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import {computed, onMounted } from 'vue';
-import { useFavoriteStore } from '../stores/favorites';
+import { useFavoriteStore } from '../stores/useFavoritesStore';
 import defaultAvatar from '../assets/images/defaultAvatar.png';
 import { useConversationUtils } from '../utils/useConversationUtils';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 
 
@@ -15,8 +17,10 @@ const favoritesCount = computed(() => favoriteStore.count);
 const toggleFavorite = async (conversationId: number) => {
     if (favoriteStore.isFavorite(conversationId)) {
         await favoriteStore.removeFromFavorites(conversationId)
+        toast.success('La conversation a bien été retiré des favoris')
     } else {
         await favoriteStore.addToFavorites(conversationId)
+        toast.success('La conversation a bien été ajouté aux favoris')
     }
 }
 

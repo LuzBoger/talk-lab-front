@@ -16,12 +16,16 @@
     "axios": "^1.9.0",
     "clsx": "^2.1.1",
     "event-source-polyfill": "^1.0.31",
+    "pinia": "^3.0.2",
     "tailwindcss": "^4.1.5",
+    "talk-lab-front": "file:",
     "vee-validate": "^4.15.0",
     "vite-plugin-svgr": "^4.3.0",
     "vue": "^3.5.13",
+    "vue-media-recorder": "^0.1.25",
     "vue-router": "^4.5.1",
     "vue3-emoji-picker": "^1.1.8",
+    "vue3-toastify": "^0.2.8",
     "yup": "^1.6.1"
   },
   "devDependencies": {
