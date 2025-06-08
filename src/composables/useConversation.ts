@@ -57,11 +57,11 @@ export function useConversation(
     };
 
     const saveConversationChanges = async () => {
-
       if (!conversationId.value) {return}
 
       try {
-          await updateConversation(conversationId.value, updatedConversationData())
+          const res = await updateConversation(conversationId.value, updatedConversationData())
+          return res;
         } catch (error) {
             console.error('Erreur lors de la sauvegarde de la conversation:', error);
           }
@@ -74,8 +74,8 @@ export function useConversation(
           status.value = 'published'
           isPublic.value = true;
 
-          await updateConversation(conversationId.value!, updatedConversationData())
-          console.log('DEBUG: status set to', status.value);
+          const res = await updateConversation(conversationId.value!, updatedConversationData())
+          return res
       } catch (error) {
         console.error('Erreur lors de la publication de la conversation:', error);
       }
@@ -85,7 +85,8 @@ export function useConversation(
       if(!conversationId.value) {return}
 
       try {
-        await deleteConversation(conversationId.value!)
+        const res = await deleteConversation(conversationId.value!)
+        return res
       } catch(error) {
         console.error("Erreur de suppresion de la conversation", error)
       }

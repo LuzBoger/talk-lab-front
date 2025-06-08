@@ -18,6 +18,9 @@ import 'vue3-emoji-picker/css';
 import SaveConversationPopUp from './SaveConversationPopUp.vue';
 import OtherMessageTypes from './OtherMessageTypes.vue';
 import { date } from 'yup';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+
 
 const route = useRoute();
 const router = useRouter();
@@ -120,22 +123,28 @@ const sendInterlocutorMessage = async () => {
 
 const submitForm = handleSubmit(async (formValues) => {
   try {
-    await createFakeConversation(formValues);
-    console.log("Conversation créé avec succès ");
+    const res = await createFakeConversation(formValues);
+    toast.success(res.message);
     router.push('/mes-conversations');
-  } catch (error) {
-    console.error('Erreur lors de la conversation:', error);
+  } catch (error: any) {
+    toast.error('Erreur lors de la création de la conversation');
+    
   }
 });
 
 const saveChanges = async () => {
-  await saveConversationChanges();
-  isConversationModified.value = false
-  showSaveModal.value = false
-
+  try{
+    await saveConversationChanges();
+    toast.success("Changements sauvegardés avec succès");
+    isConversationModified.value = false
+    showSaveModal.value = false
   if(nextRoute) {
     await router.push(nextRoute)
   }
+}catch(error) {
+  toast.error('Erreur lors de la sauvegarde des modifications');
+}
+
 }
 
 const cancelSave = () => {
@@ -143,10 +152,19 @@ const cancelSave = () => {
 }
 
 const publishConversation = async () => {
-  if(!conversationId) {return}
-  await publishConversationToPublic();
-  showPublishModal.value = false
-  isConversationModified.value = false
+  if(!conversationId) {
+    toast.error('La conversation n\'existe pas');
+    return
+  }
+  try {
+      await publishConversationToPublic();
+      toast.success('Conversation publiée avec succès');
+      showPublishModal.value = false
+      isConversationModified.value = false
+  } catch(error) {
+    console.error('Erreur lors de la publication de la conversation:', error);
+    toast.error('Erreur lors de la publication de la conversation');
+  }
 }
 
 const cancelPublish = () => {
@@ -154,8 +172,20 @@ const cancelPublish = () => {
 }
 
 const deleteConversaiton = async () => {
-  await deleteFakeConversation()
-  router.push('/')
+  if(!conversationId) {
+    toast.error('La conversation n\'existe pas');
+    return
+  }
+
+  try{
+      await deleteFakeConversation()
+      router.push('/mes-conversations')
+
+  } catch(error) {
+    console.error('Erreur lors de la suppression de la conversation:', error);
+    toast.error('Erreur lors de la suppression de la conversation');
+  }
+
 }
 const addReaction = (index: number, emoji: string) => {
   const uptadedMessages = [...messages.value]
@@ -586,7 +616,7 @@ onMounted(async () => {
           </div>
         </div>
         </div>
-              <input type="text" v-model="title" placeholder="Saisir votre message" class="absolute bottom-4 left-4 right-4 bg-[#23233F] text-white p-2 rounded" />
+              <input type="text" placeholder="Saisir votre message" class="absolute bottom-4 left-4 right-4 bg-[#23233F] text-white p-2 rounded" />
 
             <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-24 w-12 bg-zinc-600 blur-[80px]"></div>
         </div>

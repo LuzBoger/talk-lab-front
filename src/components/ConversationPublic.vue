@@ -2,9 +2,10 @@
 import{onMounted, ref} from 'vue';
 import type { Conversation } from '../types/Conversation';
 import defaultAvatar from '../assets/images/defaultAvatar.png';
-import { useFavoriteStore } from '../stores/favorites';
+import { useFavoriteStore } from '../stores/useFavoritesStore';
 import { getPublicConversations } from '../api/conversation';
-
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 const publicConversations = ref<Conversation[]>([]);
 const favoriteStore = useFavoriteStore();
@@ -13,8 +14,10 @@ const favoriteStore = useFavoriteStore();
 const toggleFavorite = async (conversationId: number) => {
   if(favoriteStore.isFavorite(conversationId)) {
     await favoriteStore.removeFromFavorites(conversationId);
+    toast.success('La conversation a bien été retirée des favoris');
   } else {
     await favoriteStore.addToFavorites(conversationId)
+    toast.success('La conversation a bien été ajoutée aux favoris');
   }
 }
 
@@ -45,7 +48,7 @@ onMounted(async () => {
         <div class="flex-1 overflow-hidden">
           <div class="flex justify-between items-center">
             <h3 class="text-white font-semibold truncate">{{ conversation.content.interlocutor_username || 'Anonyme' }}</h3>
-            <span class="text-xs text-gray-400 whitespace-nowrap">il y a 2h</span> 
+            <span class="text-xs text-gray-400 whitespace-nowrap">{{ conversation.createdAt }}</span> 
           </div>
           <p class="text-sm text-gray-400 truncate mt-1">
             {{ conversation.description || 'Aucun message récent.' }}

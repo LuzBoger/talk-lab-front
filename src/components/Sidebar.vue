@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import {ref, onMounted, computed} from 'vue';
+import {ref, onMounted, computed, onUnmounted} from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import logoUrl from '../../public/logo.svg';
 import defaultProfileImg from '../assets/images/defaultAvatar.png'
+import { useNotificationsStore } from '../stores/useNotificationsStore';
+import authService from '../api/authService';
 
 const props = defineProps({
   isLoggedIn: {
@@ -11,12 +13,20 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['sidebar-toggle', 'logout']);
 
+const emit = defineEmits(['sidebar-toggle', 'logout']);
+const notificationsStore = useNotificationsStore();
 const route = useRoute();
 const router = useRouter()
 const isCollapsed = ref<boolean>(false)
 const showProfileMenu = ref<boolean>(false)
+const username = ref<string>('');
+const avatar = ref<string>(defaultProfileImg);
+
+
+const unReadCount = computed(() => {
+  return notificationsStore.countUnReadNotifications ;
+})
 
 const routeActive  = computed(() => (path: string) => {
   return route.path === path || route.path.startsWith(path)
@@ -52,12 +62,35 @@ const navigateToHelp = () => {
   showProfileMenu.value = false
 }
 
+
 const handleLogout = () => {
   showProfileMenu.value = false
   logout()
 }
 
+const handleResize = () => {
+  if(window.innerWidth < 768 && !isCollapsed.value) {
+    isCollapsed.value = true
+    emit('sidebar-toggle', isCollapsed.value);
+  } else if(window.innerWidth >= 768 && isCollapsed.value) {
+    isCollapsed.value = false
+    emit('sidebar-toggle', isCollapsed.value);
+  }
+}
+
 onMounted(() => {
+  const user = authService.getCurrentUser();
+  if(user) {
+    username.value = user.username ||'Utilisateur'
+
+    if(user.avatar) {
+      avatar.value = user.avatar;
+    } else {
+      avatar.value = defaultProfileImg;
+    }
+  }
+  handleResize(); 
+  window.addEventListener('resize', handleResize);
   console.log('Sidebar component mounted');
 });
 </script>
@@ -106,6 +139,15 @@ onMounted(() => {
               <path d="M9 16.7577L7.695 15.5877C6.18 14.2227 4.9275 13.0452 3.9375 12.0552C2.9475 11.0652 2.16 10.1764 1.575 9.38893C0.99 8.60143 0.58125 7.87768 0.34875 7.21768C0.11625 6.55768 0 5.88268 0 5.19268C0 3.78268 0.4725 2.60518 1.4175 1.66018C2.3625 0.715176 3.54 0.242676 4.95 0.242676C5.73 0.242676 6.4725 0.407676 7.1775 0.737676C7.8825 1.06768 8.49 1.53268 9 2.13268C9.51 1.53268 10.1175 1.06768 10.8225 0.737676C11.5275 0.407676 12.27 0.242676 13.05 0.242676C14.46 0.242676 15.6375 0.715176 16.5825 1.66018C17.5275 2.60518 18 3.78268 18 5.19268C18 5.88268 17.8838 6.55768 17.6513 7.21768C17.4188 7.87768 17.01 8.60143 16.425 9.38893C15.84 10.1764 15.0525 11.0652 14.0625 12.0552C13.0725 13.0452 11.82 14.2227 10.305 15.5877L9 16.7577ZM9 14.3277C10.44 13.0377 11.625 11.9314 12.555 11.0089C13.485 10.0864 14.22 9.28393 14.76 8.60143C15.3 7.91893 15.675 7.31143 15.885 6.77893C16.095 6.24643 16.2 5.71768 16.2 5.19268C16.2 4.29268 15.9 3.54268 15.3 2.94268C14.7 2.34268 13.95 2.04268 13.05 2.04268C12.345 2.04268 11.6925 2.24143 11.0925 2.63893C10.4925 3.03643 10.08 3.54268 9.855 4.15768H8.145C7.92 3.54268 7.5075 3.03643 6.9075 2.63893C6.3075 2.24143 5.655 2.04268 4.95 2.04268C4.05 2.04268 3.3 2.34268 2.7 2.94268C2.1 3.54268 1.8 4.29268 1.8 5.19268C1.8 5.71768 1.905 6.24643 2.115 6.77893C2.325 7.31143 2.7 7.91893 3.24 8.60143C3.78 9.28393 4.515 10.0864 5.445 11.0089C6.375 11.9314 7.56 13.0377 9 14.3277Z" fill="#E3E3E3"/>
             </svg>
             <span>Mes Favoris</span>
+          </RouterLink>
+        </div>
+
+        <div class="menu-item" :class="{ active: routeActive('/profil/mes-notifications')}">
+          <RouterLink to="/profil/mes-notifications">
+            <svg fill="#000000" height="24" width="18" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 612.00 612.00" xml:space="preserve">
+              <path d="M570.107,500.254c-65.037-29.371-67.511-155.441-67.559-158.622v-84.578c0-81.402-49.742-151.399-120.427-181.203 C381.969,34,347.883,0,306.001,0c-41.883,0-75.968,34.002-76.121,75.849c-70.682,29.804-120.425,99.801-120.425,181.203v84.578 c-0.046,3.181-2.522,129.251-67.561,158.622c-7.409,3.347-11.481,11.412-9.768,19.36c1.711,7.949,8.74,13.626,16.871,13.626 h164.88c3.38,18.594,12.172,35.892,25.619,49.903c17.86,18.608,41.479,28.856,66.502,28.856 c25.025,0,48.644-10.248,66.502-28.856c13.449-14.012,22.241-31.311,25.619-49.903h164.88c8.131,0,15.159-5.676,16.872-13.626 C581.586,511.664,577.516,503.6,570.107,500.254z M484.434,439.859c6.837,20.728,16.518,41.544,30.246,58.866H97.32 c13.726-17.32,23.407-38.135,30.244-58.866H484.434z M306.001,34.515c18.945,0,34.963,12.73,39.975,30.082 c-12.912-2.678-26.282-4.09-39.975-4.09s-27.063,1.411-39.975,4.09C271.039,47.246,287.057,34.515,306.001,34.515z M143.97,341.736v-84.685c0-89.343,72.686-162.029,162.031-162.029s162.031,72.686,162.031,162.029v84.826 c0.023,2.596,0.427,29.879,7.303,63.465H136.663C143.543,371.724,143.949,344.393,143.97,341.736z M306.001,577.485 c-26.341,0-49.33-18.992-56.709-44.246h113.416C355.329,558.493,332.344,577.485,306.001,577.485z"></path> <path d="M306.001,119.235c-74.25,0-134.657,60.405-134.657,134.654c0,9.531,7.727,17.258,17.258,17.258 c9.531,0,17.258-7.727,17.258-17.258c0-55.217,44.923-100.139,100.142-100.139c9.531,0,17.258-7.727,17.258-17.258 C323.259,126.96,315.532,119.235,306.001,119.235z"></path>
+            </svg>
+            <span>Mes Notifications</span>
           </RouterLink>
         </div>
 
@@ -196,8 +238,17 @@ onMounted(() => {
     <div class="auth-buttons">
       <template v-if="props.isLoggedIn">
         <div class="dropdown" @click="toggleProfileMenu">
+          <div class="avatar-container">
           <img class="avatar" :src="defaultProfileImg" alt="Avatar utilisateur">
-          <span class="username">User</span>
+                <div v-if="unReadCount > 0" class="notification-badge">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="red-dot"></span>
+      </div>
+      </div>
+          <span class="username">{{ username }}</span>
         </div>
         <div v-if="showProfileMenu" class="profile-dropdown">
           <button @click="navigateToProfile">
@@ -364,12 +415,56 @@ onMounted(() => {
   cursor: pointer;
   user-select: none;
 }
-
+.auth-buttons .avatar-container {
+  position: relative;
+  display: inline-block;
+}
 .auth-buttons .avatar {
   width: 36px;
   height: 36px;
   object-fit: cover;
   margin-right: 8px;
+  border-radius: 50%;
+}
+.notification-badge{
+  position: absolute;
+  top: -6px;
+  right: -2px;
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border-radius: 50%;
+  z-index: 10;
+  color: #E3E3E3;
+}
+
+.sidebar-collapsed .notification-badge {
+  right: -8px;
+  top: -8px;
+}
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.red-dot {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 8px;
+  height: 8px;
+  background-color: #FF4C4C;
+  border-radius: 60%;
+  border: 2px solid #1A192C;
+  pointer-events: none;
+  animation: blink 2s infinite;
 }
 
 .auth-buttons .username {

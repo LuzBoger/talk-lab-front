@@ -5,6 +5,7 @@ import ConversationPublic from '../components/ConversationPublic.vue'
 import ConversationList from '../components/ConversationList.vue'
 import DefaultLayout from '../layout/DefaultLayout.vue'
 import FavoriteConversation from '../components/FavoriteConversation.vue'
+import NotificationsList from '../components/NotificationsList.vue'
 
 const HomePage = () => import('../pages/index.vue')
 const LoginPage = () => import('../pages/LoginPage.vue')
@@ -55,6 +56,14 @@ const routes = [
             path: 'mes-conversations',
             name: 'Mes conversations',
             component: ConversationList,
+            meta: {
+              requiresAuth: true,
+            },
+          },
+          {
+            path: 'mes-notifications',
+            name: 'Mes Notitifications',
+            component: NotificationsList,
             meta: {
               requiresAuth: true,
             },
