@@ -1,16 +1,7 @@
 import { apiClient } from "../utils/apiClient";
+import type { LoginCredentials } from "../types/LoginCredentials";
+import type { RegisterData } from "../types/RegisterData";
 
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-interface RegisterData {
-  name: string;
-  username?: string;
-  email: string;
-  password: string;
-}
 
 const authService = {
   async login(credentials: LoginCredentials) {
@@ -20,6 +11,7 @@ const authService = {
       console.log('Réponse du serveur:', response.data);
       if (response.data.token) {
         localStorage.setItem('auth_token', response.data.token);
+        localStorage.setItem('refresh_token', response.data.refresh_token)
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }
       return response.data;
@@ -57,8 +49,34 @@ const authService = {
     }
   },
 
+  async refreshToken() {
+
+    try {
+      const refreshToken = localStorage.getItem('refresh_token');
+
+      if (!refreshToken) {
+        throw new Error('Auncun refresh token trouvé');
+      }
+
+      const response = await apiClient.post('/refresh-token', {refresh_token: refreshToken})
+
+      if (response.data.token && response.data.refreshToken) {
+        localStorage.setItem('auth_token', response.data.token);
+        localStorage.setItem('refresh_token', response.data.refreshToken);
+        return true
+      }
+      return false
+    } catch (error: any) {
+      console.error('Erreur lors de la tentative de rafraîchissement du token:', error);
+
+      this.logout();
+      return false
+    }
+  },
+
   logout() {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
   },
 
