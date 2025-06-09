@@ -86,10 +86,7 @@ const formatedDate = (date: string) => {
       v-model="currentPage"
       :totalItems="notifications.sortedNotifications.length"
       :pageSize="pageSize"
-        />
-
-
-
-
+      @update:modelValue="pagesize => currentPage = pagesize"
+    />
     </div>
 </template>
