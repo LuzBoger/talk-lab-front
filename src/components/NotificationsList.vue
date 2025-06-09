@@ -21,7 +21,7 @@ const formatedDate = (date: string) => {
 
 <template>
     <div class="max-w-xl mx-auto p-6 shadow rounded">
-        <h2 class="text-xl font-bold mb-4">Notifications</h2>
+        <h2 class="text-xl font-bold mb-4 text-white">Notifications</h2>
 
         <div class="flex justify-between mb-4 space-x-2">
                 <button
@@ -56,7 +56,7 @@ const formatedDate = (date: string) => {
              :class="notification.isRead ? 'border-gray-300' : 'border-blue-500'"
              >
                 <div>
-                   <h3 class="text-sm font-semibold text-gray-800">{{ notification.message }}</h3>
+                   <h3 class="text-sm font-semibold text-white">{{ notification.message }}</h3>
                     <p class=" text-xs text-gray-500 mt-1">{{ formatedDate(notification.createdAt) }}</p>
                 </div>
 
@@ -80,7 +80,7 @@ const formatedDate = (date: string) => {
         </li>
         </ul>
 
-    <p v-if="notifications.notifications.length === 0" class="text-center text-gray-400 mt-6">Aucune notification</p>
+    <p v-if="notifications.notifications.length === 0" class="text-center text-white mt-6">Aucune notification</p>
 
     <Pagination
       v-model="currentPage"
