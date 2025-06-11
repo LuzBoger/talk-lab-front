@@ -2,13 +2,14 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import authService from '../api/authService';
+import { useAuthStore } from '../stores/useAuthStore';
 
 const email = ref('');
 const password = ref('');
 const errorMessage = ref('');
 const loading = ref(false);
 const router = useRouter();
-
+const authStore = useAuthStore()
 const login = async () => {
   if (!email.value || !password.value) {
     errorMessage.value = 'Veuillez remplir tous les champs';
@@ -24,7 +25,7 @@ const login = async () => {
       password: '******' 
     });
     
-    await authService.login({
+    await authStore.login({
       email: email.value,
       password: password.value
     });

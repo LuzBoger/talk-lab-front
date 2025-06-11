@@ -6,6 +6,7 @@ import ConversationList from '../components/ConversationList.vue'
 import DefaultLayout from '../layout/DefaultLayout.vue'
 import FavoriteConversation from '../components/FavoriteConversation.vue'
 import NotificationsList from '../components/NotificationsList.vue'
+import { useAuthStore } from '../stores/useAuthStore'
 
 const HomePage = () => import('../pages/index.vue')
 const LoginPage = () => import('../pages/LoginPage.vue')
@@ -90,20 +91,15 @@ const routes = [
   },
 ]
 
-
-
-
-
-
-
-
 const router = createRouter({
   history: createWebHistory(),
   routes,
 })
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = authService.isAuthenticated()
+  const authStore = useAuthStore()
+
+  const isAuthenticated = authStore.isAuthenticated
 
   if (!to.meta || to.meta.requiresAuth === false) {
     next()

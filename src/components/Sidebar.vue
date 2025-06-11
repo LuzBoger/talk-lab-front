@@ -1,27 +1,22 @@
 <script setup lang="ts">
-import {ref, onMounted, computed, onUnmounted} from 'vue';
+import {ref, onMounted, computed, watch} from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import logoUrl from '../../public/logo.svg';
 import defaultProfileImg from '../assets/images/defaultAvatar.png'
 import { useNotificationsStore } from '../stores/useNotificationsStore';
+import {useAuthStore} from '../stores/useAuthStore';
 import authService from '../api/authService';
-
-const props = defineProps({
-  isLoggedIn: {
-    type: Boolean,
-    default: false
-  }
-})
 
 
 const emit = defineEmits(['sidebar-toggle', 'logout']);
+const authStore = useAuthStore();
 const notificationsStore = useNotificationsStore();
 const route = useRoute();
 const router = useRouter()
 const isCollapsed = ref<boolean>(false)
 const showProfileMenu = ref<boolean>(false)
 const username = ref<string>('');
-const avatar = ref<string>(defaultProfileImg);
+
 
 
 const unReadCount = computed(() => {
@@ -43,8 +38,8 @@ const toggleSidebar = () =>  {
       emit('sidebar-toggle', isCollapsed.value);
 }
 
-const logout = () => {
-  emit('logout');
+const logout = async  () => {
+  await authStore.logout()
   router.push('/login');
 };
 
@@ -78,17 +73,18 @@ const handleResize = () => {
   }
 }
 
-onMounted(() => {
-  const user = authService.getCurrentUser();
-  if(user) {
-    username.value = user.username ||'Utilisateur'
+const user = computed(() => {
+  return authStore.user?.username || 'Utilisateur'
+})
 
-    if(user.avatar) {
-      avatar.value = user.avatar;
-    } else {
-      avatar.value = defaultProfileImg;
-    }
-  }
+const avatarurl = computed(() => {
+  return authStore.user?.avatar || defaultProfileImg
+})
+
+watch(() => authStore.isAuthenticated, (newVal) => {
+  console.log('isAuthenticated changed:', newVal);
+});
+onMounted(async () => {
   handleResize(); 
   window.addEventListener('resize', handleResize);
   console.log('Sidebar component mounted');
@@ -183,7 +179,7 @@ onMounted(() => {
         </RouterLink>
       </div>
 
-      <div v-if="props.isLoggedIn" class="menu-item" :class="{active: routeActive('/decouverte')}">
+      <div v-if="authStore.isAuthenticated" class="menu-item" :class="{active: routeActive('/decouverte')}">
         <RouterLink to="/decouverte">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 21V3H21V21H3ZM18 17H6V18.5H18V17ZM6 15.5H18V14H6V15.5ZM6 12H18V6H6V12Z" fill="#E3E3E3" />
@@ -236,10 +232,10 @@ onMounted(() => {
     </nav>
 
     <div class="auth-buttons">
-      <template v-if="props.isLoggedIn">
+      <template v-if="authStore.isAuthenticated">
         <div class="dropdown" @click="toggleProfileMenu">
           <div class="avatar-container">
-          <img class="avatar" :src="defaultProfileImg" alt="Avatar utilisateur">
+          <img class="avatar" :src="avatarurl" alt="Avatar utilisateur">
                 <div v-if="unReadCount > 0" class="notification-badge">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -248,7 +244,7 @@ onMounted(() => {
           <span class="red-dot"></span>
       </div>
       </div>
-          <span class="username">{{ username }}</span>
+          <span class="username">{{ user }}</span>
         </div>
         <div v-if="showProfileMenu" class="profile-dropdown">
           <button @click="navigateToProfile">
@@ -274,7 +270,7 @@ onMounted(() => {
       
       <template v-else>
         <button class="btn-signup" @click="$router.push('/register')">S'inscrire</button>
-        <button class="btn-login" @click="$router.push('/register')">Se connecter</button>
+        <button class="btn-login" @click="$router.push('/login')">Se connecter</button>
       </template>
     </div>
   </div>

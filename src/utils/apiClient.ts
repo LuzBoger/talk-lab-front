@@ -1,48 +1,42 @@
 import axios from 'axios';
 import authService from '../api/authService';
+import { useAuthStore } from '../stores/useAuthStore';
 
 export const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    headers: {
-        'Accept': 'application/json',
-    },
-})
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    'Accept': 'application/json',
+  },
+  withCredentials: true,
+});
 
 apiClient.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  config => config,
+  error => Promise.reject(error)
+);
+
+apiClient.interceptors.response.use(
+  response => response,
+  async error => {
+    const request = error.config;
+    const authStore = useAuthStore()
+
+    if (error.response && error.response.status === 401 && !request._retry && authStore.isAuthenticated) {
+      request._retry = true;
+
+      try {
+        const refreshed = await authService.refreshToken();
+
+        if (refreshed) { return apiClient(request);}
+      } catch (refreshError) {
+        console.error('Erreur lors du rafraîchissement du token :', refreshError);
+      }
+
+      await authService.logout();
+      authStore.user = null;
+      authStore.isAuthenticated = false;
     }
-    return config;
-  },
-  error => {
+
     return Promise.reject(error);
   }
 );
-
-apiClient.interceptors.response.use (
-  response => response,
-  async error => {
-    const request = error.config
-
-    if (error.response && error.response.status === 401 && !request._retry){
-      request._retry = true
-
-      try{
-        const refreshedToken = await authService.refreshToken()
-
-        if(refreshedToken) {
-          const token = localStorage.getItem('auth_token');
-          request.headers.Authorization = `Bearer ${token}`;
-          return apiClient(request);
-        }
-
-      } catch (e) {
-        console.error('Erreur lors de la tentative de rafraîchissement du token:', e);
-      }
-      authService.logout()
-    }
-    return Promise.reject(error)
-  }
-)
