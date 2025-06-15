@@ -7,6 +7,7 @@ import DefaultLayout from '../layout/DefaultLayout.vue'
 import FavoriteConversation from '../components/FavoriteConversation.vue'
 import NotificationsList from '../components/NotificationsList.vue'
 import { useAuthStore } from '../stores/useAuthStore'
+import UserProfile from '../components/UserProfile.vue'
 
 const HomePage = () => import('../pages/index.vue')
 const LoginPage = () => import('../pages/LoginPage.vue')
@@ -43,8 +44,16 @@ const routes = [
       },
       {
         path: '/profil',
-        redirect: '/profil/mes-favoris',
+        redirect: '/profil/mes-informations',
         children: [
+          {
+            path: 'mes-informations',
+            name: 'Mes Informations',
+            component: UserProfile,
+            meta: {
+              requiresAuth: true,
+            },
+          },
           {
             path: 'mes-favoris',
             name: 'Mes Favoris',
