@@ -7,8 +7,13 @@ import Sidebar from '../components/Sidebar.vue';
 
 import { useAuthStore } from '../stores/useAuthStore';
 
+import { useNotificationsStore } from '../stores/useNotificationsStore';
+import { useFavoriteStore } from '../stores/useFavoritesStore';
+
 
 const authStore = useAuthStore();
+const notificationsStore = useNotificationsStore();
+const favoriteStore = useFavoriteStore();
 
 const user = ref<User | null>(null);
 const router = useRouter();
@@ -26,9 +31,12 @@ const handleSidebarToggle = (collapsed: boolean) => {
 
 
 
-
-
-
+onMounted(async () => {
+   if (authStore.isAuthenticated) {
+    notificationsStore.loadAllNotifications();
+    favoriteStore.fetchFavorites();
+  }
+});
 
 </script>
 

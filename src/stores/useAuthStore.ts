@@ -10,6 +10,10 @@ export const useAuthStore = defineStore ('auth', () => {
     const user = ref<User | null>(null);
     const isAuthenticated = ref(false);
 
+    const setUser = (newUser: User | null) => {
+        user.value = newUser;
+        isAuthenticated.value = !!newUser;
+    };
 
     const getUser = async () => {
         try {
@@ -48,5 +52,5 @@ export const useAuthStore = defineStore ('auth', () => {
     }
 
 
-    return { user, isAuthenticated, getUser, login, register, logout}
+    return { user, isAuthenticated, getUser, setUser,login, register, logout}
 })

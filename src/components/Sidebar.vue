@@ -16,6 +16,8 @@ const router = useRouter()
 const isCollapsed = ref<boolean>(false)
 const showProfileMenu = ref<boolean>(false)
 const username = ref<string>('');
+const baseUrl= import.meta.env.VITE_BASE_URL;
+
 
 
 
@@ -78,7 +80,10 @@ const user = computed(() => {
 })
 
 const avatarurl = computed(() => {
-  return authStore.user?.avatar || defaultProfileImg
+  if(authStore.user?.avatarUrl) {
+    return `${baseUrl}${authStore.user.avatarUrl}`;
+  }
+  return defaultProfileImg;
 })
 
 watch(() => authStore.isAuthenticated, (newVal) => {
