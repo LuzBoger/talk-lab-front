@@ -24,14 +24,6 @@ apiClient.interceptors.response.use(
     if (error.response && error.response.status === 401 && !request._retry && authStore.isAuthenticated) {
       request._retry = true;
 
-      try {
-        const refreshed = await authService.refreshToken();
-
-        if (refreshed) { return apiClient(request);}
-      } catch (refreshError) {
-        console.error('Erreur lors du rafraîchissement du token :', refreshError);
-      }
-
       await authService.logout();
       authStore.user = null;
       authStore.isAuthenticated = false;

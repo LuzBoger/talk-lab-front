@@ -44,24 +44,6 @@ const authService = {
     }
   },
 
-  async refreshToken() {
-
-    try {
-
-      const response = await apiClient.post('/refresh-token', {}, { withCredentials: true });
-
-      if (response.status === 200) {
-        return true
-      }
-      return false
-    } catch (error: any) {
-      console.error('Erreur lors de la tentative de rafraîchissement du token:', error);
-
-      await this.logout();
-      return false
-    }
-  },
-
   async logout() {
     await apiClient.post('/logout', {}, { withCredentials: true });
 

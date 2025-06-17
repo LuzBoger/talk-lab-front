@@ -600,12 +600,15 @@ onMounted(async () => {
                   alt="Image" 
                   class="max-w-full max-h-24 object-contain rounded" 
                 />
+                                            {{ console.log(`${baseUrl}${msg.image}`) }}
+
               </div>
 
-              <div v-if="msg.audio" class="text-sm rounded-2xl px-4 py-2 max-w-xs w-full flex items-center gap-3 shadow">
-                <audio controls :src="`${baseUrl}${msg.audio}`" class="w-full h-10 [&::-webkit-media-controls-panel]:bg-gray-200 dark:[&::-webkit-media-controls-panel]:bg-zinc-700 transition-all"></audio>
-              </div>
+              <div v-if="msg.audio" class="text-sm rounded-2xl py-4  flex items-center gap-3 shadow">
+                <audio controls :src="`${baseUrl}${msg.audio}`" class=""></audio>
+                            {{ console.log(`${baseUrl}${msg.audio}`) }}
 
+              </div>
               <div v-if="msg.reaction" class="text-xs mt-2">{{ msg.reaction }}</div>
               <!-- <div class="absolute top-1 right-1">
                   <Reaction @selected="emoji => addReaction(index, emoji)"></Reaction> 

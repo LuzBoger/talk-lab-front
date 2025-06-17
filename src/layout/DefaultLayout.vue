@@ -31,13 +31,6 @@ const handleSidebarToggle = (collapsed: boolean) => {
 
 
 
-onMounted(async () => {
-   if (authStore.isAuthenticated) {
-    notificationsStore.loadAllNotifications();
-    favoriteStore.fetchFavorites();
-  }
-});
-
 </script>
 
 <template>
