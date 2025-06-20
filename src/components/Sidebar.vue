@@ -3,6 +3,7 @@ import {ref, onMounted, computed} from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import logoUrl from '../../public/logo.svg';
 import defaultProfileImg from '../assets/images/defaultAvatar.png'
+import MenuItem from './sidebarComponents/MenuItem.vue';
 
 const props = defineProps({
   isLoggedIn: {
@@ -80,31 +81,22 @@ onMounted(() => {
     </div>
 
     <nav class="menu">
-
       <template v-if="isProfileRoute">
-        <div class="menu-item" :class="{ active: routeActive('/profil/mes-informations')}">
-          <RouterLink to="/profil/mes-informations">
-            <span>Mes informations</span>
-          </RouterLink>
-        </div>
+        <MenuItem to="/profil/mes-informations" activePath="/profil/mes-informations">
+          Mes informations
+        </MenuItem>
 
-        <div class="menu-item" :class="{ active: routeActive('/profil/mes-conversations')}">
-          <RouterLink to="/profil/mes-conversations">
-            <span>Mes Créations</span>
-          </RouterLink>
-        </div>
+        <MenuItem to="/profil/mes-conversations" activePath="/profil/mes-conversations">
+          Mes Créations
+        </MenuItem>
+        
+        <MenuItem to="/profil/mes-favoris" activePath="/profil/mes-favoris">
+          Mes Favoris
+        </MenuItem>
 
-        <div class="menu-item" :class="{ active: routeActive('/profil/mes-favoris')}">
-          <RouterLink to="/profil/mes-favoris">
-            <span>Mes Favoris</span>
-          </RouterLink>
-        </div>
-
-        <div class="menu-item" :class="{ active: routeActive('/profil/parametres')}">
-          <RouterLink to="/profil/securite">
-            <span>Paramètres</span>
-          </RouterLink>
-        </div>
+        <MenuItem to="/profil/securite" activePath="/profil/securite">
+          Mes Paramètres
+        </MenuItem>
       </template>
     
       <template v-else>
