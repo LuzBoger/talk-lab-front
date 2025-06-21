@@ -27,7 +27,11 @@ export default {
     class="bg-card-bg rounded-lg transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg relative w-full max-w-92 mx-auto flex flex-col cursor-pointer"
   >
     <div class="w-full">
-      <img :src="imageUrl" :alt="title" class="w-full h-full object-cover" />
+      <img
+        :src="imageUrl"
+        :alt="title"
+        class="w-full h-full object-cover rounded-t-lg"
+      />
     </div>
     <div class="p-2.5 w-full box-border mt-0 rounded-none">
       <h3 class="text-md font-semibold mb-1 text-text-primary">
