@@ -1,142 +1,58 @@
+<script>
+export default {
+  name: 'Card',
+  props: {
+    imageUrl: {
+      type: String,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    author: {
+      type: String,
+      required: true,
+    },
+    tags: {
+      type: Array,
+      required: true,
+    },
+  },
+}
+</script>
+
 <template>
-    <div class="card">
-      <div class="card-image">
-        <img :src="imageUrl" :alt="title" />
-      </div>
-      <div class="card-content">
-        <h3 class="card-title">{{ title }}</h3>
-        <div class="card-author-container">
-          <div class="card-author">{{ author }}</div>
-          <div class="tag-container">
-            <span v-for="(tag, index) in tags" :key="index" class="tag" :class="'tag-' + tag.color">
-              {{ tag.text }}
-            </span>
-          </div>
+  <div
+    class="bg-card-bg rounded-lg transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg relative w-full max-w-92 mx-auto flex flex-col cursor-pointer"
+  >
+    <div class="w-full">
+      <img :src="imageUrl" :alt="title" class="w-full h-full object-cover" />
+    </div>
+    <div class="p-2.5 w-full box-border mt-0 rounded-none">
+      <h3 class="text-md font-semibold mb-1 text-text-primary">
+        {{ title }}
+      </h3>
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-author-text">
+          {{ author }}
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <span
+            v-for="(tag, index) in tags"
+            :key="index"
+            class="px-1.5 py-0.5 rounded-full text-xs font-medium border-1"
+            :class="{
+              'text-tag-yellow': tag.color === 'yellow',
+              'text-tag-green': tag.color === 'green',
+              'text-tag-red': tag.color === 'red',
+              'text-tag-purple': tag.color === 'purple',
+            }"
+          >
+            {{ tag.text }}
+          </span>
         </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'Card',
-    props: {
-      imageUrl: {
-        type: String,
-        required: true
-      },
-      title: {
-        type: String,
-        required: true
-      },
-      author: {
-        type: String,
-        required: true
-      },
-      tags: {
-        type: Array,
-        required: true
-      }
-    }
-  }
-  </script>
-  
-  <style scoped>
-  .card {
-    background-color: #1a1a24;
-    border-radius: 10px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    width: 100%;
-    max-width: 350px;
-    height: 300px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  .card-image {
-    width: 100%;
-    height: 236px;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .card-content {
-    padding: 10px 15px;
-    background-color: #23233F;
-    height: 64px;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
-    margin-top: 0;
-    border-radius: 0;
-  }
-  
-  .card-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 5px;
-    color: white;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .card-author-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0;
-  }
-  
-  .card-author {
-    font-size: 14px;
-    color: #aaa;
-  }
-  
-  .tag-container {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 5px;
-  }
-  
-  .tag {
-    padding: 3px 6px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 500;
-  }
-  
-  .tag-yellow {
-    background-color: #FFD700;
-    color: #333;
-  }
-  
-  .tag-green {
-    background-color: #23CE6B;
-    color: white;
-  }
-  
-  .tag-pink {
-    background-color: #FF69B4;
-    color: white;
-  }
-  
-  .tag-blue {
-    background-color: #1E90FF;
-    color: white;
-  }
-  </style> 
+  </div>
+</template>
