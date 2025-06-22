@@ -184,7 +184,7 @@ onMounted(async () => {
         </RouterLink>
       </div>
 
-      <div v-if="authStore.isAuthenticated" class="menu-item" :class="{active: routeActive('/decouverte')}">
+      <div  class="menu-item" :class="{active: routeActive('/decouverte')}">
         <RouterLink to="/decouverte">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 21V3H21V21H3ZM18 17H6V18.5H18V17ZM6 15.5H18V14H6V15.5ZM6 12H18V6H6V12Z" fill="#E3E3E3" />

@@ -5,12 +5,14 @@ import type { LoginCredentials } from "../types/LoginCredentials";
 import type { RegisterData } from "../types/RegisterData";
 import type { User } from "../types/User";
 import { useNotificationsStore } from "./useNotificationsStore";
+import { useCategoryStore } from "./useCategoryStore";
 
 
 export const useAuthStore = defineStore ('auth', () => {
     const user = ref<User | null>(null);
     const isAuthenticated = ref(false);
     const notificationStore = useNotificationsStore();
+    const categoriesStore = useCategoryStore();
 
     const setUser = (newUser: User | null) => {
         user.value = newUser;
@@ -40,7 +42,7 @@ export const useAuthStore = defineStore ('auth', () => {
     const login = async (credentials: LoginCredentials) => {
         await authService.login(credentials);
         await getUser();
-        await notificationStore.loadAllNotifications()
+
     }
 
     const register = async (userData : RegisterData) => {

@@ -54,3 +54,8 @@ export const uploadMedia = async (media: {image?: Blob; audio?: Blob}) => {
     return response;
 }
 
+export const getPublicConversationByCategory = async (categoryId: number): Promise<Conversation[]> => {
+    const response = await apiClient.get(`/conversations/category/${categoryId}`)
+    return response.data
+}
+

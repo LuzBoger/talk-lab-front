@@ -1,15 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import authService from '../api/authService'
 import ConversationSimulator  from '../components/ConversationSimulator.vue'
-import ConversationPublic from '../components/ConversationPublic.vue'
-import ConversationList from '../components/ConversationList.vue'
 import DefaultLayout from '../layout/DefaultLayout.vue'
-import FavoriteConversation from '../components/FavoriteConversation.vue'
-import NotificationsList from '../components/NotificationsList.vue'
 import { useAuthStore } from '../stores/useAuthStore'
-import UserProfile from '../components/UserProfile.vue'
 
 const HomePage = () => import('../pages/index.vue')
+const DiscoverPublicConversation = () => import('../pages/decouverte/index.vue')
+const Categories = () => import('../pages/categories/index.vue')
+const ConversationByCategories = () => import('../pages/categorie/[categoryName].vue')
+const UserProfile = () => import('../pages/profil/mes-information.vue')
+const UserConversation = () => import('../pages/profil/mes-conversations.vue')
+const UserFavorites = () => import('../pages/profil/mes-favoris.vue')
+const UserNotifications = () => import('../pages/profil/mes-notifications.vue')
 const LoginPage = () => import('../pages/LoginPage.vue')
 const RegisterPage = () => import('../pages/RegisterPage.vue')
 
@@ -24,10 +25,21 @@ const routes = [
         component: HomePage,
       },
       {
-        path: '/decouverte',
-        name: 'Découverte de conversation',
-        component: ConversationPublic,
+        path: '/categories',
+        name: 'Catégories',
+        component: Categories
       },
+      {
+        path: '/decouverte',
+        name: 'Découverte des conversations publiques',
+        component: DiscoverPublicConversation,
+      },
+      {
+        path: '/categorie/:categoryName',
+        name: 'Conversation pour la category',
+        component: ConversationByCategories
+      },
+     
       {
         path: '/conversation/nouvelle',
         name: 'Conversation',
@@ -57,7 +69,7 @@ const routes = [
           {
             path: 'mes-favoris',
             name: 'Mes Favoris',
-            component: FavoriteConversation,
+            component: UserFavorites,
             meta: {
               requiresAuth: true,
             },
@@ -65,7 +77,7 @@ const routes = [
           {
             path: 'mes-conversations',
             name: 'Mes conversations',
-            component: ConversationList,
+            component: UserConversation,
             meta: {
               requiresAuth: true,
             },
@@ -73,7 +85,7 @@ const routes = [
           {
             path: 'mes-notifications',
             name: 'Mes Notitifications',
-            component: NotificationsList,
+            component: UserNotifications,
             meta: {
               requiresAuth: true,
             },

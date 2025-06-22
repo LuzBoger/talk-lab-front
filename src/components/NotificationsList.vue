@@ -20,10 +20,7 @@ const formatedDate = (date: string) => {
 </script>
 
 <template>
-    <div class="max-w-xl mx-auto p-6 shadow rounded">
-        <h2 class="text-xl font-bold mb-4 text-white">Notifications</h2>
-
-        <div class="flex justify-between mb-4 space-x-2">
+   <div class="flex justify-between mb-4 space-x-2">
                 <button
                  type="button"
                  @click="notifications.markAllRead"
@@ -56,7 +53,7 @@ const formatedDate = (date: string) => {
              :class="notification.isRead ? 'border-gray-300' : 'border-blue-500'"
              >
                 <div>
-                   <h3 class="text-sm font-semibold text-white">{{ notification.message }}</h3>
+                   <h2 class="text-sm font-semibold text-white">{{ notification.message }}</h2>
                     <p class=" text-xs text-gray-500 mt-1">{{ formatedDate(notification.createdAt) }}</p>
                 </div>
 
@@ -88,5 +85,5 @@ const formatedDate = (date: string) => {
       :pageSize="pageSize"
       @update:modelValue="pagesize => currentPage = pagesize"
     />
-    </div>
+
 </template>
