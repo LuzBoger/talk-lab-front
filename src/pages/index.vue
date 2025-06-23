@@ -85,7 +85,6 @@ const toggleSearch = () => {
   padding-top: 30px;
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
 }
 
 .top-header {
@@ -93,7 +92,6 @@ const toggleSearch = () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  padding: 0 15px;
 }
 
 .welcome-message {

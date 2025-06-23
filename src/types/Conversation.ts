@@ -5,7 +5,6 @@ export interface Conversation {
     title: string
     description: string | undefined
     categoriesId: number[]
-    creatorId: number 
     isPublic: boolean
     createdAt?: string
     status : 'draft' | 'published'

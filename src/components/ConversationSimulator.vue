@@ -11,6 +11,7 @@ import { useMessages } from '../composables/useMessages';
 import { useConversation } from '../composables/useConversation';
 import { useConversationUtils } from '../utils/useConversationUtils';
 import PublishConversationPopUp from './PublishConversationPopUp.vue';
+import CategorySelectedModal from './CategorySelectedModal.vue';
 import Reaction from './Reaction.vue';
 import defaultAvatar from '../assets/images/defaultAvatar.png';
 import EmojiPicker from 'vue3-emoji-picker';
@@ -20,6 +21,7 @@ import OtherMessageTypes from './OtherMessageTypes.vue';
 import { date } from 'yup';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import { useCategoryStore } from '../stores/useCategoryStore';
 
 
 const route = useRoute();
@@ -50,6 +52,9 @@ const mediaRecorder = ref<MediaRecorder | null>(null)
 const audioChunks = ref<Blob[]>([]);
 const baseUrl= import.meta.env.VITE_BASE_URL;
 let nextRoute: any = null
+const showCategoryModal = ref<boolean>(false)
+const categoryStore = useCategoryStore()
+const selectedCategories = ref<number[]>([])
 
 const { getCurrentTime} = useConversationUtils();
 
@@ -59,7 +64,7 @@ const { handleSubmit, errors, setFieldValue, values } = useForm({
   initialValues: {
   title: '',
   description: '',
-  categoriesId: [1],
+  categoriesId: [] ,
   status: 'draft',
   isPublic: false,
   content: {
@@ -125,7 +130,7 @@ const submitForm = handleSubmit(async (formValues) => {
   try {
     const res = await createFakeConversation(formValues);
     toast.success(res.message);
-    router.push('/mes-conversations');
+    router.push('/profil/mes-conversations');
   } catch (error: any) {
     toast.error('Erreur lors de la création de la conversation');
     
@@ -179,7 +184,7 @@ const deleteConversaiton = async () => {
 
   try{
       await deleteFakeConversation()
-      router.push('/mes-conversations')
+      router.push('/profil/mes-conversations')
 
   } catch(error) {
     console.error('Erreur lors de la suppression de la conversation:', error);
@@ -329,7 +334,19 @@ const openPublishModal = () => {
   showPublishModal.value = true;
   isDropdownOpen.value = false;
 };
+const openCategoryModal = () => {
+  selectedCategories.value = [...(values.categoriesId ?? [])]
+  showCategoryModal.value = true
+}
 
+const handleCreateConversation =  async (categories : number[]) => {
+  selectedCategories.value = [...categories]
+  await setFieldValue('categoriesId', [...categories])
+  showCategoryModal.value = false
+  await submitForm()
+  
+
+}
 onBeforeRouteLeave((to, from, next) => {
   if (isConversationModified.value) {
     nextRoute = to
@@ -355,6 +372,7 @@ onMounted(async () => {
       setFieldValue('title', response.title);
       setFieldValue('description', response.description);
       setFieldValue('content', response.content);
+      setFieldValue('categoriesId', response.categoriesId)
       status.value = response.status;
       isPublic.value = response.isPublic;
       initialvalues.value = JSON.parse(JSON.stringify(values))
@@ -498,7 +516,8 @@ onMounted(async () => {
           
           <button
             v-if="!conversationId "
-            type="submit"
+            type="button"
+            @click="openCategoryModal"
             class="bg-[#1E90FF] text-black px-4 py-2 rounded-md cursor-pointer">
             Créer la conversation
           </button>
@@ -600,12 +619,15 @@ onMounted(async () => {
                   alt="Image" 
                   class="max-w-full max-h-24 object-contain rounded" 
                 />
+                                            {{ console.log(`${baseUrl}${msg.image}`) }}
+
               </div>
 
-              <div v-if="msg.audio" class="text-sm rounded-2xl px-4 py-2 max-w-xs w-full flex items-center gap-3 shadow">
-                <audio controls :src="`${baseUrl}${msg.audio}`" class="w-full h-10 [&::-webkit-media-controls-panel]:bg-gray-200 dark:[&::-webkit-media-controls-panel]:bg-zinc-700 transition-all"></audio>
-              </div>
+              <div v-if="msg.audio" class="text-sm rounded-2xl py-4  flex items-center gap-3 shadow">
+                <audio controls :src="`${baseUrl}${msg.audio}`" class=""></audio>
+                            {{ console.log(`${baseUrl}${msg.audio}`) }}
 
+              </div>
               <div v-if="msg.reaction" class="text-xs mt-2">{{ msg.reaction }}</div>
               <!-- <div class="absolute top-1 right-1">
                   <Reaction @selected="emoji => addReaction(index, emoji)"></Reaction> 
@@ -642,5 +664,12 @@ onMounted(async () => {
       @confirm="saveChanges"
       @cancel="cancelSave"
     />
+    <CategorySelectedModal
+      v-if="showCategoryModal"
+      :selectedCategories="selectedCategories"
+      :categories="categoryStore.categories"
+      :is-visible="showCategoryModal"
+      @save="handleCreateConversation"
+      @close="showCategoryModal = false" />
     </div>
 </template>

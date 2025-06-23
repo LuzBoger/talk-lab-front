@@ -36,8 +36,7 @@ onMounted(async () => {
 
 </script>
 <template>
-  <div class="p-6 min-h-screen bg-[#12121f]">
-    <h2 class="text-2xl font-semibold mb-4 text-white">Mes Conversations</h2>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div
         v-for="conversation in paginated"
@@ -96,6 +95,4 @@ onMounted(async () => {
       @update:modelValue="pagesize => currentPage = pagesize"
       />
 
-
-  </div>
 </template>

@@ -4,19 +4,19 @@ import { useRouter } from 'vue-router';
 import type { User } from '../types/User';
 import authService from '../api/authService';
 import Sidebar from '../components/Sidebar.vue';
-import { useNotificationsStore } from '../stores/useNotificationsStore';
-import { useFavoriteStore } from '../stores/useFavoritesStore';
 
-const notificationsStore = useNotificationsStore();
-const favoriteStore = useFavoriteStore();
+import { useAuthStore } from '../stores/useAuthStore';
+
+
+
+const authStore = useAuthStore();
 
 const user = ref<User | null>(null);
 const router = useRouter();
 const sidebarCollapsed = ref(false);
 
-const logout = () => {
-  authService.logout();
-  user.value = null;
+const logout = async () => {
+  await authStore.logout()
   router.push('/login');
 };
 
@@ -27,17 +27,6 @@ const handleSidebarToggle = (collapsed: boolean) => {
 
 
 
-
-onMounted(() => {
-  const currentUser = authService.getCurrentUser();
-  if (currentUser) {
-    user.value = currentUser;
-     notificationsStore.loadAllNotifications();
-    favoriteStore.fetchFavorites();
-  }
- 
-
-});
 </script>
 
 <template>
@@ -45,7 +34,6 @@ onMounted(() => {
     <Sidebar 
       @sidebar-toggle="handleSidebarToggle" 
       @logout="logout"
-      :isLoggedIn="!!user"
     />
     
     <div class="flex-1 bg-[#1D1C31]" :class="{ 'ml-20': sidebarCollapsed, 'ml-305': !sidebarCollapsed }">

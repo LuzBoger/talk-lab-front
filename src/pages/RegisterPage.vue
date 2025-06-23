@@ -130,20 +130,7 @@ const register = async () => {
 </template> 
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-body, html {
-  margin: 0 !important;
-  padding: 0 !important;
-  height: 100% !important;
-  width: 100% !important;
-  overflow: hidden !important;
-  background-color: transparent !important;
-}
 
 .separator {
   width: 1px !important;

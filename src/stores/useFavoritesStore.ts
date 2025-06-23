@@ -5,7 +5,7 @@ import { addFavorite, getFavorites, removeFavorite } from "../api/favorites";
 
 
 
-export const useFavoriteStore = defineStore('favorites', () => {
+export const useFavoritesStore = defineStore('favorites', () => {
     const favorites = ref<Conversation[]>([])
     const count = ref(0)
 
