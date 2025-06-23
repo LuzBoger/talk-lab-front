@@ -12,10 +12,15 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  className: {
+    type: String,
+    default: '',
+  },
 })
 </script>
 <template>
   <svg
+    :class="props.className"
     :width="props.width"
     :height="props.height"
     viewBox="0 0 76 76"

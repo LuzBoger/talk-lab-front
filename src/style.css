@@ -16,5 +16,9 @@
   --color-tag-green: #549601;
   --color-tag-red: #FF5C5C;
   --color-tag-purple: #9747FF;
+  --color-errror-message-light: #fde8e8;
+  --color-error-message: #c53030;
+  --color-validate-button: #007f56;
+  --color-validate-button-hover: #006644;
 }
 @tailwind utilities;
