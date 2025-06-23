@@ -46,7 +46,10 @@ const login = async () => {
 
 <template>
   <div class="flex w-screen h-screen">
-    <router-link to="/" class="absolute top-5 left-5 z-10 cursor-pointer">
+    <router-link
+      to="/"
+      class="absolute top-5 left-5 z-10 cursor-pointer transition duration-300 ease-in-out hover:scale-110"
+    >
       <ArrowIcon :width="25" :height="25" fillColor="black" />
     </router-link>
     <div class="flex w-full h-full overflow-hidden">
