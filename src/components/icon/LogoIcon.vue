@@ -1,3 +1,4 @@
+<script setup lang="ts"></script>
 <template>
   <svg
     width="100"
@@ -28,9 +29,3 @@
     />
   </svg>
 </template>
-
-<script>
-export default {
-  name: 'LogoIcon',
-}
-</script>

@@ -14,6 +14,8 @@ import DropdownButton from './sidebarComponents/dropdownButton/DropdownButton.vu
 import ProfilIcon from './icon/ProfilIcon.vue'
 import HelpIcon from './icon/HelpIcon.vue'
 import LogoutIcon from './icon/LogoutIcon.vue'
+import DrowDownButtonLogout from './sidebarComponents/dropdownButton/DrowDownButtonLogout.vue'
+import DropDownButtonLogout from './sidebarComponents/dropdownButton/DropDownButtonLogout.vue'
 const props = defineProps({
   isLoggedIn: {
     type: Boolean,
@@ -48,11 +50,6 @@ const navigateToProfile = () => {
 const navigateToHelp = () => {
   router.push('/aide')
   showProfileMenu.value = false
-}
-
-const handleLogout = () => {
-  showProfileMenu.value = false
-  logout()
 }
 
 onMounted(() => {
@@ -144,15 +141,15 @@ onMounted(() => {
           v-if="showProfileMenu"
           class="mt-2 bg-dropdown-bg rounded-2xl shadow-lg flex flex-col p-2 absolute bottom-20 w-36 gap-1"
         >
-          <DropdownButton label="Profil" :action="navigateToProfile">
+          <DropdownButton label="Profil" to="/profil">
             <template #icon><ProfilIcon /></template>
           </DropdownButton>
-          <DropdownButton label="Aide" :action="navigateToHelp">
+          <DropdownButton label="Aide" to="/aide">
             <template #icon><HelpIcon /> </template
           ></DropdownButton>
-          <DropdownButton label="Déconnexion" :action="logout"
+          <DropDownButtonLogout label="Déconnexion" @action="logout"
             ><template #icon><LogoutIcon /></template
-          ></DropdownButton>
+          ></DropDownButtonLogout>
         </div>
       </template>
 
