@@ -14,7 +14,7 @@ import DropdownButton from './sidebarComponents/dropdownButton/DropdownButton.vu
 import ProfilIcon from './icon/ProfilIcon.vue'
 import HelpIcon from './icon/HelpIcon.vue'
 import LogoutIcon from './icon/LogoutIcon.vue'
-import DrowDownButtonLogout from './sidebarComponents/dropdownButton/DrowDownButtonLogout.vue'
+import DropDownButtonLogout from './sidebarComponents/dropdownButton/DropDownButtonLogout.vue';
 import { useNotificationsStore } from '../stores/useNotificationsStore';
 import {useAuthStore} from '../stores/useAuthStore';
 import authService from '../api/authService';
