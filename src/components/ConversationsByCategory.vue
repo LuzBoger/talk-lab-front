@@ -4,8 +4,8 @@ import type {Conversation} from '../types/Conversation'
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import defaultAvatar from '../assets/images/defaultAvatar.png';
-import HeartEmpty from '../icon/HeartEmpty.vue'
-import HeartFilled from '../icon/HeartFilled.vue'
+import HeartEmpty from './icon/HeartEmpty.vue'
+import HeartFilled from './icon/HeartFilled.vue'
 
 
 const props = defineProps<{

@@ -4,8 +4,8 @@ import { useFavoritesStore } from '../stores/useFavoritesStore';
 import defaultAvatar from '../assets/images/defaultAvatar.png';
 import { useConversationUtils } from '../utils/useConversationUtils';
 import { toast } from 'vue3-toastify';
-import HeartEmpty from '../icon/HeartEmpty.vue';
-import HeartFilled from '../icon/HeartFilled.vue';
+import HeartEmpty from './icon/HeartEmpty.vue';
+import HeartFilled from './icon/HeartFilled.vue';
 import 'vue3-toastify/dist/index.css';
 
 
