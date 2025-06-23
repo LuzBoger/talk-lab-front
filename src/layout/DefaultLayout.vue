@@ -2,20 +2,20 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { User } from '../types/User'
-import authService from '../api/authService'
 import Sidebar from '../components/Sidebar.vue'
+import { useAuthStore } from '../stores/useAuthStore';
 
+const authStore = useAuthStore();
 const user = ref<User | null>(null)
 const router = useRouter()
 
-const logout = () => {
-  authService.logout()
-  user.value = null
-  router.push('/login')
-}
+const logout = async () => {
+  await authStore.logout()
+  router.push('/login');
+};
 
 onMounted(() => {
-  const currentUser = authService.getCurrentUser()
+  const currentUser = authStore.getCurrentUser()
   if (currentUser) {
     user.value = currentUser
   }

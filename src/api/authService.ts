@@ -1,27 +1,14 @@
 import { apiClient } from "../utils/apiClient";
+import type { LoginCredentials } from "../types/LoginCredentials";
+import type { RegisterData } from "../types/RegisterData";
 
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-interface RegisterData {
-  name: string;
-  username?: string;
-  email: string;
-  password: string;
-}
 
 const authService = {
   async login(credentials: LoginCredentials) {
     try {
       console.log('Tentative de connexion avec:', credentials);
-      const response = await apiClient.post('/login', credentials);
+      const response = await apiClient.post('/login', credentials, {withCredentials: true});
       console.log('Réponse du serveur:', response.data);
-      if (response.data.token) {
-        localStorage.setItem('auth_token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-      }
       return response.data;
     } catch (error: any) {
       console.error('Erreur de connexion détaillée:', error);
@@ -40,7 +27,7 @@ const authService = {
   async register(userData: RegisterData) {
     try {
       console.log('Tentative d\'inscription avec:', userData);
-      const response = await apiClient.post('/register', userData);
+      const response = await apiClient.post('/register', userData, {withCredentials: true});
       console.log('Réponse du serveur:', response.data);
       return response.data;
     } catch (error: any) {
@@ -57,22 +44,23 @@ const authService = {
     }
   },
 
-  logout() {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user');
+  async logout() {
+    await apiClient.post('/logout', {}, { withCredentials: true });
+
   },
 
-  getCurrentUser() {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      return JSON.parse(userStr);
+   async getCurrentUser() {
+    const response = await apiClient.get('/me', { withCredentials: true });
+      console.log('/me response:', response.data);
+
+    if (response) {
+      return response.data.user;
     }
     return null;
   },
 
-  isAuthenticated() {
-    return !!localStorage.getItem('auth_token');
-  }
+
+
 };
 
 export default authService; 

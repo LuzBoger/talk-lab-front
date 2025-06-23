@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import '../style.css'
+
 import LoginIcon from '../components/icon/LoginIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
 import GoogleIcon from '../components/icon/GoogleIcon.vue'
 import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
-import authService from '../api/authService'
-import { useRouter } from 'vue-router'
-const email = ref('')
-const password = ref('')
-const errorMessage = ref('')
-const loading = ref(false)
-const router = useRouter()
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import authService from '../api/authService';
+import { useAuthStore } from '../stores/useAuthStore';
 
+const email = ref('');
+const password = ref('');
+const errorMessage = ref('');
+const loading = ref(false);
+const router = useRouter();
+const authStore = useAuthStore()
 const login = async () => {
   if (!email.value || !password.value) {
     errorMessage.value = 'Veuillez remplir tous les champs'
@@ -25,9 +27,9 @@ const login = async () => {
   try {
     console.log('Tentative de connexion avec:', {
       email: email.value,
-      password: '******',
-    })
-    await authService.login({
+      password: '******' 
+    });
+    await authStore.login({
       email: email.value,
       password: password.value,
     })

@@ -15,7 +15,10 @@ import ProfilIcon from './icon/ProfilIcon.vue'
 import HelpIcon from './icon/HelpIcon.vue'
 import LogoutIcon from './icon/LogoutIcon.vue'
 import DrowDownButtonLogout from './sidebarComponents/dropdownButton/DrowDownButtonLogout.vue'
-import DropDownButtonLogout from './sidebarComponents/dropdownButton/DropDownButtonLogout.vue'
+import { useNotificationsStore } from '../stores/useNotificationsStore';
+import {useAuthStore} from '../stores/useAuthStore';
+import authService from '../api/authService';
+
 const props = defineProps({
   isLoggedIn: {
     type: Boolean,
@@ -25,9 +28,20 @@ const props = defineProps({
 
 const emit = defineEmits(['sidebar-toggle', 'logout'])
 
-const route = useRoute()
+const authStore = useAuthStore();
+const notificationsStore = useNotificationsStore();
+const route = useRoute();
 const router = useRouter()
 const showProfileMenu = ref<boolean>(false)
+const username = ref<string>('');
+const baseUrl= import.meta.env.VITE_BASE_URL;
+
+
+
+
+const unReadCount = computed(() => {
+  return notificationsStore.countUnReadNotifications ;
+})
 
 const isProfileRoute = computed(() => {
   return route.path.startsWith('/profil')
@@ -86,7 +100,6 @@ onMounted(() => {
           Mes Paramètres
         </MenuItem>
       </template>
-
       <template v-else>
         <MenuItem to="/" activePath="/">
           <template #icon><HomeIcon /></template>
