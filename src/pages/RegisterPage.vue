@@ -100,7 +100,9 @@ const register = async () => {
             </div>
 
             <div class="mb-3">
-              <label for="name" class="block mb-1 text-gray-800 text-xs"
+              <label
+                for="name"
+                class="block mb-1 text-gray-800 text-xs font-medium"
                 >Nom complet</label
               >
               <input
@@ -113,7 +115,9 @@ const register = async () => {
             </div>
 
             <div class="mb-3">
-              <label for="username" class="block mb-1 text-gray-800 text-xs"
+              <label
+                for="username"
+                class="block mb-1 text-gray-800 text-xs font-medium"
                 >Nom d'utilisateur</label
               >
               <input
@@ -126,7 +130,9 @@ const register = async () => {
             </div>
 
             <div class="mb-3">
-              <label for="email" class="block mb-1 text-gray-800 text-xs"
+              <label
+                for="email"
+                class="block mb-1 text-gray-800 text-xs font-medium"
                 >E-mail</label
               >
               <input
@@ -139,7 +145,9 @@ const register = async () => {
             </div>
 
             <div class="mb-3">
-              <label for="password" class="block mb-1 text-gray-800 text-xs"
+              <label
+                for="password"
+                class="block mb-1 text-gray-800 text-xs font-medium"
                 >Mot de passe</label
               >
               <input
@@ -154,7 +162,7 @@ const register = async () => {
             <div class="mb-3">
               <label
                 for="confirmPassword"
-                class="block mb-1 text-gray-800 text-xs"
+                class="block mb-1 text-gray-800 text-xs font-medium"
                 >Confirmation mot de passe</label
               >
               <input
