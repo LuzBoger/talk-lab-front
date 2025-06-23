@@ -93,7 +93,7 @@ const login = async () => {
                 v-model="email"
                 placeholder="exemple@mail.com"
                 required
-                class="w-full p-2.5 border border-gray-200 rounded bg-gray-50 text-sm"
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm"
               />
             </div>
 
@@ -109,14 +109,14 @@ const login = async () => {
                 v-model="password"
                 placeholder="******"
                 required
-                class="w-full p-2.5 border border-gray-200 rounded bg-gray-50 text-sm"
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm"
               />
             </div>
 
             <button
               type="submit"
               :disabled="loading"
-              class="w-full p-2.5 bg-validate-button hover:bg-validate-button-hover text-white rounded font-semibold text-sm mt-2.5 disabled:bg-gray-500 disabled:cursor-not-allowed cursor-pointer"
+              class="w-full p-2.5 bg-validate-button hover:bg-validate-button-hover text-white rounded-lg font-semibold text-sm mt-2.5 disabled:bg-gray-500 disabled:cursor-not-allowed cursor-pointer"
             >
               <span v-if="loading" class="inline-block mr-2 align-middle">
                 <LoadingSpinnerIcon
@@ -127,12 +127,12 @@ const login = async () => {
             </button>
           </form>
 
-          <div class="text-center text-gray-900 relative font-semibold">ou</div>
+          <div class="text-center text-gray-900 relative font-semibold">Ou</div>
 
           <div class="flex justify-center">
             <GoogleIcon
-              :width="72"
-              :height="72"
+              :width="60"
+              :height="60"
               fillColor="none"
               :className="'transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 cursor-pointer'"
             />

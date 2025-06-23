@@ -73,20 +73,23 @@ const register = async () => {
           >
             Inscrivez-vous et donnez du style à vos messages.
           </h1>
-          <p class="text-sm md:text-sm text-center text-gray-600 mb-4">
-            Avec Google ou par email, c'est rapide et simple.
+          <p class="text-sm text-center text-gray-700 mb-4">
+            Avec <span class="font-semibold">Google</span> ou par
+            <span class="font-semibold">Email</span>, c'est rapide et simple.
           </p>
 
           <div class="flex justify-center mb-4">
             <GoogleIcon
-              :width="70"
-              :height="70"
+              :width="60"
+              :height="60"
               fillColor="none"
               :className="'transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 cursor-pointer'"
             />
           </div>
 
-          <div class="text-center text-gray-600 my-3.5 relative">ou</div>
+          <div class="text-center font-medium text-gray-900 my-3.5 relative">
+            Ou
+          </div>
 
           <form class="w-80" @submit.prevent="register">
             <div
@@ -105,7 +108,7 @@ const register = async () => {
                 id="name"
                 v-model="name"
                 placeholder="Prénom Nom"
-                class="w-full p-2.5 border border-gray-200 rounded bg-gray-50 text-sm"
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm"
               />
             </div>
 
@@ -118,7 +121,7 @@ const register = async () => {
                 id="username"
                 v-model="username"
                 placeholder="Pseudo"
-                class="w-full p-2.5 border border-gray-200 rounded bg-gray-50 text-sm"
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm"
               />
             </div>
 
@@ -131,7 +134,7 @@ const register = async () => {
                 id="email"
                 v-model="email"
                 placeholder="exemple@mail.com"
-                class="w-full p-2.5 border border-gray-200 rounded bg-gray-50 text-sm"
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm"
               />
             </div>
 
@@ -144,7 +147,7 @@ const register = async () => {
                 id="password"
                 v-model="password"
                 placeholder="******"
-                class="w-full p-2.5 border border-gray-200 rounded bg-gray-50 text-sm"
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm"
               />
             </div>
 
@@ -159,14 +162,14 @@ const register = async () => {
                 id="confirmPassword"
                 v-model="confirmPassword"
                 placeholder="******"
-                class="w-full p-2.5 border border-gray-200 rounded bg-gray-50 text-sm"
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm"
               />
             </div>
 
             <button
               type="submit"
               :disabled="loading"
-              class="w-full p-2.5 bg-validate-button hover:bg-validate-button-hover text-white rounded font-semibold text-sm mt-2.5 disabled:bg-gray-500 disabled:cursor-not-allowed cursor-pointer"
+              class="w-full p-2.5 bg-validate-button hover:bg-validate-button-hover text-white rounded-lg font-semibold text-sm mt-2.5 disabled:bg-gray-500 disabled:cursor-not-allowed cursor-pointer"
             >
               <span v-if="loading" class="inline-block mr-2 align-middle">
                 <LoadingSpinnerIcon
