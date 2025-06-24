@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import defaultProfileImg from '../assets/images/defaultAvatar.png'
 import MenuItem from './sidebarComponents/MenuItem.vue'
@@ -19,25 +19,14 @@ import { useNotificationsStore } from '../stores/useNotificationsStore';
 import {useAuthStore} from '../stores/useAuthStore';
 import authService from '../api/authService';
 
-const props = defineProps({
-  isLoggedIn: {
-    type: Boolean,
-    default: false,
-  },
-})
 
 const emit = defineEmits(['sidebar-toggle', 'logout'])
-
 const authStore = useAuthStore();
 const notificationsStore = useNotificationsStore();
 const route = useRoute();
 const router = useRouter()
 const showProfileMenu = ref<boolean>(false)
-const username = ref<string>('');
 const baseUrl= import.meta.env.VITE_BASE_URL;
-
-
-
 
 const unReadCount = computed(() => {
   return notificationsStore.countUnReadNotifications ;
@@ -47,10 +36,10 @@ const isProfileRoute = computed(() => {
   return route.path.startsWith('/profil')
 })
 
-const logout = () => {
-  emit('logout')
-  router.push('/login')
-}
+const logout = async  () => {
+  await authStore.logout()
+  router.push('/login');
+};
 
 const toggleProfileMenu = () => {
   showProfileMenu.value = !showProfileMenu.value
@@ -65,6 +54,19 @@ const navigateToHelp = () => {
   router.push('/aide')
   showProfileMenu.value = false
 }
+const user = computed(() => {
+  return authStore.user?.username || 'Utilisateur'
+})
+const avatarurl = computed(() => {
+  if(authStore.user?.avatarUrl) {
+    return `${baseUrl}${authStore.user.avatarUrl}`;
+  }
+  return defaultProfileImg;
+})
+
+watch(() => authStore.isAuthenticated, (newVal) => {
+  console.log('isAuthenticated changed:', newVal);
+});
 
 onMounted(() => {
   console.log('Sidebar component mounted')
@@ -112,7 +114,7 @@ onMounted(() => {
         <MenuItem
           to="/decouverte"
           activePath="/decouverte"
-          v-if="props.isLoggedIn"
+          v-if="authStore.isAuthenticated"
         >
           <template #icon><MyCreationIcon /></template>
           Découverte de conversation
@@ -136,18 +138,18 @@ onMounted(() => {
     </nav>
 
     <div class="pt-5 border-t border-border-auth-button flex flex-col gap-2.5">
-      <template v-if="props.isLoggedIn">
+      <template v-if="authStore.isAuthenticated">
         <div
           class="flex items-center cursor-pointer gap-2.5 p-2.5 rounded-lg bg-dropdown-bg transition-colors duration-300"
           @click="toggleProfileMenu"
         >
           <img
             class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2 border-avatar-border"
-            :src="defaultProfileImg"
+            :src="avatarurl"
             alt="Avatar utilisateur"
           />
           <span class="font-semibold text-text-primary whitespace-nowrap"
-            >User</span
+            >{{user || 'Utilisateur'}}</span
           >
         </div>
         <div

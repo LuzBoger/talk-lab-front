@@ -5,6 +5,7 @@ import RegisterIcon from '../components/icon/RegisterIcon.vue'
 import GoogleIcon from '../components/icon/GoogleIcon.vue'
 import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
+import authService from '../api/authService'
 
 const name = ref('')
 const username = ref('')
@@ -36,6 +37,12 @@ const register = async () => {
   errorMessage.value = ''
 
   try {
+        await authService.register({
+      name: name.value,
+      username: username.value,
+      email: email.value,
+      password: password.value
+    });
     // Remplacez par votre logique d'inscription
     console.log('Inscription réussie')
     router.push('/login')

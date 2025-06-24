@@ -11,8 +11,6 @@ import { useCategoryStore } from "./useCategoryStore";
 export const useAuthStore = defineStore ('auth', () => {
     const user = ref<User | null>(null);
     const isAuthenticated = ref(false);
-    const notificationStore = useNotificationsStore();
-    const categoriesStore = useCategoryStore();
 
     const setUser = (newUser: User | null) => {
         user.value = newUser;

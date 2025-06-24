@@ -1,32 +1,30 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import type { User } from '../types/User'
+import { useRoute, useRouter } from 'vue-router'
 import Sidebar from '../components/Sidebar.vue'
 import { useAuthStore } from '../stores/useAuthStore';
+import { computed } from 'vue';
 
 const authStore = useAuthStore();
-const user = ref<User | null>(null)
 const router = useRouter()
+const route = useRoute()
 
 const logout = async () => {
   await authStore.logout()
   router.push('/login');
 };
 
-onMounted(() => {
-  const currentUser = authStore.getCurrentUser()
-  if (currentUser) {
-    user.value = currentUser
-  }
+const showSideBar = computed(() => {
+  return !['/login', '/register'].includes(route.path)
 })
+
+
 </script>
 
 <template>
-  <div class="flex">
-    <Sidebar @logout="logout" :isLoggedIn="!!user" />
-    <div class="flex flex-1 bg-[#1D1C31]">
+  <div class="flex min-h-screen bg-[#1D1C31]">
+    <Sidebar v-if="showSideBar" @logout="logout"  />
+    <div :class="showSideBar ? 'flex-1' : 'w-full'">
       <router-view />
-    </div>
+</div>
   </div>
 </template>

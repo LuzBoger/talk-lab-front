@@ -15,6 +15,7 @@ const errorMessage = ref('');
 const loading = ref(false);
 const router = useRouter();
 const authStore = useAuthStore()
+
 const login = async () => {
   if (!email.value || !password.value) {
     errorMessage.value = 'Veuillez remplir tous les champs'
@@ -78,7 +79,7 @@ const login = async () => {
           <form class="w-full flex flex-col gap-3" @submit.prevent="login">
             <div
               v-if="errorMessage"
-              class="bg-errror-message-light text-error-message p-2 rounded text-center text-sm font-semibold"
+              class="bg-error-message-light text-error-message p-2 rounded text-center text-sm font-semibold"
             >
               {{ errorMessage }}
             </div>
