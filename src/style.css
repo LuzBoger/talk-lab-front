@@ -21,6 +21,7 @@
   --color-validate-button: #007f56;
   --color-validate-button-hover: #006644;
   --color-main-color: #23CE6B;
+  --color-bg-dark: #11101a;
 }
 @tailwind utilities;
 
