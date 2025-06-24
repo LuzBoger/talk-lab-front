@@ -14,12 +14,12 @@ const emitVideo = () => {emit('audio')}
 </script>
 
 <template>
-    <div class="flex items-center space-x-2 mt-2 text-white">
+    <div class="flex items-center space-x-2 mt-2 text-white ">
         <button
             @click="emitEmoji"
             aria-label="Ajouter un emoji"
             type="button"
-            class="flex items-center justify-center w-9 h-9 rounded-md bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="flex items-center justify-center w-9 h-9 rounded-md bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
         >
         <svg
          xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ const emitVideo = () => {emit('audio')}
             @click="emitImage"
             aria-label="Ajouter une image"
             type="button"
-            class="flex items-center justify-center w-9 h-9 rounded-md bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="flex items-center justify-center w-9 h-9 rounded-md bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
         >
         <svg
          xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,7 @@ const emitVideo = () => {emit('audio')}
       aria-label="Envoyer un vocal"
       type="button"
       :class="[
-        'flex items-center justify-center w-9 h-9 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+        'flex items-center justify-center w-9 h-9 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer',
         props.isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-700 hover:bg-gray-600'
         ]"
         >
