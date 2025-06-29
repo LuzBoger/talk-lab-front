@@ -12,6 +12,14 @@ interface RegisterData {
   password: string;
 }
 
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  username: string | null;
+  roles?: string[];
+}
+
 const authService = {
   async login(credentials: LoginCredentials) {
     try {
@@ -19,7 +27,7 @@ const authService = {
       const response = await apiClient.post('/api/login', credentials);
       console.log('Réponse du serveur:', response.data);
       if (response.data.token) {
-        localStorage.setItem('auth_token', response.data.token);
+        localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }
       return response.data;
@@ -57,21 +65,60 @@ const authService = {
     }
   },
 
+  async refreshToken() {
+    try {
+      const response = await apiClient.post('/api/refresh-token');
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        return response.data;
+      }
+      throw new Error('Refresh token failed');
+    } catch (error) {
+      console.error('Erreur lors du rafraîchissement du token:', error);
+      this.logout();
+      throw error;
+    }
+  },
+
   logout() {
-    localStorage.removeItem('auth_token');
+    localStorage.removeItem('token');
     localStorage.removeItem('user');
   },
 
-  getCurrentUser() {
+  getCurrentUser(): User | null {
     const userStr = localStorage.getItem('user');
-    if (userStr) {
-      return JSON.parse(userStr);
+    if (!userStr) return null;
+    
+    try {
+      const user = JSON.parse(userStr);
+      const token = localStorage.getItem('token');
+      if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        user.roles = payload.roles || [];
+      }
+      return user;
+    } catch (e) {
+      console.error('Erreur lors de la récupération des informations utilisateur:', e);
+      return null;
     }
-    return null;
   },
 
-  isAuthenticated() {
-    return !!localStorage.getItem('auth_token');
+  isAuthenticated(): boolean {
+    const token = localStorage.getItem('token');
+    return !!token;
+  },
+
+  isAdmin(): boolean {
+    try {
+      const user = this.getCurrentUser();
+      if (!user || !user.roles) {
+        return false;
+      }
+      return user.roles.includes('ROLE_ADMIN');
+    } catch (error) {
+      console.error('Erreur lors de la vérification du rôle admin:', error);
+      return false;
+    }
   }
 };
 

@@ -3,13 +3,15 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import authService from '../api/authService';
 
+const emit = defineEmits(['auth-changed']);
+
 const email = ref('');
 const password = ref('');
 const errorMessage = ref('');
 const loading = ref(false);
 const router = useRouter();
 
-const login = async () => {
+const handleLogin = async () => {
   if (!email.value || !password.value) {
     errorMessage.value = 'Veuillez remplir tous les champs';
     return;
@@ -24,15 +26,18 @@ const login = async () => {
       password: '******' 
     });
     
-    await authService.login({
+    const response = await authService.login({
       email: email.value,
       password: password.value
     });
     
-    router.push('/');
+    if (response) {
+      emit('auth-changed');
+      router.push('/');
+    }
   } catch (error: any) {
     console.error('Détails de l\'erreur:', error);
-    errorMessage.value = error.response?.data?.message || 'Erreur de connexion';
+    errorMessage.value = error.response?.data?.message || 'Une erreur est survenue lors de la connexion';
   } finally {
     loading.value = false;
   }
@@ -77,7 +82,7 @@ const goToRegister = () => {
          
           
           
-          <form class="register-form" @submit.prevent="login">
+          <form class="register-form" @submit.prevent="handleLogin">
             <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
             
             <div class="form-group">
