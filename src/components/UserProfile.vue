@@ -52,7 +52,7 @@ onMounted(() => {
 
         <div class="w-full max-w-sm mt-8 space-y-4">
             <div class="flex flex-col">
-                <label for="name" class="text-sm font-medium">Name</label>
+                <label for="name" class="text-sm font-medium">Nom Prénom</label>
                 <input v-model="form.name" type="text" id="name"
                     class="mt-1 p-2 bg-[#1E1E2F] rounded border border-[#2C2C3F] focus:outline-none focus:ring-2 focus:ring-[#3A3A4F] " disabled  />
             </div>
@@ -71,7 +71,7 @@ onMounted(() => {
 
             <button @click="updateProfile"
                 class="w-full bg-[#3A3A4F] hover:bg-[#4A4A5F] text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-[#5A5A6F]">
-                Update Profile
+                Mettre à jour 
             </button>
         </div>
 
