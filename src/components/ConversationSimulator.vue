@@ -12,17 +12,17 @@ import { useConversation } from '../composables/useConversation';
 import { useConversationUtils } from '../utils/useConversationUtils';
 import PublishConversationPopUp from './PublishConversationPopUp.vue';
 import CategorySelectedModal from './CategorySelectedModal.vue';
-import Reaction from './Reaction.vue';
-import defaultAvatar from '../assets/images/defaultAvatar.png';
 import EmojiPicker from 'vue3-emoji-picker';
 import 'vue3-emoji-picker/css';
 import SaveConversationPopUp from './SaveConversationPopUp.vue';
 import OtherMessageTypes from './OtherMessageTypes.vue';
-import { date } from 'yup';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import { useCategoryStore } from '../stores/useCategoryStore';
 import PreviewHeader from './preview/PreviewHeader.vue';
+import UserInfo from './preview/UserInfo.vue';
+import Message from './preview/Message.vue';
+import MessageContainer from './preview/MessageContainer.vue';
 
 
 const route = useRoute();
@@ -128,6 +128,17 @@ const sendInterlocutorMessage = async () => {
   imageInterlocutorSelected.value = null
 
 }
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setFieldValue('content.interlocutor_avatar', e.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+};
 
 const submitForm = handleSubmit(async (formValues) => {
   try {
@@ -444,7 +455,7 @@ onMounted(async () => {
         <!-- Photo de profil -->
         <div class="flex flex-col gap-1">
           <label class="text-sm font-medium text-white">Photo de profil</label>
-          <input type="text" v-model="interlocutor_avatar" class="w-full px-3 py-2 rounded bg-card-bg" />
+          <input type="file" @change="handleFileUpload" accept="image/*" class="w-full px-3 py-2 rounded bg-card-bg" />
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -553,9 +564,11 @@ onMounted(async () => {
       </div>
     </form>
     <div>
-      <div class="w-preview h-preview flex flex-col font-sans justify-between bg-white">
-        <PreviewHeader :Hour="startTime" :signalSelected="signal" :networks="reseau" :batSelected="batteryLevel">
-        </PreviewHeader>
+      <div class="w-preview h-preview flex flex-col font-sans bg-white">
+        <PreviewHeader :Hour="startTime" :signalSelected="signal" :networks="reseau" :batSelected="batteryLevel"/>
+        <UserInfo :interlocutorName="interlocutor_name" :interlocutorUsername="interlocutor_username"
+          :interlocutorAvatar="interlocutor_avatar" />
+          <MessageContainer :messages="messagesUsers" :interlocutorAvatar="interlocutor_avatar"/>
       </div>
     </div>
     <PublishConversationPopUp :is-visible="showPublishModal" @confirm="publishConversation" @cancel="cancelPublish" />

@@ -48,6 +48,12 @@
   --height-preview: calc(2532px / 3.3333);
   --width-preview: calc(1170px / 3.3333);
   --font-sans: "SF", sans-serif;
+  --color-mess-you: #3e73f5;
+  --color-mess-other: #262626;
+  --border-radius-18: 18px;
+  --line-height-18: 18px;
+  --font-size-10: 10px;
+  --font-size-15: 15px;
 }
 @tailwind utilities;
 
