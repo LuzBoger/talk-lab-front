@@ -1,20 +1,22 @@
 <script setup lang="ts">
-
+import { ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/useAuthStore';
 import LoginIcon from '../components/icon/LoginIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
 import GoogleIcon from '../components/icon/GoogleIcon.vue'
 import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import authService from '../api/authService';
-import { useAuthStore } from '../stores/useAuthStore';
+import TwoFactorModal from '../components/2FA/TwoFactorModal.vue';
+
+const router = useRouter();
+const authStore = useAuthStore()
 
 const email = ref('');
 const password = ref('');
 const errorMessage = ref('');
 const loading = ref(false);
-const router = useRouter();
-const authStore = useAuthStore()
+const showModalTwoFactor = ref(false)
+const errorMessageModal = ref('')
 
 const login = async () => {
   if (!email.value || !password.value) {
@@ -26,17 +28,18 @@ const login = async () => {
   errorMessage.value = ''
 
   try {
-    console.log('Tentative de connexion avec:', {
-      email: email.value,
-      password: '******' 
-    });
-    await authStore.login({
+     await authStore.login({
       email: email.value,
       password: password.value,
     })
-    router.push('/') // Redirigez vers le tableau de bord après la connexion réussie
 
-    // Remplacez par votre logique de connexion
+    if(authStore.isTwoFactorEnable) {
+      showModalTwoFactor.value = true
+      return
+    }
+
+    router.push('/')
+
     console.log('Connexion réussie')
   } catch (error: any) {
     console.error("Détails de l'erreur:", error)
@@ -45,6 +48,31 @@ const login = async () => {
     loading.value = false
   }
 }
+
+
+const validateTotp = async (code: string) => {
+
+  loading.value = true
+
+  try {
+    await authStore.verifyTotp(code)
+    showModalTwoFactor.value = false
+    router.push('/')
+  }catch (error: any) {
+    errorMessageModal.value = error.response?.data?.message || 'Code 2FA invalide'
+  } finally {
+    loading.value = false
+  }
+
+}
+
+const closeModal = () => {
+  showModalTwoFactor.value = false
+  errorMessageModal.value = ''
+}
+
+
+
 </script>
 
 <template>
@@ -118,7 +146,7 @@ const login = async () => {
 
             <button
               type="submit"
-              :disabled="loading"
+              :disabled="loading || showModalTwoFactor"
               class="w-full p-2.5 bg-validate-button hover:bg-validate-button-hover text-white rounded-lg font-semibold text-sm mt-2.5 disabled:bg-gray-500 disabled:cursor-not-allowed cursor-pointer"
             >
               <span v-if="loading" class="inline-block mr-2 align-middle">
@@ -152,5 +180,12 @@ const login = async () => {
         </div>
       </div>
     </div>
-  </div>
+   </div>
+   <TwoFactorModal 
+      v-if="showModalTwoFactor"
+      :error-message="errorMessage"
+      @confirm="validateTotp"
+      @close="closeModal"
+  />
+  
 </template>

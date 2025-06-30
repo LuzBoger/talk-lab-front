@@ -11,6 +11,7 @@ const UserProfile = () => import('../pages/profil/mes-information.vue')
 const UserConversation = () => import('../pages/profil/mes-conversations.vue')
 const UserFavorites = () => import('../pages/profil/mes-favoris.vue')
 const UserNotifications = () => import('../pages/profil/mes-notifications.vue')
+const Parameter = () => import('../pages/parametre.vue')
 const LoginPage = () => import('../pages/LoginPage.vue')
 const RegisterPage = () => import('../pages/RegisterPage.vue')
 
@@ -86,6 +87,14 @@ const routes = [
             path: 'mes-notifications',
             name: 'Mes Notitifications',
             component: UserNotifications,
+            meta: {
+              requiresAuth: true,
+            },
+          },
+          {
+            path: 'securite',
+            name: 'Mes Parametres',
+            component: Parameter,
             meta: {
               requiresAuth: true,
             },
