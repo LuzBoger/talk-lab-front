@@ -32,7 +32,7 @@ console.log(props)
           {{ props.interlocutorName }}
         </span>
         <span
-          class="text-xs text-pseudo absolute bottom-[2px] inline whitespace-nowrap"
+          class="text-xs text-pseudo absolute bottom-[2px] inline whitespace-nowrap "
         >
           {{ props.interlocutorUsername }}
         </span>

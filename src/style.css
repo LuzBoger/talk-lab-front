@@ -54,6 +54,7 @@
   --line-height-18: 18px;
   --font-size-10: 10px;
   --font-size-15: 15px;
+  --color-pseudo: #7E7E7E;
 }
 @tailwind utilities;
 

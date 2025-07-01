@@ -8,17 +8,14 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  fillColor: {
-    type: String,
-    required: true,
-  },
 })
 </script>
 <template>
   <svg
     :width="props.width"
     :height="props.height"
-    :fill="props.fillColor"
+    :fill="'none'"
+    stroke="#000000"
     viewBox="0 0 16 20"
     xmlns="http://www.w3.org/2000/svg"
   >

@@ -23,6 +23,7 @@ import PreviewHeader from './preview/PreviewHeader.vue';
 import UserInfo from './preview/UserInfo.vue';
 import Message from './preview/Message.vue';
 import MessageContainer from './preview/MessageContainer.vue';
+import BottomBar from './preview/BottomBar.vue';
 
 
 const route = useRoute();
@@ -564,11 +565,18 @@ onMounted(async () => {
       </div>
     </form>
     <div>
-      <div class="w-preview h-preview flex flex-col font-sans bg-white">
+      <div class="w-preview h-preview flex flex-col justify-between font-sans bg-white">
+        <div>
         <PreviewHeader :Hour="startTime" :signalSelected="signal" :networks="reseau" :batSelected="batteryLevel"/>
         <UserInfo :interlocutorName="interlocutor_name" :interlocutorUsername="interlocutor_username"
           :interlocutorAvatar="interlocutor_avatar" />
           <MessageContainer :messages="messagesUsers" :interlocutorAvatar="interlocutor_avatar"/>
+        </div>
+        <div class="flex flex-col items-center">
+          <BottomBar/>
+          <div class="min-w-32 max-w-32 min-h-[5px] mb-1.5 rounded-full bg-black"></div>
+        </div>
+
       </div>
     </div>
     <PublishConversationPopUp :is-visible="showPublishModal" @confirm="publishConversation" @cancel="cancelPublish" />

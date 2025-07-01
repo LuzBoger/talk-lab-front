@@ -8,10 +8,6 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  fillColor: {
-    type: String,
-    required: true,
-  },
 })
 </script>
 <template>
@@ -19,7 +15,8 @@ const props = defineProps({
     :width="props.width"
     :height="props.height"
     viewBox="0 0 21 21"
-    :fill="props.fillColor"
+    fill="none"
+    stroke="#000000"
     xmlns="http://www.w3.org/2000/svg"
   >
     <circle cx="10.5" cy="10.5" r="9.5" stroke-width="2" />

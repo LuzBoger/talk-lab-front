@@ -3,7 +3,7 @@
     width="19"
     height="15"
     viewBox="0 0 19 15"
-    fill="none"
+    fill="#FFFFFF"
     xmlns="http://www.w3.org/2000/svg"
   >
     <mask

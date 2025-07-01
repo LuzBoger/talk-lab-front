@@ -33,6 +33,25 @@ const choiceColor = (author: string) => {
     return 'bg-[#efefef] text-black'
   }
 }
+const getMessageRadiusClass = (index: number, currentAuthor: string) => {
+  if (index > 0 && currentAuthor === props.messages[index - 1].author) {
+    // Si le message précédent est du même auteur, on réduit le rayon du coin supérieur
+    return currentAuthor === 'user'
+      ? 'rounded-tr-[2px] rounded-l-[18px]'
+      : 'rounded-tl-[2px] rounded-r-[18px]'
+  } else if (
+    index < props.messages.length - 1 &&
+    currentAuthor === props.messages[index + 1].author
+  ) {
+    // Si le message suivant est du même auteur, on réduit le rayon du coin inférieur
+    return currentAuthor === 'user'
+      ? 'rounded-br-[2px] rounded-l-[18px]'
+      : 'rounded-bl-[2px] rounded-r-[18px]'
+  } else {
+    // Sinon, on applique un rayon complet à tous les coins
+    return 'rounded-[18px]'
+  }
+}
 </script>
 <template>
   <div class="mt-2 flex flex-col">
@@ -64,6 +83,7 @@ const choiceColor = (author: string) => {
       <Message
         :message="message.message"
         :color="choiceColor(message.author)"
+        :radiusClass="getMessageRadiusClass(index, message.author)"
       />
     </div>
   </div>
