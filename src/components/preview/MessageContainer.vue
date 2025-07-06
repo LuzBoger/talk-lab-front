@@ -66,6 +66,11 @@ const getMessageRadiusClass = (index: number, currentAuthor: string) => {
   // Gérer le cas où les messages précédent et suivant sont du même auteur
   if (previousMessageSameAuthor && nextMessageSameAuthor) {
     if (currentMessageHasReaction) {
+      if (previousMessageHasReaction) {
+        return currentAuthor === 'user'
+          ? getRadiusClasses('r-[18px]', 'r-[18px]', '[18px]', '[18px]')
+          : getRadiusClasses('l-[18px]', 'l-[18px]', '[18px]', '[18px]')
+      }
       return currentAuthor === 'user'
         ? getRadiusClasses('r-[2px]', 'r-[18px]', '[18px]', '[18px]')
         : getRadiusClasses('l-[2px]', 'l-[18px]', '[18px]', '[18px]')
