@@ -9,6 +9,10 @@ const props = defineProps({
     required: true,
   },
   interlocutorAvatar: String,
+  addReaction: {
+    type: Function,
+    required: true,
+  },
 })
 
 const isLastInterlocutorMessage = (index: number, currentAuthor: string) => {
@@ -36,30 +40,69 @@ const choiceColor = (author: string) => {
 const getMessageRadiusClass = (index: number, currentAuthor: string) => {
   const isFirstMessage = index === 0
   const isLastMessage = index === props.messages.length - 1
+  const currentMessageHasReaction = props.messages[index].reaction !== ''
   const previousMessageSameAuthor =
     !isFirstMessage && currentAuthor === props.messages[index - 1].author
   const nextMessageSameAuthor =
     !isLastMessage && currentAuthor === props.messages[index + 1].author
+  const previousMessageHasReaction =
+    !isFirstMessage && props.messages[index - 1].reaction !== ''
 
-  if (previousMessageSameAuthor && nextMessageSameAuthor) {
-    // Si le message précédent et suivant sont du même auteur, on réduit les rayons des coins supérieur et inférieur
-    return currentAuthor === 'user'
-      ? 'rounded-tr-[2px] rounded-br-[2px] rounded-l-[18px]'
-      : 'rounded-tl-[2px] rounded-bl-[2px] rounded-r-[18px]'
-  } else if (previousMessageSameAuthor) {
-    // Si seulement le message précédent est du même auteur, on réduit le rayon du coin supérieur
-    return currentAuthor === 'user'
-      ? 'rounded-tr-[2px] rounded-l-[18px] rounded-br-[18px]'
-      : 'rounded-tl-[2px] rounded-r-[18px] rounded-bl-[18px]'
-  } else if (nextMessageSameAuthor) {
-    // Si seulement le message suivant est du même auteur, on réduit le rayon du coin inférieur
-    return currentAuthor === 'user'
-      ? 'rounded-br-[2px] rounded-l-[18px] rounded-tr-[18px]'
-      : 'rounded-bl-[2px] rounded-r-[18px] rounded-tl-[18px]'
-  } else {
-    // Sinon, on applique un rayon complet à tous les coins
-    return 'rounded-[18px]'
+  // Fonction auxiliaire pour déterminer les classes de rayon en fonction des conditions
+  const getRadiusClasses = (
+    topRadius: string,
+    bottomRadius: string,
+    leftRadius: string,
+    rightRadius: string,
+  ) => {
+    return `rounded-t${topRadius} rounded-b${bottomRadius} rounded-l${leftRadius} rounded-r${rightRadius}`
   }
+
+  // Gérer le cas où le message actuel a une réaction et aucun message précédent du même auteur
+  if (currentMessageHasReaction && !previousMessageSameAuthor) {
+    return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+  }
+
+  // Gérer le cas où les messages précédent et suivant sont du même auteur
+  if (previousMessageSameAuthor && nextMessageSameAuthor) {
+    if (currentMessageHasReaction) {
+      return currentAuthor === 'user'
+        ? getRadiusClasses('r-[2px]', 'r-[18px]', '[18px]', '[18px]')
+        : getRadiusClasses('l-[2px]', 'l-[18px]', '[18px]', '[18px]')
+    } else {
+      if (previousMessageHasReaction) {
+        return currentAuthor === 'user'
+          ? getRadiusClasses('r-[18px]', 'r-[2px]', '[18px]', '[18px]')
+          : getRadiusClasses('l-[18px]', 'l-[2px]', '[18px]', '[18px]')
+      }
+      return currentAuthor === 'user'
+        ? getRadiusClasses('r-[2px]', 'r-[2px]', '[18px]', '[18px]')
+        : getRadiusClasses('l-[2px]', 'l-[2px]', '[18px]', '[18px]')
+    }
+  }
+
+  // Gérer le cas où seul le message précédent est du même auteur
+  if (previousMessageSameAuthor) {
+    if (previousMessageHasReaction) {
+      return currentAuthor === 'user'
+        ? getRadiusClasses('[18px]', 'r-[18px]', '[18px]', '[2px]')
+        : getRadiusClasses('[18px]', 'l-[18px]', '[2px]', '[18px]')
+    } else {
+      return currentAuthor === 'user'
+        ? getRadiusClasses('r-[2px]', 'r-[18px]', '[18px]', '[18px]')
+        : getRadiusClasses('l-[2px]', 'l-[18px]', '[18px]', '[18px]')
+    }
+  }
+
+  // Gérer le cas où seul le message suivant est du même auteur
+  if (nextMessageSameAuthor) {
+    return currentAuthor === 'user'
+      ? getRadiusClasses('r-[18px]', 'r-[2px]', '[18px]', '[18px]')
+      : getRadiusClasses('l-[18px]', 'l-[2px]', '[18px]', '[18px]')
+  }
+
+  // Cas par défaut
+  return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
 }
 </script>
 <template>
@@ -90,9 +133,11 @@ const getMessageRadiusClass = (index: number, currentAuthor: string) => {
         <div class="min-w-[46px]"></div>
       </div>
       <Message
-        :message="message.message"
+        :message="message"
         :color="choiceColor(message.author)"
         :radiusClass="getMessageRadiusClass(index, message.author)"
+        :index="index"
+        :addReaction="addReaction"
       />
     </div>
   </div>

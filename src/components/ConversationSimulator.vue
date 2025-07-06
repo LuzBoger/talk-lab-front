@@ -570,7 +570,7 @@ onMounted(async () => {
         <PreviewHeader :Hour="startTime" :signalSelected="signal" :networks="reseau" :batSelected="batteryLevel"/>
         <UserInfo :interlocutorName="interlocutor_name" :interlocutorUsername="interlocutor_username"
           :interlocutorAvatar="interlocutor_avatar" />
-          <MessageContainer :messages="messagesUsers" :interlocutorAvatar="interlocutor_avatar"/>
+          <MessageContainer :messages="messages" :interlocutorAvatar="interlocutor_avatar" :addReaction="addReaction"/>
         </div>
         <div class="flex flex-col items-center">
           <BottomBar/>
