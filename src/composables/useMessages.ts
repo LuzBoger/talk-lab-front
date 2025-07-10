@@ -1,68 +1,57 @@
-import { ref, watch} from 'vue';
-import type { Ref } from 'vue';
-import type { Messages } from '../types/Messages';
-import { uploadMedia } from '../api/conversation';
+import { ref, watch } from 'vue'
+import type { Ref } from 'vue'
+import type { Messages } from '../types/Messages'
 
 export function useMessages(
-    message: Ref<Messages[]>,
-    setFieldValue: (field: any, value:any) => void,
+  message: Ref<Messages[]>,
+  setFieldValue: (field: any, value: any) => void,
 ) {
+  const messages = ref<Messages[]>(message.value || [])
 
-    const messages = ref<Messages[]>( message.value || []);
+  watch(
+    () => message.value,
+    (newMessages) => {
+      if (newMessages) {
+        messages.value = newMessages
+      }
+    },
+  )
 
-    watch(() => message.value, (newMessages) => {
-        if(newMessages) {
-            messages.value = newMessages;
-        }
-    }
-    );
-    
-    const sendMessage = async (
-        author: 'user' | 'interlocutor',
-        messageContent: string,
-        otherContent? : {
-            image?: Blob
-            audio?: Blob;
-        } 
-    ) => {
-        let urls: { image?: string; audio?: string } = {};
+  const sendMessage = async (
+    author: 'user' | 'interlocutor',
+    messageContent: string,
+    otherContent?: {
+      image?: Blob
+      audio?: Blob
+    },
+  ) => {
+    console.log(otherContent)
+    // Supposons que vous ayez un Blob audio
 
-        if(otherContent && (otherContent.image || otherContent.audio)) {
-            try {
-                const res = await uploadMedia(otherContent);
-                if (res.data.imageUrl) urls.image = res.data.imageUrl;
-                if (res.data.audioUrl) urls.audio = res.data.audioUrl;
-            } catch(error) {
-                console.error('Erreur lors de l\'upload', error);
-            }
-        }
-
-        const newMessage: Messages = {
-            author,
-            message: messageContent,
-            isSeen: false,
-            reaction: '',
-            ...urls
-        };
-
-        if(author === 'interlocutor') {
-            for(let i = messages.value.length - 1; i >= 0; i-- ) {
-                if(messages.value[i].author === 'user') {
-                    messages.value[i].isSeen = true;
-                    break;
-                }
-            }
-        }
-
-        messages.value = [...messages.value, newMessage];
-        setFieldValue('content.messages', messages.value);
-    };
-
-    return {
-        messages,
-        sendMessage,
+    const newMessage: Messages = {
+      author,
+      message: messageContent,
+      isSeen: false,
+      reaction: '',
+      image: otherContent?.image,
+      audio: otherContent?.audio,
     }
 
+    if (author === 'interlocutor') {
+      for (let i = messages.value.length - 1; i >= 0; i--) {
+        if (messages.value[i].author === 'user') {
+          messages.value[i].isSeen = true
+          break
+        }
+      }
+    }
 
+    messages.value = [...messages.value, newMessage]
+    setFieldValue('content.messages', messages.value)
+  }
+
+  return {
+    messages,
+    sendMessage,
+  }
 }
-

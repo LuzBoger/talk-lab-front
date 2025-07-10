@@ -4,6 +4,6 @@ export type Messages = {
     time?: string ;
     isSeen?: boolean ;
     reaction?: string;
-    image?: string;
-    audio?: string;
+    image?: Blob;
+    audio?: Blob;
 }
