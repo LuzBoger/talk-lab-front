@@ -10,12 +10,20 @@ const selectEmoji = (event: any) => {
   emit('selected', event.i)
   showEmojiPicker.value = false
 }
+const props = defineProps({
+  author: String,
+})
 </script>
 
 <template>
   <div :class="clsx('relative ')">
     <div
-      class="absolute top-full mt-2 left-0 z-[9999]"
+      :class="
+        clsx(
+          'absolute top-full mt-12 z-[9999]',
+          props.author == 'user' ? 'right-5' : 'left-[-50px]',
+        )
+      "
       style="min-width: 250px"
     >
       <EmojiPicker @select="selectEmoji" :native="true" />
