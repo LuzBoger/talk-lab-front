@@ -14,6 +14,7 @@ import PublishConversationPopUp from './PublishConversationPopUp.vue';
 import CategorySelectedModal from './CategorySelectedModal.vue';
 import EmojiPicker from 'vue3-emoji-picker';
 import 'vue3-emoji-picker/css';
+import RecordRTC, { StereoAudioRecorder } from 'recordrtc';
 import SaveConversationPopUp from './SaveConversationPopUp.vue';
 import OtherMessageTypes from './OtherMessageTypes.vue';
 import { toast } from 'vue3-toastify';
@@ -21,7 +22,6 @@ import 'vue3-toastify/dist/index.css';
 import { useCategoryStore } from '../stores/useCategoryStore';
 import PreviewHeader from './preview/PreviewHeader.vue';
 import UserInfo from './preview/UserInfo.vue';
-import Message from './preview/Message.vue';
 import MessageContainer from './preview/MessageContainer.vue';
 import BottomBar from './preview/BottomBar.vue';
 
@@ -52,6 +52,7 @@ const isRecordingInterlocutor = ref<boolean>(false)
 const currentRecordingTarget = ref<'user' | 'interlocutor' | null>(null);
 const mediaRecorder = ref<MediaRecorder | null>(null)
 const audioChunks = ref<Blob[]>([]);
+const recorder = ref<any>(null);
 const baseUrl = import.meta.env.VITE_BASE_URL;
 let nextRoute: any = null
 const showCategoryModal = ref<boolean>(false)
@@ -286,59 +287,71 @@ const removeImage = (target: 'user' | 'interlocutor') => {
 }
 
 const startVocal = async (target: 'user' | 'interlocutor') => {
-
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-    mediaRecorder.value = new MediaRecorder(stream);
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-    audioChunks.value = []
+    recorder.value = new RecordRTC(stream, {
+      type: 'audio',
+      mimeType: 'audio/wav', // WAV = compatible partout, durée OK
+      recorderType: StereoAudioRecorder,
+      numberOfAudioChannels: 1,
+      desiredSampRate: 16000,
+    });
 
-    mediaRecorder.value.ondataavailable = (e) => {
-      audioChunks.value.push(e.data);
-    }
+    recorder.value.startRecording();
 
-    mediaRecorder.value.onstop = async () => {
-      const audioBlob = new Blob(audioChunks.value, { type: 'audio/webm' })
-      await sendMessage(target, '', { audio: audioBlob })
-
-      audioChunks.value = [];
-      if (target === 'user') {
-        isRecordingUser.value = false
-      } else {
-        isRecordingInterlocutor.value = false
-      }
-    }
-
-    mediaRecorder.value.start();
     if (target === 'user') {
-      isRecordingUser.value = true
-      isRecordingInterlocutor.value = false
+      isRecordingUser.value = true;
+      isRecordingInterlocutor.value = false;
     } else {
-      isRecordingInterlocutor.value = true
-      isRecordingUser.value = false
-
+      isRecordingInterlocutor.value = true;
+      isRecordingUser.value = false;
     }
+
+    // Stocke le stream pour pouvoir le libérer plus tard
+    recorder.value._stream = stream;
   } catch (error) {
     console.error('Erreur lors du vocal:', error);
   }
-}
+};
+
+const stopVocal = async (target: 'user' | 'interlocutor') => {
+  if (!recorder.value) return;
+
+  recorder.value.stopRecording(async () => {
+    const audioBlob = recorder.value.getBlob();
+
+    // Libère le micro
+    if (recorder.value._stream) {
+      recorder.value._stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+    }
+
+    if (target === 'user') {
+      isRecordingUser.value = false;
+    } else {
+      isRecordingInterlocutor.value = false;
+    }
+
+    await sendMessage(target, '', { audio: audioBlob });
+    recorder.value = null;
+  });
+};
 
 const onAudioClicked = (target: 'user' | 'interlocutor') => {
-
   if (target === 'user') {
     if (isRecordingUser.value) {
-      mediaRecorder.value?.stop()
+      stopVocal('user');
     } else {
-      startVocal('user')
+      startVocal('user');
     }
   } else {
     if (isRecordingInterlocutor.value) {
-      mediaRecorder.value?.stop()
+      stopVocal('interlocutor');
     } else {
-      startVocal('interlocutor')
+      startVocal('interlocutor');
     }
   }
-}
+};
 
 const openSaveModal = () => {
   showSaveModal.value = true;
@@ -567,13 +580,13 @@ onMounted(async () => {
     <div>
       <div class="w-preview h-preview flex flex-col justify-between font-sans bg-white">
         <div>
-        <PreviewHeader :Hour="startTime" :signalSelected="signal" :networks="reseau" :batSelected="batteryLevel"/>
-        <UserInfo :interlocutorName="interlocutor_name" :interlocutorUsername="interlocutor_username"
-          :interlocutorAvatar="interlocutor_avatar" />
-          <MessageContainer :messages="messages" :interlocutorAvatar="interlocutor_avatar" :addReaction="addReaction"/>
+          <PreviewHeader :Hour="startTime" :signalSelected="signal" :networks="reseau" :batSelected="batteryLevel" />
+          <UserInfo :interlocutorName="interlocutor_name" :interlocutorUsername="interlocutor_username"
+            :interlocutorAvatar="interlocutor_avatar" />
+          <MessageContainer :messages="messages" :interlocutorAvatar="interlocutor_avatar" :addReaction="addReaction" />
         </div>
         <div class="flex flex-col items-center">
-          <BottomBar/>
+          <BottomBar />
           <div class="min-w-32 max-w-32 min-h-[5px] mb-1.5 rounded-full bg-black"></div>
         </div>
 
