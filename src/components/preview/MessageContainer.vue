@@ -38,6 +38,7 @@ const choiceColor = (author: string) => {
   }
 }
 const getMessageRadiusClass = (index: number, currentAuthor: string) => {
+  console.log(`Index: ${index}, Author: ${currentAuthor}`)
   const isFirstMessage = index === 0
   const isLastMessage = index === props.messages.length - 1
   const currentMessageHasReaction = props.messages[index].reaction !== ''
@@ -48,70 +49,125 @@ const getMessageRadiusClass = (index: number, currentAuthor: string) => {
   const previousMessageHasReaction =
     !isFirstMessage && props.messages[index - 1].reaction !== ''
 
+  const currentMessageHasAudio = props.messages[index].audio !== undefined
+
+  // Vérifier si le message précédent ou suivant contient une image
+  const hasImageBefore =
+    !isFirstMessage && props.messages[index - 1].image !== undefined
+  const hasImageAfter =
+    !isLastMessage && props.messages[index + 1].image !== undefined
+
   // Fonction auxiliaire pour déterminer les classes de rayon en fonction des conditions
   const getRadiusClasses = (
-    topRadius: string,
-    bottomRadius: string,
-    leftRadius: string,
-    rightRadius: string,
+    topLeftRadius: string,
+    topRightRadius: string,
+    bottomLeftRadius: string,
+    bottomRightRadius: string,
   ) => {
-    return `rounded-t${topRadius} rounded-b${bottomRadius} rounded-l${leftRadius} rounded-r${rightRadius}`
+    console.log(
+      `Applying radius classes: tl-${topLeftRadius}, tr-${topRightRadius}, bl-${bottomLeftRadius}, br-${bottomRightRadius}`,
+    )
+    return `rounded-tl-${topLeftRadius} rounded-tr-${topRightRadius} rounded-bl-${bottomLeftRadius} rounded-br-${bottomRightRadius}`
   }
 
   // Gérer le cas où le message actuel a une réaction et aucun message précédent du même auteur
   if (currentMessageHasReaction && !previousMessageSameAuthor) {
+    console.log('Case: currentMessageHasReaction && !previousMessageSameAuthor')
+    return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+  }
+  // Gérer le cas où il y a une image avant ou après le message actuel
+  if (hasImageBefore || hasImageAfter) {
+    console.log('Case: hasImageBefore || hasImageAfter')
+    return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+  }
+
+  // Gérer le cas où le message actuel est un audio
+  if (currentMessageHasAudio) {
+    console.log('Case: currentMessageHasAudio')
+    if (currentMessageHasReaction && !previousMessageSameAuthor) {
+      return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+    }
+    if (previousMessageSameAuthor && nextMessageSameAuthor) {
+      return currentAuthor === 'user'
+        ? getRadiusClasses('[18px]', '[2px]', '[18px]', '[2px]')
+        : getRadiusClasses('[2px]', '[18px]', '[2px]', '[18px]')
+    }
+    if (previousMessageSameAuthor) {
+      return currentAuthor === 'user'
+        ? getRadiusClasses('[18px]', '[2px]', '[18px]', '[18px]')
+        : getRadiusClasses('[2px]', '[18px]', '[18px]', '[18px]')
+    }
+    if (nextMessageSameAuthor) {
+      return currentAuthor === 'user'
+        ? getRadiusClasses('[18px]', '[18px]', '[18px]', '[2px]')
+        : getRadiusClasses('[18px]', '[18px]', '[2px]', '[18px]')
+    }
     return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
   }
 
   // Gérer le cas où les messages précédent et suivant sont du même auteur
   if (previousMessageSameAuthor && nextMessageSameAuthor) {
+    console.log('Case: previousMessageSameAuthor && nextMessageSameAuthor')
     if (currentMessageHasReaction) {
       if (previousMessageHasReaction) {
+        console.log(
+          'Subcase: currentMessageHasReaction && previousMessageHasReaction',
+        )
         return currentAuthor === 'user'
-          ? getRadiusClasses('r-[18px]', 'r-[18px]', '[18px]', '[18px]')
-          : getRadiusClasses('l-[18px]', 'l-[18px]', '[18px]', '[18px]')
+          ? getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+          : getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
       }
+      console.log('Subcase: currentMessageHasReaction')
       return currentAuthor === 'user'
-        ? getRadiusClasses('r-[2px]', 'r-[18px]', '[18px]', '[18px]')
-        : getRadiusClasses('l-[2px]', 'l-[18px]', '[18px]', '[18px]')
+        ? getRadiusClasses('[18px]', '[2px]', '[18px]', '[18px]')
+        : getRadiusClasses('[2px]', '[18px]', '[18px]', '[18px]')
     } else {
       if (previousMessageHasReaction) {
+        console.log('Subcase: previousMessageHasReaction')
         return currentAuthor === 'user'
-          ? getRadiusClasses('r-[18px]', 'r-[2px]', '[18px]', '[18px]')
-          : getRadiusClasses('l-[18px]', 'l-[2px]', '[18px]', '[18px]')
+          ? getRadiusClasses('[18px]', '[18px]', '[18px]', '[2px]')
+          : getRadiusClasses('[18px]', '[18px]', '[2px]', '[18px]')
       }
+      console.log('Subcase: default')
       return currentAuthor === 'user'
-        ? getRadiusClasses('r-[2px]', 'r-[2px]', '[18px]', '[18px]')
-        : getRadiusClasses('l-[2px]', 'l-[2px]', '[18px]', '[18px]')
+        ? getRadiusClasses('[18px]', '[2px]', '[18px]', '[2px]')
+        : getRadiusClasses('[2px]', '[18px]', '[2px]', '[18px]')
     }
   }
 
   // Gérer le cas où seul le message précédent est du même auteur
   if (previousMessageSameAuthor) {
+    console.log('Case: previousMessageSameAuthor')
     if (previousMessageHasReaction) {
+      console.log('Subcase: previousMessageHasReaction')
       return currentAuthor === 'user'
-        ? getRadiusClasses('[18px]', 'r-[18px]', '[18px]', '[2px]')
-        : getRadiusClasses('[18px]', 'l-[18px]', '[2px]', '[18px]')
+        ? getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+        : getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
     } else {
+      console.log('Subcase: default')
       return currentAuthor === 'user'
-        ? getRadiusClasses('r-[2px]', 'r-[18px]', '[18px]', '[18px]')
-        : getRadiusClasses('l-[2px]', 'l-[18px]', '[18px]', '[18px]')
+        ? getRadiusClasses('[18px]', '[2px]', '[18px]', '[18px]')
+        : getRadiusClasses('[2px]', '[18px]', '[18px]', '[18px]')
     }
   }
 
   // Gérer le cas où seul le message suivant est du même auteur
   if (nextMessageSameAuthor) {
+    console.log('Case: nextMessageSameAuthor')
     return currentAuthor === 'user'
-      ? getRadiusClasses('r-[18px]', 'r-[2px]', '[18px]', '[18px]')
-      : getRadiusClasses('l-[18px]', 'l-[2px]', '[18px]', '[18px]')
+      ? getRadiusClasses('[18px]', '[18px]', '[18px]', '[2px]')
+      : getRadiusClasses('[18px]', '[18px]', '[2px]', '[18px]')
   }
 
   // Cas par défaut
+  console.log('Case: default')
   return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
 }
 </script>
 <template>
-  <div class="mt-2 flex flex-col">
+  <div
+    class="mt-2 flex flex-col h-message-preview custom-scrollbar overflow-y-auto"
+  >
     <div
       v-for="(message, index) in messages"
       :key="'message_' + index"
