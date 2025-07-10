@@ -32,7 +32,7 @@ console.log(props)
           {{ props.interlocutorName }}
         </span>
         <span
-          class="text-xs text-pseudo absolute bottom-[2px] inline whitespace-nowrap "
+          class="text-xs text-pseudo absolute bottom-[2px] inline whitespace-nowrap"
         >
           {{ props.interlocutorUsername }}
         </span>
@@ -41,7 +41,6 @@ console.log(props)
     <div class="flex pr-4 gap-6 items-center">
       <CallIcon />
       <VideoCallIcon />
-      <InfoIcon />
     </div>
   </div>
 </template>
