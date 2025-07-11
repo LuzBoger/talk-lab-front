@@ -46,7 +46,6 @@ export function useConversation(
       }
       try{
         const response = await createConversation(conversationData(formValues))
-
         return response
       } catch(error) {
         console.error('Erreur lors de la création de la conversation:', error);
