@@ -91,30 +91,6 @@ export function useConversationSimulator(props: { conversationId?: number }) {
     deleteFakeConversation,
   } = useConversation(conversationId, values, setFieldValue)
 
-  watch(
-    values,
-    (newValues) => {
-      // Pour debug
-    },
-    { deep: true },
-  )
-
-  watch(
-    errors,
-    (newValues) => {
-      // Pour debug
-    },
-    { deep: true },
-  )
-
-  watch(
-    interlocutor_avatar,
-    (newValues) => {
-      // Pour debug
-    },
-    { deep: true },
-  )
-
   const sendUserMessage = async () => {
     if (!messageUser.value && !imageUserSelected.value) return
     if (imageUserSelected.value && messageUser.value) {
