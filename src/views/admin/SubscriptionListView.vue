@@ -292,9 +292,64 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.admin-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+@import '../../styles/admin.css';
+
+/* Styles spécifiques aux badges */
+.badge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  margin-bottom: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  color: white;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.375rem;
+}
+
+.bg-success {
+  background-color: var(--color-validate-button) !important;
+}
+
+.bg-warning {
+  background-color: var(--color-tag-yellow) !important;
+  color: var(--color-bg-dark) !important;
+}
+
+.bg-danger {
+  background-color: var(--color-cancel-color) !important;
+}
+
+.bg-secondary {
+  background-color: var(--color-border-auth-button) !important;
+}
+
+.table-sm th,
+.table-sm td {
+  padding: 0.5rem;
+}
+
+.display-4 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.text-primary {
+  color: var(--color-main-color) !important;
+}
+
+.text-success {
+  color: var(--color-validate-button) !important;
+}
+
+.text-info {
+  color: var(--color-publish-button) !important;
+}
+
+.text-muted {
+  color: rgba(227, 227, 227, 0.6) !important;
 }
 </style> 

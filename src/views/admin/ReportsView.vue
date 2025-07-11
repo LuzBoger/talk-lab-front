@@ -158,9 +158,42 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.admin-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+@import '../../styles/admin.css';
+
+/* Styles spécifiques aux rapports */
+.display-4 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.text-primary {
+  color: var(--color-main-color) !important;
+}
+
+.text-success {
+  color: var(--color-validate-button) !important;
+}
+
+.text-info {
+  color: var(--color-publish-button) !important;
+}
+
+.text-muted {
+  color: rgba(227, 227, 227, 0.6) !important;
+}
+
+.py-5 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.table-bordered {
+  border: 1px solid var(--color-border-auth-button);
+}
+
+.table-bordered th,
+.table-bordered td {
+  border: 1px solid var(--color-border-auth-button);
 }
 </style> 

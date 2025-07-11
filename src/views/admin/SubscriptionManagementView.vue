@@ -419,10 +419,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
+@import '../../styles/admin.css';
+
+/* Styles spécifiques à la gestion des abonnements */
 .subscription-management {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-primary);
+  min-height: 100vh;
 }
 
 .header {
@@ -430,14 +433,10 @@ export default defineComponent({
   margin-bottom: 2rem;
 }
 
-.header h1 {
-  color: #1A192C;
-  margin-bottom: 0.5rem;
-}
-
 .header p {
-  color: #666;
+  color: var(--color-text-primary);
   font-size: 1.1rem;
+  opacity: 0.8;
 }
 
 .tabs {
@@ -449,9 +448,9 @@ export default defineComponent({
 
 .tab-button {
   padding: 0.75rem 1.5rem;
-  border: 2px solid #7C3AED;
-  background: white;
-  color: #7C3AED;
+  border: 2px solid var(--color-main-color);
+  background: transparent;
+  color: var(--color-main-color);
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
@@ -459,66 +458,20 @@ export default defineComponent({
 }
 
 .tab-button.active {
-  background: #7C3AED;
-  color: white;
+  background: var(--color-main-color);
+  color: var(--color-bg-dark);
 }
 
 .tab-button:hover {
-  background: #6D28D9;
-  color: white;
-}
-
-.message {
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-}
-
-.success {
-  background-color: #DEF7EC;
-  color: #03543F;
-}
-
-.error {
-  background-color: #FDE8E8;
-  color: #9B1C1C;
-}
-
-.loading {
-  text-align: center;
-  padding: 2rem;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #7C3AED;
-  border-radius: 50%;
-  margin: 0 auto 1rem;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.users-header,
-.subscriptions-header {
-  margin-bottom: 1rem;
-}
-
-.users-header h2,
-.subscriptions-header h2 {
-  color: #1A192C;
-  font-size: 1.5rem;
+  background: var(--color-main-color);
+  color: var(--color-bg-dark);
 }
 
 .table-container {
-  background: white;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border-auth-button);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   overflow-x: auto;
 }
 
@@ -526,6 +479,7 @@ export default defineComponent({
 .subscriptions-table {
   width: 100%;
   border-collapse: collapse;
+  color: var(--color-text-primary);
 }
 
 .users-table th,
@@ -534,14 +488,14 @@ export default defineComponent({
 .subscriptions-table td {
   padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-border-auth-button);
 }
 
 .users-table th,
 .subscriptions-table th {
-  background: #f8f9fa;
+  background: var(--color-sidebar-bg);
   font-weight: 600;
-  color: #4B5563;
+  color: var(--color-text-primary);
 }
 
 .subscription-badge {
@@ -553,13 +507,14 @@ export default defineComponent({
 }
 
 .subscription-badge.has-subscription {
-  background-color: #DEF7EC;
-  color: #03543F;
+  background-color: var(--color-validate-button);
+  color: white;
 }
 
 .subscription-badge.no-subscription {
-  background-color: #F3F4F6;
-  color: #6B7280;
+  background-color: var(--color-card-bg);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-auth-button);
 }
 
 .status-badge {
@@ -571,18 +526,18 @@ export default defineComponent({
 }
 
 .status-badge.active {
-  background-color: #DEF7EC;
-  color: #03543F;
+  background-color: var(--color-validate-button);
+  color: white;
 }
 
 .status-badge.canceled {
-  background-color: #FDE8E8;
-  color: #9B1C1C;
+  background-color: var(--color-cancel-color);
+  color: white;
 }
 
 .status-badge.expired {
-  background-color: #FEF3C7;
-  color: #92400E;
+  background-color: var(--color-tag-yellow);
+  color: var(--color-bg-dark);
 }
 
 .actions {
@@ -591,102 +546,15 @@ export default defineComponent({
   flex-wrap: wrap;
 }
 
-.btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-info {
-  background: #3B82F6;
-  color: white;
-}
-
-.btn-info:hover {
-  background: #2563EB;
-}
-
-.btn-warning {
-  background: #F59E0B;
-  color: white;
-}
-
-.btn-warning:hover {
-  background: #D97706;
-}
-
-.btn-danger {
-  background: #DC2626;
-  color: white;
-}
-
-.btn-danger:hover {
-  background: #B91C1C;
-}
-
-.btn-secondary {
-  background: #6B7280;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background: #4B5563;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  max-width: 600px;
-  width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.modal-content h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #1A192C;
-}
-
-.subscription-details {
-  margin-bottom: 2rem;
-}
-
-.subscription-details p {
-  margin-bottom: 0.5rem;
-}
-
 .description {
-  background: #f8f9fa;
+  background: var(--color-sidebar-bg);
   padding: 1rem;
   border-radius: 4px;
   white-space: pre-line;
   font-size: 0.9rem;
   line-height: 1.4;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-auth-button);
 }
 
 @media (max-width: 768px) {

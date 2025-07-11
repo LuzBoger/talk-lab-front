@@ -215,14 +215,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.admin-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.btn-group {
-  display: flex;
-  gap: 5px;
-}
+@import '../../styles/admin.css';
 </style> 

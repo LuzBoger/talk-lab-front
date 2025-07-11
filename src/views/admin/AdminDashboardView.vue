@@ -61,23 +61,7 @@
         </div>
       </div>
 
-      <div class="col-md-6 mb-4">
-        <div class="card shadow">
-          <div class="card-header">
-            <h5 class="mb-0">Dernières activités</h5>
-          </div>
-          <div class="card-body">
-            <div v-if="loading" class="text-center">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Chargement...</span>
-              </div>
-            </div>
-            <p v-else class="text-muted">
-              Fonctionnalité en développement
-            </p>
-          </div>
-        </div>
-      </div>
+
     </div>
   </div>
 </template>
@@ -147,24 +131,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.admin-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.card {
-  height: 100%;
-}
-
-.card-title {
-  color: #6c757d;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.card-text {
-  color: #212529;
-  margin-bottom: 0;
-}
+@import '../../styles/admin.css';
 </style> 

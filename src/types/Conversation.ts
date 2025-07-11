@@ -4,11 +4,9 @@ export interface Conversation {
     id?: number
     title: string
     description: string | undefined
-    category_id: number[]
-    creator_id: number 
-    createdAt: string
-    updatedAt: string
+    categoriesId: number[]
     isPublic: boolean
+    createdAt?: string
     status : 'draft' | 'published'
     content: ConversationContent
 }

@@ -3,9 +3,9 @@ export interface ConversationContent {
     interlocutor_username: string
     interlocutor_avatar?: string | null
     startTime: string;
-    batteryLevel: number;
+    batteryLevel: string;
     reseau: string;
-    signal: number;
+    signal: string;
     messages?: {
         author: 'user' |'interlocutor';
         message: string;

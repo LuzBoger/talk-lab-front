@@ -222,9 +222,60 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.admin-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+@import '../../styles/admin.css';
+
+/* Styles spécifiques au formulaire */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-check-input {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border-auth-button);
+  border-radius: 4px;
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: var(--color-main-color);
+  border-color: var(--color-main-color);
+}
+
+.form-check-label {
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--color-main-color);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+}
+
+.btn-link:hover {
+  color: var(--color-main-color-hover);
 }
 </style> 

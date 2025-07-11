@@ -1,4 +1,73 @@
 @import 'tailwindcss';
-@tailwind base;
-@tailwind components;
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/roboto-regular.woff2') format('woff2'),
+         url('fonts/Roboto-Regular-webfont.woff') format('woff');
+  }
+@font-face {
+  font-family: 'SF';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/sf-pro-display_regular.woff2') format('woff2'),
+}
+@theme {
+  --color-sidebar-bg: #1a192c;
+  --color-text-primary: #e3e3e3;
+  --color-toggle-button-bg: rgb(26 25 44 / 0.8);
+  --color-toggle-button-hover: #1a192c;
+  --color-border-auth-button: #2e2b55;
+  --color-auth-button-hover: #444071;
+  --color-signup-button: #6c63ff;
+  --color-dropdown-bg: #2e2b55;
+  --color-dropdown-hover: #444071;
+  --color-avatar-border: #6c63ff;
+  --color-card-bg: #23233F;
+  --color-author-text: #aaa;
+  --color-tag-yellow: #FFBF00;
+  --color-tag-green: #549601;
+  --color-tag-red: #FF5C5C;
+  --color-tag-purple: #9747FF;
+  --color-errror-message-light: #fde8e8;
+  --color-error-message: #c53030;
+  --color-validate-button: #007f56;
+  --color-validate-button-hover: #006644;
+  --color-main-color: #23CE6B;
+  --color-main-color-hover: #3AE47A;
+  --color-bg-dark: #11101a;
+  --color-publish-button: #1E90FF;
+  --color-publish-button-hover: #4DA6FF;
+  --color-cancel-color:#EC221F;
+  --color-mess-other: #262626;
+  --color-mess-you: #3e73f5;
+  --color-write-black: #191919;
+  --color-write-white: #dbdbdb;
+  --color-takephoto: #3C82F5;
+  --width-form: 704px;
+  --height-preview: calc(2532px / 3.3333);
+  --height-message-preview: calc(1927px / 3.3333);
+  --width-preview: calc(1170px / 3.3333);
+  --font-sans: "SF", sans-serif;
+  --color-mess-you: #3e73f5;
+  --color-mess-other: #262626;
+  --border-radius-18: 18px;
+  --line-height-18: 18px;
+  --font-size-10: 10px;
+  --font-size-15: 15px;
+  --color-pseudo: #7E7E7E;
+}
+
+/* Ajoutez votre CSS personnalisé ici */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+.custom-scrollbar {
+    scrollbar-width: none; /* Pour Firefox */
+    -ms-overflow-style: none; /* Pour Internet Explorer et Edge */
+}
 @tailwind utilities;
+
+

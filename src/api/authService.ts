@@ -1,35 +1,14 @@
-import apiClient from './apiClient';
+import { apiClient } from "../utils/apiClient";
+import type { LoginCredentials } from "../types/LoginCredentials";
+import type { RegisterData } from "../types/RegisterData";
 
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-interface RegisterData {
-  name: string;
-  username?: string;
-  email: string;
-  password: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  username: string | null;
-  roles?: string[];
-}
 
 const authService = {
   async login(credentials: LoginCredentials) {
     try {
       console.log('Tentative de connexion avec:', credentials);
-      const response = await apiClient.post('/api/login', credentials);
+      const response = await apiClient.post('/login', credentials, {withCredentials: true});
       console.log('Réponse du serveur:', response.data);
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-      }
       return response.data;
     } catch (error: any) {
       console.error('Erreur de connexion détaillée:', error);
@@ -48,7 +27,7 @@ const authService = {
   async register(userData: RegisterData) {
     try {
       console.log('Tentative d\'inscription avec:', userData);
-      const response = await apiClient.post('/api/register', userData);
+      const response = await apiClient.post('/register', userData, {withCredentials: true});
       console.log('Réponse du serveur:', response.data);
       return response.data;
     } catch (error: any) {
@@ -80,46 +59,23 @@ const authService = {
     }
   },
 
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  async logout() {
+    await apiClient.post('/logout', {}, { withCredentials: true });
+
   },
 
-  getCurrentUser(): User | null {
-    const userStr = localStorage.getItem('user');
-    if (!userStr) return null;
-    
-    try {
-      const user = JSON.parse(userStr);
-      const token = localStorage.getItem('token');
-      if (token) {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        user.roles = payload.roles || [];
-      }
-      return user;
-    } catch (e) {
-      console.error('Erreur lors de la récupération des informations utilisateur:', e);
-      return null;
+   async getCurrentUser() {
+    const response = await apiClient.get('/me', { withCredentials: true });
+      console.log('/me response:', response.data);
+
+    if (response) {
+      return response.data.user;
     }
+    return null;
   },
 
-  isAuthenticated(): boolean {
-    const token = localStorage.getItem('token');
-    return !!token;
-  },
 
-  isAdmin(): boolean {
-    try {
-      const user = this.getCurrentUser();
-      if (!user || !user.roles) {
-        return false;
-      }
-      return user.roles.includes('ROLE_ADMIN');
-    } catch (error) {
-      console.error('Erreur lors de la vérification du rôle admin:', error);
-      return false;
-    }
-  }
+
 };
 
 export default authService; 

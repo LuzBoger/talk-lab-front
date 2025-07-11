@@ -6,25 +6,22 @@ export const createConversation = async (conversation:Conversation) => {
     return response.data;
 }
 
-export const sendMessage = async (
-    conversationId: number,
-    data: { author: string; message: string }
-) => {
-    const response = await apiClient.post(
-        `/conversation/${conversationId}/message`,
-        data
-    );
-    return response.data;
-};
 
-export const getConversations = async (): Promise<Conversation[]> => {
-    const response = await apiClient.get('/conversations');
+export const getPublicConversations = async (): Promise<Conversation[]> => {
+    const response = await apiClient.get('/conversations/public');
+    console.log("Conversation Publique", response)
     return response.data;
+
 }
 
 export const getConversationById = async (id: number): Promise<Conversation> => {
     const response = await apiClient.get(`/conversation/${id}`);
     return response.data;
+}
+
+export const getConversationsByUser = async (): Promise<Conversation[]> => {
+    const response = await apiClient.get('/conversations');
+    return response.data
 }
 
 export const updateConversation = async (id: number, conversation: Conversation): Promise<Conversation> => {
@@ -33,14 +30,32 @@ export const updateConversation = async (id: number, conversation: Conversation)
 }
 
 export const deleteConversation = async (id: number): Promise<void> => {
-    await apiClient.delete(`/delete/conversation/${id}`);
-}
-
-export const publishConversation = async (id: number, updateConversation : any): Promise<void> => {
-    await apiClient.put(`/publish/conversation/${id}`, updateConversation); 
-}
-export const resetConversation = async (id: number,) => {
-    const response = await apiClient.put(`/reset/conversation/${id}`);
-    console.log(response.data);
+    const response = await apiClient.delete(`/delete/conversation/${id}`);
     return response.data;
 }
+
+export const uploadMedia = async (media: {image?: Blob; audio?: Blob}) => {
+    const formData = new FormData();
+
+    if(media.image) {
+        formData.append('image', media.image);
+    }
+
+    if(media.audio) {
+        formData.append('audio', media.audio)
+    }
+
+    const response = await apiClient.post('/messages/upload', formData, {
+        headers: {
+            'Content-Type' : 'multipart/form-data'
+        },
+    });
+    console.log(response.data)
+    return response;
+}
+
+export const getPublicConversationByCategory = async (categoryId: number): Promise<Conversation[]> => {
+    const response = await apiClient.get(`/conversations/category/${categoryId}`)
+    return response.data
+}
+
