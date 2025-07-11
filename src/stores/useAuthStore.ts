@@ -30,15 +30,10 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = null
         isAuthenticated.value = false
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Erreur lors de la récupération de l'utilisateur:", error)
-      // Si l'erreur est 401 ou 403, l'utilisateur n'est plus authentifié
-      if (error.response?.status === 401 || error.response?.status === 403) {
-        console.log("Session expirée ou utilisateur non authentifié")
-      }
       user.value = null
       isAuthenticated.value = false
-      isTwoFactorEnable.value = false
     }
   }
 
@@ -61,15 +56,23 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const logout = async () => {
+    // Nettoyer l'état local AVANT l'appel API
+    user.value = null
+    isAuthenticated.value = false
+    isTwoFactorEnable.value = false
+    
     try {
       await authService.logout()
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error)
     }
-    // Nettoyer l'état local dans tous les cas
-    user.value = null
-    isAuthenticated.value = false
-    isTwoFactorEnable.value = false
+    
+    // Force la suppression des cookies côté client car le backend les recrée
+    setTimeout(() => {
+      document.cookie = 'BEARER=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+      document.cookie = 'REFRESH_TOKEN=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+      console.log('Cookies supprimés après logout')
+    }, 100)
   }
 
   const verifyTotp = async (code: string) => {
