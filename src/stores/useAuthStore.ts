@@ -1,88 +1,103 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
-import authService from "../api/authService";
-import type { LoginCredentials } from "../types/LoginCredentials";
-import type { RegisterData } from "../types/RegisterData";
-import type { User } from "../types/User";
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+import authService from '../api/authService'
+import type { LoginCredentials } from '../types/LoginCredentials'
+import type { RegisterData } from '../types/RegisterData'
+import type { User } from '../types/User'
 
+export const useAuthStore = defineStore('auth', () => {
+  console.log('useAuthStore initialized')
+  const user = ref<User | null>(null)
+  const isAuthenticated = ref(false)
+  const isTwoFactorEnable = ref(false)
+  const tempCredentials = ref<LoginCredentials | null>(null)
 
+  const setUser = (newUser: User | null) => {
+    user.value = newUser
+    isAuthenticated.value = !!newUser
+  }
 
-export const useAuthStore = defineStore ('auth', () => {
-    const user = ref<User | null>(null);
-    const isAuthenticated = ref(false);
-    const isTwoFactorEnable = ref(false)
-    const tempCredentials = ref<LoginCredentials | null>(null)
+  const getUser = async () => {
+    console.log('suis-je la ?')
+    try {
+      const currentUser = await authService.getCurrentUser()
+      console.log('getUser - currentUser:', currentUser)
+      if (currentUser) {
+        user.value = currentUser
+        isAuthenticated.value = true
+        isTwoFactorEnable.value = !!currentUser.isTwofactorEnabled
+      } else {
+        user.value = null
+        isAuthenticated.value = false
+      }
+    } catch (error: any) {
+      console.error("Erreur lors de la récupération de l'utilisateur:", error)
+      // Si l'erreur est 401 ou 403, l'utilisateur n'est plus authentifié
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        console.log("Session expirée ou utilisateur non authentifié")
+      }
+      user.value = null
+      isAuthenticated.value = false
+      isTwoFactorEnable.value = false
+    }
+  }
 
-    const setUser = (newUser: User | null) => {
-        user.value = newUser;
-        isAuthenticated.value = !!newUser;
-    };
+  const login = async (credentials: LoginCredentials) => {
+    const response = await authService.login(credentials)
+    console.log('Valuer de ', response.isTwoFactorEnabled)
+    if (response.isTwoFactorEnabled) {
+      isTwoFactorEnable.value = true
+      tempCredentials.value = credentials
+      return false
+    }
+    isTwoFactorEnable.value = false
+    await getUser()
+    return true
+  }
 
-    const getUser = async () => {
-        try {
-            const currentUser = await authService.getCurrentUser();
-                   console.log('getUser - currentUser:', currentUser);
-            if(currentUser) {
-                user.value = currentUser
-                isAuthenticated.value = true
-                isTwoFactorEnable.value = !!currentUser.isTwofactorEnabled
-            } else {
-                user.value = null
-                isAuthenticated.value = false
-                isAuthenticated.value = false
-            }
+  const register = async (userData: RegisterData) => {
+    await authService.register(userData)
+    await getUser()
+  }
 
-        } catch (error) {
-            console.error('Erreur lors de la récupération de l\'utilisateur:', error);
-            user.value = null;
-            isAuthenticated.value = false;
-        }
+  const logout = async () => {
+    try {
+      await authService.logout()
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error)
+    }
+    // Nettoyer l'état local dans tous les cas
+    user.value = null
+    isAuthenticated.value = false
+    isTwoFactorEnable.value = false
+  }
+
+  const verifyTotp = async (code: string) => {
+    if (!tempCredentials.value) {
+      throw new Error('Utilisateur non connecté')
     }
 
-
-    const login = async (credentials: LoginCredentials) => {
-        const response = await authService.login(credentials);
-        console.log("Valuer de ", response.isTwoFactorEnabled)
-        if(response.isTwoFactorEnabled) {
-            isTwoFactorEnable.value = true
-            tempCredentials.value = credentials
-            return false
-        }
-        isTwoFactorEnable.value = false
-        await getUser();
-        return true
-
+    const { email, password } = tempCredentials.value
+    const res = await login({ email, password, totpCode: code })
+    if (!res) {
+      throw new Error('Code 2FA invalide')
     }
 
-    const register = async (userData : RegisterData) => {
-        await authService.register(userData)
-        await getUser();
-    }
+    isTwoFactorEnable.value = false
+    tempCredentials.value = null
+    await getUser()
+    return true
+  }
 
-    const logout = async () => {
-        await authService.logout();
-        user.value = null;
-        isAuthenticated.value = false;
-    }
-
-    const verifyTotp = async (code: string) => {
-
-        if(!tempCredentials.value) {
-            throw new Error("Utilisateur non connecté");
-        }
-
-        const {email, password} = tempCredentials.value
-        const res = await login({email, password, totpCode:code})
-        if(!res) {
-                throw new Error("Code 2FA invalide");
-        }
-
-        isTwoFactorEnable.value = false
-        tempCredentials.value = null
-        await getUser()
-        return true
-
-    }
-
-    return { user, isAuthenticated, isTwoFactorEnable,verifyTotp, getUser, setUser,login, register, logout}
+  return {
+    user,
+    isAuthenticated,
+    isTwoFactorEnable,
+    verifyTotp,
+    getUser,
+    setUser,
+    login,
+    register,
+    logout,
+  }
 })

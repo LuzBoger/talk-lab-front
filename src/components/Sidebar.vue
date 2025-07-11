@@ -25,7 +25,6 @@ const route = useRoute()
 const router = useRouter()
 const showProfileMenu = ref<boolean>(false)
 const baseUrl = import.meta.env.VITE_BASE_URL
-
 const unReadCount = computed(() => {
   return notificationsStore.countUnReadNotifications
 })
@@ -33,7 +32,6 @@ const unReadCount = computed(() => {
 const isProfileRoute = computed(() => {
   return route.path.startsWith('/profil')
 })
-console.log(authStore)
 const logout = async () => {
   await authStore.logout()
   router.push('/login')
@@ -42,19 +40,6 @@ const logout = async () => {
 const toggleProfileMenu = () => {
   showProfileMenu.value = !showProfileMenu.value
 }
-
-const navigateToProfile = () => {
-  router.push('/profil')
-  showProfileMenu.value = false
-}
-
-const navigateToHelp = () => {
-  router.push('/aide')
-  showProfileMenu.value = false
-}
-const user = computed(() => {
-  return authStore.user?.username || 'Utilisateur'
-})
 const avatarurl = computed(() => {
   if (authStore.user?.avatarUrl) {
     return `${baseUrl}${authStore.user.avatarUrl}`
@@ -62,15 +47,9 @@ const avatarurl = computed(() => {
   return defaultProfileImg
 })
 
-watch(
-  () => authStore.isAuthenticated,
-  (newVal) => {
-    console.log('isAuthenticated changed:', newVal)
-  },
-)
-
 onMounted(() => {
   console.log('Sidebar component mounted')
+  console.log(authStore.isAuthenticated)
 })
 </script>
 
@@ -150,7 +129,7 @@ onMounted(() => {
             alt="Avatar utilisateur"
           />
           <span class="font-semibold text-text-primary whitespace-nowrap">{{
-            user || 'Utilisateur'
+            authStore.user?.name
           }}</span>
         </div>
         <div
