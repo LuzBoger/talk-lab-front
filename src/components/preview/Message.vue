@@ -48,10 +48,10 @@ console.log('props.radiusClass:', props.radiusClass)
 </script>
 <template>
   <div
+    :style="props.radiusClass"
     :class="
       clsx(
-        'max-w-[256px] px-[13.5px] py-[9px] w-fit my-[1px] leading-4.5 text-base flex items-center cursor-pointer relative group',
-        props.radiusClass,
+        'max-w-[256px] px-[13.5px] py-[9px] w-fit my-[1px] leading-4.5 text-base flex items-center cursor-pointer relative',
         props.message?.image ? '' : props.color,
         props.message.reaction !== '' && 'mb-5',
       )

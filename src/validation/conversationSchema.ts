@@ -16,10 +16,7 @@ export const conversationSchema = yup.object({
     interlocutor_username: yup
       .string()
       .required("Veuillez définir le nom d'utilisateur de votre interlocuteur"),
-    interlocutor_avatar: yup
-      .string()
-      .url("Veuillez saisir une URL pour l'avatar de votre interlocuteur")
-      .required(),
+    interlocutor_avatar: yup.string().required(),
     startTime: yup
       .string()
       .required('Veuillez définir une heure pour votre conversation'),

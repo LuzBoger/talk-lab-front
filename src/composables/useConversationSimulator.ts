@@ -10,6 +10,7 @@ import { useConversation } from './useConversation'
 import { useCategoryStore } from '../stores/useCategoryStore'
 import RecordRTC, { StereoAudioRecorder } from 'recordrtc'
 import { toast } from 'vue3-toastify'
+import { uploadMedia } from '../api/conversation'
 
 export function useConversationSimulator(props: { conversationId?: number }) {
   const route = useRoute()
@@ -40,6 +41,7 @@ export function useConversationSimulator(props: { conversationId?: number }) {
   const showCategoryModal = ref<boolean>(false)
   const categoryStore = useCategoryStore()
   const selectedCategories = ref<number[]>([])
+const baseUrl= import.meta.env.VITE_BASE_URL;
 
   const { handleSubmit, errors, setFieldValue, values, submitCount } = useForm({
     validationSchema: toTypedSchema(conversationSchema),
@@ -80,6 +82,22 @@ export function useConversationSimulator(props: { conversationId?: number }) {
     'content.interlocutor_avatar',
   )
   const { value: messagesUsers } = useField<Messages[]>('content.messages')
+  // Crée un watcher pour observer les changements de la variable errors
+  watch(
+    errors,
+    (newErrors) => {
+      console.log('Nouvelles erreurs:', newErrors)
+    },
+    { deep: true },
+  ) // Utilisez deep: true pour observer les changements imbriqués dans l'objet
+
+  watch(
+    values,
+    (newValues) => {
+      console.log('Nouvelles values :', newValues)
+    },
+    { deep: true },
+  ) // Utilisez deep: true pour observer les changements imbriqués dans l'objet
 
   const { messages, sendMessage } = useMessages(messagesUsers, setFieldValue)
   const {
@@ -125,17 +143,22 @@ export function useConversationSimulator(props: { conversationId?: number }) {
     imageInterlocutorSelected.value = null
   }
 
-  const handleFileUpload = (event: Event) => {
+  const handleFileUpload = async (event: Event) => {
     const file = (event.target as HTMLInputElement).files?.[0]
+    console.log(file)
     if (file) {
-      // Utilise une URL locale pour l'avatar
-      const url = URL.createObjectURL(file)
-      setFieldValue('content.interlocutor_avatar', url)
-      // Tu peux aussi stocker le file si besoin pour l'envoi réel
       imageInterlocutorSelected.value = file
+      try {
+        // Upload le fichier et récupère l'URL du backend
+        const response = await uploadMedia({ image: file as Blob })
+        console.log(response.data)
+        setFieldValue('content.interlocutor_avatar', baseUrl + response.data.imageUrl)
+        imageInterlocutorSend.value = response.data.imageUrl
+      } catch (error) {
+        toast.error("Erreur lors de l'upload de l'image")
+      }
     }
   }
-
   const onSubmit = handleSubmit(async (formValues) => {
     try {
       const res = await createFakeConversation(formValues)

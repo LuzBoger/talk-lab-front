@@ -3,7 +3,7 @@ import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import clsx from 'clsx'
 import PlayPreviewIcon from './previewIcon/PlayPreviewIcon.vue'
 const props = defineProps({
-  audio: Blob,
+  audio: String,
   author: String,
 })
 const isPlaying = ref(false)
@@ -108,9 +108,18 @@ watch(duration, (newVal, oldVal) => {
 })
 
 onMounted(async () => {
-  console.log('Blob type:', props.audio.type, 'size:', props.audio.size)
-  audioUrl.value = URL.createObjectURL(props.audio)
-  await generateWaveform(props.audio)
+  let blob: Blob
+  audioUrl.value = props.audio
+  try {
+    const response = await fetch(props.audio)
+    if (!response.ok) {
+      throw new Error('Impossible de récupérer le fichier audio')
+    }
+    blob = await response.blob()
+    await generateWaveform(blob)
+  } catch (error) {
+    console.error("Erreur lors du chargement de l'audio:", error)
+  }
 })
 
 onBeforeUnmount(() => {

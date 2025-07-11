@@ -12,8 +12,6 @@ import BottomBar from './preview/BottomBar.vue';
 import clsx from 'clsx';
 import { useConversationSimulator } from '../composables/useConversationSimulator';
 const sim = useConversationSimulator({});
-
-
 </script>
 
 <template>

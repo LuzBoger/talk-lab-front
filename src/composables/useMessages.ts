@@ -1,6 +1,8 @@
 import { ref, watch } from 'vue'
 import type { Ref } from 'vue'
 import type { Messages } from '../types/Messages'
+import { uploadMedia } from '../api/conversation'
+const baseUrl = import.meta.env.VITE_BASE_URL
 
 export function useMessages(
   message: Ref<Messages[]>,
@@ -25,16 +27,24 @@ export function useMessages(
       audio?: Blob
     },
   ) => {
-    console.log(otherContent)
-    // Supposons que vous ayez un Blob audio
+    let urls: { image?: string; audio?: string } = {}
+
+    if (otherContent && (otherContent.image || otherContent.audio)) {
+      try {
+        const res = await uploadMedia(otherContent)
+        if (res.data.imageUrl) urls.image = baseUrl + res.data.imageUrl
+        if (res.data.audioUrl) urls.audio = baseUrl + res.data.audioUrl
+      } catch (error) {
+        console.error("Erreur lors de l'upload", error)
+      }
+    }
 
     const newMessage: Messages = {
       author,
       message: messageContent,
       isSeen: false,
       reaction: '',
-      image: otherContent?.image,
-      audio: otherContent?.audio,
+      ...urls,
     }
 
     if (author === 'interlocutor') {

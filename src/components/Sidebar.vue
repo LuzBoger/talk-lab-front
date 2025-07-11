@@ -14,32 +14,30 @@ import DropdownButton from './sidebarComponents/dropdownButton/DropdownButton.vu
 import ProfilIcon from './icon/ProfilIcon.vue'
 import HelpIcon from './icon/HelpIcon.vue'
 import LogoutIcon from './icon/LogoutIcon.vue'
-import DropDownButtonLogout from './sidebarComponents/dropdownButton/DropDownButtonLogout.vue';
-import { useNotificationsStore } from '../stores/useNotificationsStore';
-import {useAuthStore} from '../stores/useAuthStore';
-import authService from '../api/authService';
-
+import DropDownButtonLogout from './sidebarComponents/dropdownButton/DropDownButtonLogout.vue'
+import { useNotificationsStore } from '../stores/useNotificationsStore'
+import { useAuthStore } from '../stores/useAuthStore'
 
 const emit = defineEmits(['sidebar-toggle', 'logout'])
-const authStore = useAuthStore();
-const notificationsStore = useNotificationsStore();
-const route = useRoute();
+const authStore = useAuthStore()
+const notificationsStore = useNotificationsStore()
+const route = useRoute()
 const router = useRouter()
 const showProfileMenu = ref<boolean>(false)
-const baseUrl= import.meta.env.VITE_BASE_URL;
+const baseUrl = import.meta.env.VITE_BASE_URL
 
 const unReadCount = computed(() => {
-  return notificationsStore.countUnReadNotifications ;
+  return notificationsStore.countUnReadNotifications
 })
 
 const isProfileRoute = computed(() => {
   return route.path.startsWith('/profil')
 })
-
-const logout = async  () => {
+console.log(authStore)
+const logout = async () => {
   await authStore.logout()
-  router.push('/login');
-};
+  router.push('/login')
+}
 
 const toggleProfileMenu = () => {
   showProfileMenu.value = !showProfileMenu.value
@@ -58,15 +56,18 @@ const user = computed(() => {
   return authStore.user?.username || 'Utilisateur'
 })
 const avatarurl = computed(() => {
-  if(authStore.user?.avatarUrl) {
-    return `${baseUrl}${authStore.user.avatarUrl}`;
+  if (authStore.user?.avatarUrl) {
+    return `${baseUrl}${authStore.user.avatarUrl}`
   }
-  return defaultProfileImg;
+  return defaultProfileImg
 })
 
-watch(() => authStore.isAuthenticated, (newVal) => {
-  console.log('isAuthenticated changed:', newVal);
-});
+watch(
+  () => authStore.isAuthenticated,
+  (newVal) => {
+    console.log('isAuthenticated changed:', newVal)
+  },
+)
 
 onMounted(() => {
   console.log('Sidebar component mounted')
@@ -148,9 +149,9 @@ onMounted(() => {
             :src="avatarurl"
             alt="Avatar utilisateur"
           />
-          <span class="font-semibold text-text-primary whitespace-nowrap"
-            >{{user || 'Utilisateur'}}</span
-          >
+          <span class="font-semibold text-text-primary whitespace-nowrap">{{
+            user || 'Utilisateur'
+          }}</span>
         </div>
         <div
           v-if="showProfileMenu"
