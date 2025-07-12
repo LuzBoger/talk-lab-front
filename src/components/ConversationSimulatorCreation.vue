@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import { useConversationSimulator } from '../composables/useConversationSimulator';
 const sim = useConversationSimulator();
 console.log(sim.conversationId.value)
+console.log(sim);
 </script>
 
 <template>

@@ -97,7 +97,7 @@ function formatDate(dateStr?: string) {
           </span>
         </div>
         <router-link
-          :to="`/conversation/${props.conversation.id}`"
+          :to="`/view-conversation/${props.conversation.id}`"
           class="px-4 py-2 bg-publish-button hover:bg-publish-button-hover cursor-pointer text-white rounded-lg shadow"
           >Visualiser</router-link
         >

@@ -101,10 +101,7 @@ onMounted(() => {
           <template #icon><MyCreationIcon /></template>
           Découverte de conversation
         </MenuItem>
-        <MenuItem
-          to="/conversation/nouvelle"
-          activePath="/conversation/nouvelle"
-        >
+        <MenuItem to="/create-conversation" activePath="/create-conversation">
           <template #icon><CreateDiscussionIcon /></template>
           Créer une discussion
         </MenuItem>
