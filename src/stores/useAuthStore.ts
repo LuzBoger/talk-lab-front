@@ -9,6 +9,7 @@ export const useAuthStore = defineStore('auth', () => {
   console.log('useAuthStore initialized')
   const user = ref<User | null>(null)
   const isAuthenticated = ref(false)
+  const isAuthLoading = ref(true)
   const isTwoFactorEnable = ref(false)
   const tempCredentials = ref<LoginCredentials | null>(null)
 
@@ -17,23 +18,18 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated.value = !!newUser
   }
 
-  const getUser = async () => {
-    console.log('suis-je la ?')
+  const loadUser = async () => {
+    isAuthLoading.value = true
     try {
       const currentUser = await authService.getCurrentUser()
-      console.log('getUser - currentUser:', currentUser)
-      if (currentUser) {
-        user.value = currentUser
-        isAuthenticated.value = true
-        isTwoFactorEnable.value = !!currentUser.isTwofactorEnabled
-      } else {
-        user.value = null
-        isAuthenticated.value = false
-      }
-    } catch (error) {
-      console.error("Erreur lors de la récupération de l'utilisateur:", error)
+      user.value = currentUser
+      isAuthenticated.value = !!currentUser
+      isTwoFactorEnable.value = !!currentUser?.isTwofactorEnabled
+    } catch (e) {
       user.value = null
       isAuthenticated.value = false
+    } finally {
+      isAuthLoading.value = false
     }
   }
 
@@ -46,13 +42,13 @@ export const useAuthStore = defineStore('auth', () => {
       return false
     }
     isTwoFactorEnable.value = false
-    await getUser()
+    await loadUser()
     return true
   }
 
   const register = async (userData: RegisterData) => {
     await authService.register(userData)
-    await getUser()
+    await loadUser()
   }
 
   const logout = async () => {
@@ -88,16 +84,17 @@ export const useAuthStore = defineStore('auth', () => {
 
     isTwoFactorEnable.value = false
     tempCredentials.value = null
-    await getUser()
+    await loadUser()
     return true
   }
 
   return {
     user,
     isAuthenticated,
+    isAuthLoading,
     isTwoFactorEnable,
     verifyTotp,
-    getUser,
+    loadUser,
     setUser,
     login,
     register,
