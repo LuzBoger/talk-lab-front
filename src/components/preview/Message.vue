@@ -43,7 +43,11 @@ const handleReactionSelected = (emoji: string) => {
 
 onMounted(() => {
   if (props.message?.image) {
-    imageUrl.value = URL.createObjectURL(props.message.image)
+    if (typeof props.message.image === 'string') {
+      imageUrl.value = props.message.image
+    } else {
+      imageUrl.value = URL.createObjectURL(props.message.image)
+    }
   }
 })
 

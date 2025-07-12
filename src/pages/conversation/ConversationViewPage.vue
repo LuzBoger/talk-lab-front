@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useConversationStore } from '../../stores/useConversationStore'
 import ConversationSimulatorView from '../../components/ConversationSimulatorView.vue'
 const conversationStore = useConversationStore()

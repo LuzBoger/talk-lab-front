@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import PublishConversationPopUp from './PublishConversationPopUp.vue';
 import CategorySelectedModal from './CategorySelectedModal.vue';
 import EmojiPicker from 'vue3-emoji-picker';
@@ -12,8 +13,12 @@ import BottomBar from './preview/BottomBar.vue';
 import clsx from 'clsx';
 import { useConversationSimulator } from '../composables/useConversationSimulator';
 const sim = useConversationSimulator();
-console.log(sim.conversationId.value)
-console.log(sim);
+const optionsBat = ['full', 'green', 'yellow', 'red']
+const optionsSignal = ['Bien', 'Moyen']
+
+watch(() => sim.imageInterlocutorSend.value, (newVal) => {
+  console.log('imageInterlocutorSend changed:', newVal)
+})
 </script>
 
 <template>
@@ -40,7 +45,7 @@ console.log(sim);
             <label class="text-sm font-medium text-white">Batterie <span class="text-red-600">*</span></label>
             <select v-model="sim.batteryLevel.value"
               :class="clsx('bg-card-bg text-white p-2 rounded w-full', sim.submitCount.value > 0 && sim.errors.value?.['content.batteryLevel'] && 'border border-red-700')">
-              <option v-for="option in sim.optionsBat" :key="option" :value="option">
+              <option v-for="option in optionsBat" :key="option" :value="option">
                 {{ option }}
               </option>
             </select>
@@ -54,9 +59,9 @@ console.log(sim);
           <!-- Signal -->
           <div class="flex flex-col gap-1">
             <label class="text-sm font-medium text-white">Qualité du signal <span class="text-red-600">*</span></label>
-            <select v-model="sim.signal.value"
+            <select v-model="sim.signal"
               :class="clsx('bg-card-bg text-white p-2 rounded w-full', sim.submitCount.value > 0 && sim.errors.value?.['content.signal'] && 'border border-red-700')">
-              <option v-for="option in sim.optionsSignal" :key="option" :value="option">
+              <option v-for="option in optionsSignal" :key="option" :value="option">
                 {{ option }}
               </option>
             </select>
@@ -214,7 +219,6 @@ console.log(sim);
           <BottomBar />
           <div class="min-w-32 max-w-32 min-h-[5px] mb-1.5 rounded-full bg-black"></div>
         </div>
-
       </div>
     </div>
     <PublishConversationPopUp :is-visible="sim.showPublishModal.value" @confirm="sim.publishConversation"

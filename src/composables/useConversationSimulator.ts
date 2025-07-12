@@ -8,10 +8,22 @@ import { getConversationById } from '../api/conversation'
 import { useMessages } from './useMessages'
 import { useConversation } from './useConversation'
 import { useCategoryStore } from '../stores/useCategoryStore'
-import RecordRTC, { StereoAudioRecorder } from 'recordrtc'
 import { toast } from 'vue3-toastify'
-import { uploadMedia } from '../api/conversation'
-
+import { startVocal, stopVocal } from './utils/audioUtils'
+import {
+  handleFileUpload as handleFileUploadUtil,
+  removeImage as removeImageUtil,
+  imageSelected as imageSelectedUtil,
+} from './utils/imageUtils'
+import {
+  openSaveModal as openSaveModalUtil,
+  openPublishModal as openPublishModalUtil,
+  handleCreateConversation as handleCreateConversationUtil,
+} from './utils/formUtils'
+import {
+  toggleEmojiPicker as toggleEmojiPickerUtil,
+  emojiSelected as emojiSelectedUtil,
+} from './utils/emojiUtils'
 export function useConversationSimulator() {
   const route = useRoute()
   const router = useRouter()
@@ -33,8 +45,10 @@ export function useConversationSimulator() {
   const initialvalues = ref(null)
   const imageUserSend = ref<string | undefined>(undefined)
   const imageInterlocutorSend = ref<string | undefined>(undefined)
+
   const imageUserSelected = ref<File | null>(null)
   const imageInterlocutorSelected = ref<File | null>(null)
+
   const imgInputUser = ref<HTMLInputElement | null>(null)
   const imgInputInterlocutor = ref<HTMLInputElement | null>(null)
   const isRecordingUser = ref<boolean>(false)
@@ -71,10 +85,8 @@ export function useConversationSimulator() {
   const { value: categoriesId } = useField<number[]>('categoriesId')
   const { value: startTime } = useField<string>('content.startTime')
   const { value: batteryLevel } = useField<string>('content.batteryLevel')
-  const optionsBat = ['full', 'green', 'yellow', 'red']
   const { value: reseau } = useField<string>('content.reseau')
   const { value: signal } = useField<string>('content.signal')
-  const optionsSignal = ['Bien', 'Moyen']
   const { value: interlocutor_name } = useField<string>(
     'content.interlocutor_name',
   )
@@ -146,23 +158,12 @@ export function useConversationSimulator() {
     imageInterlocutorSelected.value = null
   }
 
-  const handleFileUpload = async (event: Event) => {
-    const file = (event.target as HTMLInputElement).files?.[0]
-    console.log(file)
-    if (file) {
-      imageInterlocutorSelected.value = file
-      try {
-        // Upload le fichier et récupère l'URL du backend
-        const response = await uploadMedia({ image: file as Blob })
-        console.log(response.data)
-        setFieldValue(
-          'content.interlocutor_avatar',
-          baseUrl + response.data.imageUrl,
-        )
-      } catch (error) {
-        toast.error("Erreur lors de l'upload de l'image")
-      }
-    }
+  const handleFileUpload = (event: Event) => {
+    handleFileUploadUtil(
+      event,
+      setFieldValue,
+      baseUrl,
+    )
   }
   const onSubmit = handleSubmit(async (formValues) => {
     try {
@@ -231,28 +232,22 @@ export function useConversationSimulator() {
     setFieldValue('content.messages', updatedMessages)
   }
 
-  const toggleEmojiPicker = (target: 'user' | 'interlocutor') => {
-    currentTarget.value = target
-    if (target === 'user') {
-      showEmojiPickerUser.value = !showEmojiPickerUser.value
-      showEmojiPickerInterlocutor.value = false
-    } else {
-      showEmojiPickerInterlocutor.value = !showEmojiPickerInterlocutor.value
-      showEmojiPickerUser.value = false
-    }
-  }
-
-  const emojiSelected = (event: any) => {
-    const emoji = event.i
-    if (currentTarget.value === 'user') {
-      messageUser.value += emoji
-      showEmojiPickerUser.value = false
-    } else {
-      messageInterlocutor.value += emoji
-      showEmojiPickerInterlocutor.value = false
-    }
-    currentTarget.value = null
-  }
+  const toggleEmojiPicker = (target: 'user' | 'interlocutor') =>
+    toggleEmojiPickerUtil(
+      target,
+      currentTarget,
+      showEmojiPickerUser,
+      showEmojiPickerInterlocutor,
+    )
+  const emojiSelected = (event: any) =>
+    emojiSelectedUtil(
+      event,
+      currentTarget,
+      messageUser,
+      messageInterlocutor,
+      showEmojiPickerUser,
+      showEmojiPickerInterlocutor,
+    )
 
   const onImageClickedByUser = () => {
     imgInputUser.value?.click()
@@ -261,114 +256,63 @@ export function useConversationSimulator() {
     imgInputInterlocutor.value?.click()
   }
 
-  const imageSelected = (event: Event, target: 'user' | 'interlocutor') => {
-    const input = event.target as HTMLInputElement
-    if (input.files) {
-      const file = input.files[0]
-      const reader = new FileReader()
-      const maxSize = 2 * 1024 * 1024
-      if (file.size > maxSize) {
-        toast.error('Le fichier dépasse la taille maximale de 2Mo')
-        return
-      }
-      reader.onload = () => {
-        const imgPreview = reader.result as string
-        if (target === 'user') {
-          imageUserSend.value = imgPreview
-          imageUserSelected.value = file
-        } else {
-          imageInterlocutorSend.value = imgPreview
-          imageInterlocutorSelected.value = file
-        }
-      }
-      reader.readAsDataURL(file)
-    }
-  }
+  const imageSelected = (event: Event, target: 'user' | 'interlocutor') =>
+    imageSelectedUtil(
+      event,
+      target,
+      imageUserSend,
+      imageUserSelected,
+      imageInterlocutorSend,
+      imageInterlocutorSelected,
+      toast,
+    )
 
   const removeImage = (target: 'user' | 'interlocutor') => {
     if (target === 'user') {
-      imageUserSend.value = ''
-      imageUserSelected.value = null
+      removeImageUtil(imageUserSend, imageUserSelected)
     } else {
-      imageInterlocutorSend.value = ''
-      imageInterlocutorSelected.value = null
+      removeImageUtil(imageInterlocutorSend, imageInterlocutorSelected)
     }
   }
 
-  const startVocal = async (target: 'user' | 'interlocutor') => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      recorder.value = new RecordRTC(stream, {
-        type: 'audio',
-        mimeType: 'audio/wav',
-        recorderType: StereoAudioRecorder,
-        numberOfAudioChannels: 1,
-        desiredSampRate: 16000,
-      })
-      recorder.value.startRecording()
-      if (target === 'user') {
-        isRecordingUser.value = true
-        isRecordingInterlocutor.value = false
-      } else {
-        isRecordingInterlocutor.value = true
-        isRecordingUser.value = false
-      }
-      recorder.value._stream = stream
-    } catch (error) {
-      toast.error('Erreur lors du vocal')
-    }
-  }
-
-  const stopVocal = async (target: 'user' | 'interlocutor') => {
-    if (!recorder.value) return
-    recorder.value.stopRecording(async () => {
-      const audioBlob = recorder.value.getBlob()
-      if (recorder.value._stream) {
-        recorder.value._stream
-          .getTracks()
-          .forEach((track: MediaStreamTrack) => track.stop())
-      }
-      if (target === 'user') {
-        isRecordingUser.value = false
-      } else {
-        isRecordingInterlocutor.value = false
-      }
-      await sendMessage(target, '', { audio: audioBlob })
-      recorder.value = null
-    })
-  }
+  // Utilisation des fonctions utilitaires audio
+  const startVocalAction = (target: 'user' | 'interlocutor') =>
+    startVocal(target, recorder, isRecordingUser, isRecordingInterlocutor)
+  const stopVocalAction = (target: 'user' | 'interlocutor') =>
+    stopVocal(
+      target,
+      recorder,
+      isRecordingUser,
+      isRecordingInterlocutor,
+      sendMessage,
+    )
 
   const onAudioClicked = (target: 'user' | 'interlocutor') => {
     if (target === 'user') {
       if (isRecordingUser.value) {
-        stopVocal('user')
+        stopVocalAction('user')
       } else {
-        startVocal('user')
+        startVocalAction('user')
       }
     } else {
       if (isRecordingInterlocutor.value) {
-        stopVocal('interlocutor')
+        stopVocalAction('interlocutor')
       } else {
-        startVocal('interlocutor')
+        startVocalAction('interlocutor')
       }
     }
   }
 
-  const openSaveModal = () => {
-    showSaveModal.value = true
-    isDropdownOpen.value = false
-  }
-
-  const openPublishModal = () => {
-    showPublishModal.value = true
-    isDropdownOpen.value = false
-  }
-
-  const handleCreateConversation = async (categories: number[]) => {
-    selectedCategories.value = [...categories]
-    await setFieldValue('categoriesId', [...categories])
-    showCategoryModal.value = false
-  }
+  const openSaveModal = () => openSaveModalUtil(showSaveModal, isDropdownOpen)
+  const openPublishModal = () =>
+    openPublishModalUtil(showPublishModal, isDropdownOpen)
+  const handleCreateConversation = async (categories: number[]) =>
+    await handleCreateConversationUtil(
+      categories,
+      selectedCategories,
+      setFieldValue,
+      showCategoryModal,
+    )
 
   onBeforeRouteLeave((to, from, next) => {
     if (isConversationModified.value) {
@@ -418,10 +362,8 @@ export function useConversationSimulator() {
     categoriesId,
     startTime,
     batteryLevel,
-    optionsBat,
     reseau,
     signal,
-    optionsSignal,
     interlocutor_name,
     interlocutor_username,
     interlocutor_avatar,

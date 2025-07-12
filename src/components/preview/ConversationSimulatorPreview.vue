@@ -4,9 +4,10 @@ import PreviewHeader from './PreviewHeader.vue'
 import UserInfo from './UserInfo.vue'
 import MessageContainer from './MessageContainer.vue'
 import BottomBar from './BottomBar.vue'
-const props = defineProps<{ conversation: Conversation, canBeModified: boolean }>()
-console.log('ConversationPreview props:', props)
-console.log(props.conversation.content.startTime)
+const props = defineProps<{
+  conversation: Conversation
+  canBeModified: boolean
+}>()
 </script>
 
 <template>
