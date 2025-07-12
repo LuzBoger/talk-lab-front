@@ -98,7 +98,7 @@ console.log(sim.conversationId.value)
             <div class="relative">
               <div v-if="sim.imageUserSend.value" class="mb-2 w-16 h-16">
                 <div class="relative">
-                  <img :src="sim.imageUserSend.value" alt="Prévisualisation"
+                  <img :src="sim?.imageUserSend.value" alt="Prévisualisation"
                     class="w-16 h-16 object-cover rounded-md shadow border border-white" />
                   <button type="button" @click="sim.removeImage('user')"
                     class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center shadow hover:bg-red-600">

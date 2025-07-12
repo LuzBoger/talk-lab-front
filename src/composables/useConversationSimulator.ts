@@ -159,7 +159,6 @@ export function useConversationSimulator() {
           'content.interlocutor_avatar',
           baseUrl + response.data.imageUrl,
         )
-        imageInterlocutorSend.value = response.data.imageUrl
       } catch (error) {
         toast.error("Erreur lors de l'upload de l'image")
       }
