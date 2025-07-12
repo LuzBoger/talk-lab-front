@@ -3,6 +3,7 @@ import { defineProps, computed } from 'vue'
 import type { ConversationListing } from '../../types/ConversationListing'
 const props = defineProps<{
   conversation: ConversationListing
+  isCanBeModified: boolean
 }>()
 const tagColors = ['yellow', 'green', 'red', 'purple']
 
@@ -97,9 +98,16 @@ function formatDate(dateStr?: string) {
           </span>
         </div>
         <router-link
+          v-if="!props.isCanBeModified"
           :to="`/view-conversation/${props.conversation.id}`"
           class="px-4 py-2 bg-publish-button hover:bg-publish-button-hover cursor-pointer text-white rounded-lg shadow"
           >Visualiser</router-link
+        >
+        <router-link
+          v-if="props.isCanBeModified"
+          :to="`/edit-conversation/${props.conversation.id}`"
+          class="px-4 py-2 bg-publish-button hover:bg-publish-button-hover cursor-pointer text-white rounded-lg shadow"
+          >Modifier</router-link
         >
       </div>
     </div>
