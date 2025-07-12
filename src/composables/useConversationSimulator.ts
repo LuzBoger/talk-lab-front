@@ -4,7 +4,6 @@ import { useForm, useField } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/yup'
 import { conversationSchema } from '../validation/conversationSchema'
 import type { Messages } from '../types/Messages'
-import { getConversationById } from '../api/conversation'
 import { useMessages } from './useMessages'
 import { useConversation } from './useConversation'
 import { useCategoryStore } from '../stores/useCategoryStore'
@@ -24,15 +23,16 @@ import {
   toggleEmojiPicker as toggleEmojiPickerUtil,
   emojiSelected as emojiSelectedUtil,
 } from './utils/emojiUtils'
+import { useConversationStore } from '../stores/useConversationStore'
 export function useConversationSimulator() {
   const route = useRoute()
   const router = useRouter()
+  const conversationStore = useConversationStore()
   const conversationId = ref<number | null>(
     isNaN(parseInt(route.params.id as string))
       ? null
       : parseInt(route.params.id as string),
   )
-  console.log(conversationId.value)
   const messageUser = ref<string>('')
   const messageInterlocutor = ref<string>('')
   const showEmojiPickerUser = ref<boolean>(false)
@@ -159,11 +159,7 @@ export function useConversationSimulator() {
   }
 
   const handleFileUpload = (event: Event) => {
-    handleFileUploadUtil(
-      event,
-      setFieldValue,
-      baseUrl,
-    )
+    handleFileUploadUtil(event, setFieldValue, baseUrl)
   }
   const onSubmit = handleSubmit(async (formValues) => {
     try {
@@ -340,15 +336,22 @@ export function useConversationSimulator() {
   onMounted(async () => {
     if (conversationId.value) {
       try {
-        const response = await getConversationById(conversationId.value)
-        setFieldValue('title', response.title)
-        setFieldValue('description', response.description)
-        setFieldValue('content', response.content)
-        setFieldValue('categoriesId', response.categoriesId)
-        status.value = response.status
-        isPublic.value = response.isPublic
-        initialvalues.value = JSON.parse(JSON.stringify(values))
-        isConversationModified.value = false
+        await conversationStore.fetchConversationById(conversationId.value)
+        const response = conversationStore.currentConversation
+        if (response !== null) {
+          setFieldValue('title', response.title)
+          setFieldValue('description', response.description)
+          setFieldValue('content', response.content)
+          console.log(response.categoriesId)
+          setFieldValue(
+            'categoriesId',
+            response.categoriesId.map((cat: any) => cat.id),
+          )
+          status.value = response.status
+          isPublic.value = response.isPublic
+          initialvalues.value = JSON.parse(JSON.stringify(values))
+          isConversationModified.value = false
+        }
       } catch (error) {
         toast.error('Erreur lors de la récupération de la conversation')
       }

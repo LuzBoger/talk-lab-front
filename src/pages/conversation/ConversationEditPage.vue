@@ -2,7 +2,7 @@
 import { useRoute } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { useConversationStore } from '../../stores/useConversationStore'
-import ConversationSimulatorEdit from '../../components/ConversationSimulatorEdit.vue'
+import ConversationSimulatorCreation from '../../components/ConversationSimulatorCreation.vue'
 const conversationStore = useConversationStore()
 const route = useRoute()
 const id = ref(parseInt(route.params.id as string))
@@ -11,5 +11,5 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <ConversationSimulatorEdit />
+  <ConversationSimulatorCreation />
 </template>
