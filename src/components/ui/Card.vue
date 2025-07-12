@@ -33,7 +33,7 @@ function formatDate(dateStr?: string) {
       <img
         :src="props?.conversation?.content?.interlocutor_avatar"
         class="w-full h-full object-cover rounded-t-lg"
-        style="max-height: 236px"
+        style="max-height: 236px; min-height: 236px"
       />
     </div>
     <div class="p-2.5 w-full box-border mt-0 rounded-none">
