@@ -94,7 +94,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import subscriptionService from '../api/subscriptionService';
-import authService from '../api/authService';
+import { useAuthStore } from '../stores/useAuthStore';
 import type { Plan, Subscription } from '../api/subscriptionService';
 
 export default defineComponent({
@@ -118,7 +118,8 @@ export default defineComponent({
         this.loading = true;
         this.error = null;
         
-        this.isLoggedIn = authService.isAuthenticated();
+        const authStore = useAuthStore();
+        this.isLoggedIn = authStore.isAuthenticated;
         
         this.plans = await subscriptionService.getPlans();
         
@@ -192,7 +193,7 @@ export default defineComponent({
 <style scoped>
 .subscription-plans {
   padding: 2rem;
-  background: #f8f9fa;
+  background: var(--color-bg-dark);
   min-height: 100vh;
 }
 
@@ -202,16 +203,17 @@ export default defineComponent({
 }
 
 .plan-card {
-  background: white;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border-auth-button);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   position: relative;
 }
 
 .popular-badge {
-  background: #7C3AED;
-  color: white;
+  background: var(--color-main-color);
+  color: var(--color-bg-dark);
   text-align: center;
   padding: 0.8rem;
   font-weight: 600;
@@ -224,13 +226,14 @@ export default defineComponent({
 }
 
 h2 {
-  color: #1a1a1a;
+  color: var(--color-text-primary);
   font-size: 1.8rem;
   margin-bottom: 1rem;
 }
 
 .plan-description {
-  color: #666;
+  color: var(--color-text-primary);
+  opacity: 0.8;
   margin-bottom: 1.5rem;
   font-size: 1rem;
   line-height: 1.5;
@@ -241,15 +244,16 @@ h2 {
 }
 
 .original-price {
-  color: #666;
+  color: var(--color-text-primary);
+  opacity: 0.6;
   text-decoration: line-through;
   font-size: 1rem;
   margin-bottom: 0.5rem;
 }
 
 .discount {
-  background: #EEF2FF;
-  color: #7C3AED;
+  background: var(--color-main-color);
+  color: var(--color-bg-dark);
   display: inline-block;
   padding: 0.3rem 0.8rem;
   border-radius: 4px;
@@ -268,23 +272,25 @@ h2 {
 .amount {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--color-text-primary);
 }
 
 .period {
-  color: #666;
+  color: var(--color-text-primary);
+  opacity: 0.8;
   font-size: 1.2rem;
 }
 
 .price-note {
-  color: #666;
+  color: var(--color-text-primary);
+  opacity: 0.6;
   font-size: 0.8rem;
   margin-bottom: 1.5rem;
 }
 
 .select-button {
-  background: #7C3AED;
-  color: white;
+  background: var(--color-main-color);
+  color: var(--color-bg-dark);
   width: 100%;
   padding: 1rem;
   border: none;
@@ -296,16 +302,16 @@ h2 {
 }
 
 .select-button:hover {
-  background: #6D28D9;
+  background: var(--color-main-color-hover);
 }
 
 .select-button:disabled {
-  background: #9CA3AF;
+  background: var(--color-border-auth-button);
   cursor: not-allowed;
 }
 
 .current-plan-button {
-  background: #10B981;
+  background: var(--color-validate-button);
   color: white;
   width: 100%;
   padding: 1rem;
@@ -317,8 +323,8 @@ h2 {
 }
 
 .change-button {
-  background: #F59E0B;
-  color: white;
+  background: var(--color-tag-yellow);
+  color: var(--color-bg-dark);
   width: 100%;
   padding: 1rem;
   border: none;
@@ -330,16 +336,17 @@ h2 {
 }
 
 .change-button:hover {
-  background: #D97706;
+  background: #e6a800;
 }
 
 .change-button:disabled {
-  background: #9CA3AF;
+  background: var(--color-border-auth-button);
   cursor: not-allowed;
 }
 
 .renewal-note {
-  color: #666;
+  color: var(--color-text-primary);
+  opacity: 0.6;
   font-size: 0.8rem;
   text-align: center;
   margin: 1rem 0 2rem;
@@ -347,7 +354,7 @@ h2 {
 }
 
 .features {
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--color-border-auth-button);
   padding-top: 1.5rem;
 }
 
@@ -356,13 +363,14 @@ h2 {
   align-items: flex-start;
   gap: 0.8rem;
   margin-bottom: 1rem;
-  color: #4B5563;
+  color: var(--color-text-primary);
+  opacity: 0.9;
   font-size: 0.95rem;
   line-height: 1.4;
 }
 
 .check {
-  color: #10B981;
+  color: var(--color-validate-button);
   font-weight: bold;
   font-size: 1.1rem;
 }
@@ -370,13 +378,14 @@ h2 {
 .loading {
   text-align: center;
   padding: 2rem;
+  color: var(--color-text-primary);
 }
 
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #7C3AED;
+  border: 4px solid var(--color-border-auth-button);
+  border-top: 4px solid var(--color-main-color);
   border-radius: 50%;
   margin: 0 auto 1rem;
   animation: spin 1s linear infinite;
@@ -390,13 +399,15 @@ h2 {
 .error {
   text-align: center;
   padding: 2rem;
-  color: #DC2626;
-  background: #FEE2E2;
+  color: var(--color-cancel-color);
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-cancel-color);
   border-radius: 8px;
 }
 
 .login-note {
-  color: #666;
+  color: var(--color-text-primary);
+  opacity: 0.6;
   font-size: 0.8rem;
   text-align: center;
   margin: 1rem 0 2rem;

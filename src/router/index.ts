@@ -130,9 +130,7 @@ const routes = [
         path: '/subscription/plans',
         name: 'SubscriptionPlans',
         component: SubscriptionPlansView,
-        meta: {
-          requiresAuth: true,
-        },
+        // Page publique - accessible sans connexion
       },
       {
         path: '/subscription/my-subscription',
