@@ -341,7 +341,10 @@ export function useConversationSimulator() {
         if (response !== null) {
           setFieldValue('title', response.title)
           setFieldValue('description', response.description)
-          setFieldValue('content', response.content)
+          setFieldValue('content', {
+            ...response.content,
+            interlocutor_avatar: response.content.interlocutor_avatar ?? '',
+          })
           console.log(response.categoriesId)
           setFieldValue(
             'categoriesId',
