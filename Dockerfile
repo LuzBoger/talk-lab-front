@@ -10,10 +10,9 @@ COPY . .
 
 RUN npm run build || true
 
-RUN mkdir -p /app/front-dist && cp -r /app/dist/* /app/front-dist/
-
 
 FROM nginx:alpine
+
 COPY --from=build /app/front-dist /var/www/html/front-dist
 
 
