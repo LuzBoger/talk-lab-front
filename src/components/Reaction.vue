@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import EmojiPicker from 'vue3-emoji-picker'
-import 'vue3-emoji-picker/dist/vue3-emoji-picker.css'
+import 'vue3-emoji-picker/css'
 import clsx from 'clsx'
 const emit = defineEmits<{ (event: 'selected', emoji: string): void }>()
 const showEmojiPicker = ref<boolean>(false)
