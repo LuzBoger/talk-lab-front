@@ -10,21 +10,14 @@ COPY . .
 
 RUN npm run build 
 
+FROM alpine:latest
 
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-# Ajouter une configuration nginx basique pour les SPA
-RUN echo 'server { \
-    listen 80; \
-    server_name localhost; \
-    root /usr/share/nginx/html; \
-    index index.html; \
-    location / { \
-    try_files $uri $uri/ /index.html; \
-    } \
-    }' > /etc/nginx/conf.d/default.conf
+# Créer le répertoire et copier les fichiers
+RUN mkdir -p /var/www/html/front-dist
+COPY --from=build /app/dist /var/www/html/front-dist
 
-CMD ["nginx", "-g", "daemon off;"]
+# Juste garder les fichiers disponibles, pas de serveur nginx ici
+CMD ["tail", "-f", "/dev/null"]
 
 
 
