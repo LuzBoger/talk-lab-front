@@ -10,7 +10,6 @@ const conversationStore = useConversationStore()
 const categoriesStore = useCategoryStore()
 
 const selectedCategory = ref<number | ''>('')
-const NB_CONV = 3
 
 const categories = computed(() => {
   return categoriesStore.categories || []

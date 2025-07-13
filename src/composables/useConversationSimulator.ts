@@ -122,7 +122,7 @@ export function useConversationSimulator() {
     saveConversationChanges,
     publishConversationToPublic,
     deleteFakeConversation,
-  } = useConversation(conversationId, values, setFieldValue)
+  } = useConversation(conversationId, values)
 
   const sendUserMessage = async () => {
     if (!messageUser.value && !imageUserSelected.value) return
@@ -310,7 +310,7 @@ export function useConversationSimulator() {
       showCategoryModal,
     )
 
-  onBeforeRouteLeave((to, from, next) => {
+  onBeforeRouteLeave((to, _from, next) => {
     if (isConversationModified.value) {
       nextRoute = to
       showSaveModal.value = true

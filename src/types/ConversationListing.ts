@@ -7,7 +7,8 @@ export interface ConversationListing {
   categoriesId: number[]
   isPublic: boolean
   createdAt?: string
+  updatedAt?: string
   status: 'draft' | 'published'
   content: ConversationContent
-  author: string
+  author?: string
 }
