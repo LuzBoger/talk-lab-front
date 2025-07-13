@@ -11,7 +11,15 @@ const props = defineProps({
     required: true,
   },
   color: String,
-  radiusClass: String,
+  radiusClass: {
+    type: Object as () => {
+      borderTopLeftRadius?: string
+      borderTopRightRadius?: string
+      borderBottomLeftRadius?: string
+      borderBottomRightRadius?: string
+    },
+    required: false,
+  },
   index: Number,
   addReaction: {
     type: Function,

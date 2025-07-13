@@ -2,6 +2,17 @@ import RecordRTC, { StereoAudioRecorder } from 'recordrtc'
 import type { Ref } from 'vue'
 import { toast } from 'vue3-toastify'
 
+let RecordRTCInstance: any = null
+let StereoAudioRecorderInstance: any = null
+try {
+  RecordRTCInstance = RecordRTC
+  StereoAudioRecorderInstance = StereoAudioRecorder
+} catch (e) {
+  // fallback si la lib n'est pas dispo
+  RecordRTCInstance = null
+  StereoAudioRecorderInstance = null
+}
+
 export async function startVocal(
   target: 'user' | 'interlocutor',
   recorder: Ref<any>,
@@ -9,11 +20,15 @@ export async function startVocal(
   isRecordingInterlocutor: Ref<boolean>,
 ) {
   try {
+    if (!RecordRTCInstance || !StereoAudioRecorderInstance) {
+      toast.error('RecordRTC non disponible')
+      return
+    }
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-    recorder.value = new RecordRTC(stream, {
+    recorder.value = new RecordRTCInstance(stream, {
       type: 'audio',
       mimeType: 'audio/wav',
-      recorderType: StereoAudioRecorder,
+      recorderType: StereoAudioRecorderInstance,
       numberOfAudioChannels: 1,
       desiredSampRate: 16000,
     })
