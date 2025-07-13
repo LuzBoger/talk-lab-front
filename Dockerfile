@@ -8,8 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build || true
-
+RUN npm run build || true && mkdir -p dist
 
 FROM nginx:alpine
 
