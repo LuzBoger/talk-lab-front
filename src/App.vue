@@ -15,7 +15,6 @@ const authStore = useAuthStore()
 onMounted(async () => {
   await categoryStore.fetchCategories()
   await conversationStore.fetchPublicConversations()
-  await authStore.getUser()
   console.log(
     'Public conversation:',
     await conversationStore.fetchPublicConversations(),

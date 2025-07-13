@@ -23,11 +23,19 @@ const showReaction = ref<boolean>(false)
 const showPlusButton = ref<boolean>(false)
 const imageUrl = ref<string | null>(null)
 
+const handleMouseOver = () => {
+  if (props.addReaction !== undefined) showPlusButton.value = true
+}
+const handleMouseLeave = () => {
+  if (props.addReaction !== undefined) showPlusButton.value = false
+}
 const toggleReaction = () => {
+  if (props.addReaction === undefined) return
   showReaction.value = !showReaction.value
 }
 
 const handleReactionSelected = (emoji: string) => {
+  if (props.addReaction === undefined) return
   props.addReaction(props.index, emoji)
   showReaction.value = false
   showPlusButton.value = false
@@ -35,7 +43,11 @@ const handleReactionSelected = (emoji: string) => {
 
 onMounted(() => {
   if (props.message?.image) {
-    imageUrl.value = URL.createObjectURL(props.message.image)
+    if (typeof props.message.image === 'string') {
+      imageUrl.value = props.message.image
+    } else {
+      imageUrl.value = URL.createObjectURL(props.message.image)
+    }
   }
 })
 
@@ -51,13 +63,14 @@ console.log('props.radiusClass:', props.radiusClass)
     :style="props.radiusClass"
     :class="
       clsx(
-        'max-w-[256px] px-[13.5px] py-[9px] w-fit my-[1px] leading-4.5 text-base flex items-center cursor-pointer relative',
+        'max-w-[256px] px-[13.5px] py-[9px] w-fit my-[1px] leading-4.5 text-base flex items-center relative',
+        addReaction !== undefined && 'cursor-pointer',
         props.message?.image ? '' : props.color,
         props.message.reaction !== '' && 'mb-5',
       )
     "
-    @mouseover="showPlusButton = true"
-    @mouseleave="showPlusButton = false"
+    @mouseover="handleMouseOver"
+    @mouseleave="handleMouseLeave"
   >
     <span>{{ props.message.message }}</span>
     <img

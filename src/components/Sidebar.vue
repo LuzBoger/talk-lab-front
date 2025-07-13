@@ -58,7 +58,9 @@ onMounted(() => {
     class="w-72 h-screen bg-sidebar-bg p-5 flex flex-col justify-between text-text-primary"
   >
     <div class="logo flex justify-center mb-10">
-      <LogoIcon />
+      <router-link to="/" class="cursor-pointer">
+        <LogoIcon />
+      </router-link>
     </div>
 
     <nav class="flex flex-col flex-1">
@@ -99,10 +101,7 @@ onMounted(() => {
           <template #icon><MyCreationIcon /></template>
           Découverte de conversation
         </MenuItem>
-        <MenuItem
-          to="/conversation/nouvelle"
-          activePath="/conversation/nouvelle"
-        >
+        <MenuItem to="/create-conversation" activePath="/create-conversation">
           <template #icon><CreateDiscussionIcon /></template>
           Créer une discussion
         </MenuItem>

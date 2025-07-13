@@ -34,6 +34,7 @@ watch(
           v-for="(conversation, index) in publicConversations"
           :key="'rec-' + index"
           :conversation="conversation"
+          :isCanBeModified="false"
         />
       </div>
     </section>

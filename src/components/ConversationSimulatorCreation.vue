@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from 'vue'
 import PublishConversationPopUp from './PublishConversationPopUp.vue';
 import CategorySelectedModal from './CategorySelectedModal.vue';
 import EmojiPicker from 'vue3-emoji-picker';
@@ -12,12 +13,17 @@ import BottomBar from './preview/BottomBar.vue';
 import clsx from 'clsx';
 import { useConversationSimulator } from '../composables/useConversationSimulator';
 const sim = useConversationSimulator();
-console.log(sim.conversationId.value)
+const optionsBat = ['full', 'green', 'yellow', 'red']
+const optionsSignal = ['Bien', 'Moyen']
+
+watch(() => sim.imageInterlocutorSend.value, (newVal) => {
+  console.log('imageInterlocutorSend changed:', newVal)
+})
 </script>
 
 <template>
   <div class="flex flex-col lg:flex-row p-4 min-h-screen text-white">
-    <form v-if="sim.conversationId.value == null" @submit.prevent="sim.onSubmit" class="space-y-4 p-4 rounded-lg w-form">
+    <form @submit.prevent="sim.onSubmit" class="space-y-4 p-4 rounded-lg w-form">
       <div class="flex items-center gap-1">
         <input type="text" v-model="sim.title.value" placeholder="Titre de la conversation"
           :class="clsx('w-80 bg-sidebar-bg text-white p-2 rounded', sim.submitCount.value > 0 && sim.errors.value.title && 'border border-red-700')" />
@@ -39,7 +45,7 @@ console.log(sim.conversationId.value)
             <label class="text-sm font-medium text-white">Batterie <span class="text-red-600">*</span></label>
             <select v-model="sim.batteryLevel.value"
               :class="clsx('bg-card-bg text-white p-2 rounded w-full', sim.submitCount.value > 0 && sim.errors.value?.['content.batteryLevel'] && 'border border-red-700')">
-              <option v-for="option in sim.optionsBat" :key="option" :value="option">
+              <option v-for="option in optionsBat" :key="option" :value="option">
                 {{ option }}
               </option>
             </select>
@@ -53,17 +59,17 @@ console.log(sim.conversationId.value)
           <!-- Signal -->
           <div class="flex flex-col gap-1">
             <label class="text-sm font-medium text-white">Qualité du signal <span class="text-red-600">*</span></label>
-            <select v-model="sim.signal.value"
+            <select v-model="sim.signal"
               :class="clsx('bg-card-bg text-white p-2 rounded w-full', sim.submitCount.value > 0 && sim.errors.value?.['content.signal'] && 'border border-red-700')">
-              <option v-for="option in sim.optionsSignal" :key="option" :value="option">
+              <option v-for="option in optionsSignal" :key="option" :value="option">
                 {{ option }}
               </option>
             </select>
           </div>
         </div>
         <div class="flex flex-col gap-1">
-          <label class="text-sm font-medium text-white">Description de la conversation</label>
-          <textarea v-model="sim.description.value" class="w-full bg-card-bg text-white py-2 rounded h-24"
+          <label class="text-sm font-medium text-white">Description de la conversation<span class="text-red-600">*</span></label>
+          <textarea v-model="sim.description.value" :class="clsx('w-full px-2 bg-card-bg text-white py-2 rounded h-24', sim.submitCount.value > 0 && sim.errors.value.description && 'border border-red-700')"
             rows="3"></textarea>
         </div>
 
@@ -98,7 +104,7 @@ console.log(sim.conversationId.value)
             <div class="relative">
               <div v-if="sim.imageUserSend.value" class="mb-2 w-16 h-16">
                 <div class="relative">
-                  <img :src="sim.imageUserSend.value" alt="Prévisualisation"
+                  <img :src="sim?.imageUserSend.value" alt="Prévisualisation"
                     class="w-16 h-16 object-cover rounded-md shadow border border-white" />
                   <button type="button" @click="sim.removeImage('user')"
                     class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center shadow hover:bg-red-600">
@@ -172,27 +178,33 @@ console.log(sim.conversationId.value)
               Créer
             </button>
 
-            <button v-else="sim.conversationId.value" type="button" @click="sim.deleteConversaiton"
-              class="bg-cancel-color text-black px-4 py-2 rounded-md cursor-pointer">
-              Supprimer la conversation
-            </button>
+
           </div>
 
-          <div class="flex gap-2 flex-wrap mt-2 sm:mt-0">
-            <div v-if="sim.status.value === 'draft' && sim.conversationId.value" class="flex gap-2 flex-wrap">
+          <div class="flex gap-2 flex-wrap mt-2 sm:mt-0 w-full">
+            <div v-if="sim.status.value === 'draft' && sim.conversationId.value" class="flex gap-2 flex-wrap justify-between w-full">
+              <button type="button" @click="sim.deleteConversaiton"
+                class="bg-cancel-color hover:bg-cancel-hover text-white px-4 py-2 rounded-md cursor-pointer">
+                Supprimer la conversation
+              </button>
               <button type="button" @click="sim.openSaveModal"
-                class="bg-main-color text-black px-4 py-2 rounded-md cursor-pointer">
+                class="bg-main-color hover:bg-main-color-hover text-black px-4 py-2 rounded-md cursor-pointer">
                 Enregistrer les modifications
               </button>
 
               <button type="button" @click="sim.openPublishModal"
-                class="bg-publish-button px-4 py-2 rounded-md cursor-pointer">
+                class="bg-publish-button hover:bg-publish-button-hover px-4 py-2 rounded-md cursor-pointer">
                 Publier la conversation
               </button>
+
             </div>
             <button v-if="sim.status.value === 'published' && sim.conversationId.value" type="button"
               @click="sim.saveChanges" class="bg-main-color px-4 py-2 rounded-md cursor-pointer">
               Enregistrer les modifications
+            </button>
+            <button v-if="sim.status.value === 'published' && sim.conversationId.value" type="button" @click="sim.deleteConversaiton"
+                class="bg-cancel-color hover:bg-cancel-hover text-white px-4 py-2 rounded-md cursor-pointer">
+                Supprimer la conversation
             </button>
           </div>
         </div>
@@ -213,7 +225,6 @@ console.log(sim.conversationId.value)
           <BottomBar />
           <div class="min-w-32 max-w-32 min-h-[5px] mb-1.5 rounded-full bg-black"></div>
         </div>
-
       </div>
     </div>
     <PublishConversationPopUp :is-visible="sim.showPublishModal.value" @confirm="sim.publishConversation"
