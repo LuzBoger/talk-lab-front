@@ -27,12 +27,21 @@ const props = defineProps<{
           :interlocutorUsername="
             props.conversation.content.interlocutor_username
           "
-          :interlocutorAvatar="props.conversation.content.interlocutor_avatar"
+          :interlocutorAvatar="
+            props.conversation.content.interlocutor_avatar ?? undefined
+          "
         />
         <MessageContainer
-          :messages="props.conversation.content.messages"
-          :interlocutorAvatar="props.conversation.content.interlocutor_avatar"
-          :addReaction="undefined"
+          :messages="
+            (props.conversation.content.messages ?? []).map((msg) => ({
+              ...msg,
+              time: msg.time ?? undefined,
+              reaction: msg.reaction ?? undefined,
+            }))
+          "
+          :interlocutorAvatar="
+            props.conversation.content.interlocutor_avatar ?? undefined
+          "
         />
       </div>
       <div class="flex flex-col items-center">

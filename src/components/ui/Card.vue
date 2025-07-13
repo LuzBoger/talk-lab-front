@@ -8,13 +8,22 @@ const props = defineProps<{
 const tagColors = ['yellow', 'green', 'red', 'purple']
 
 const tags = computed(() =>
-  (props.conversation?.categoriesId || []).map((cat, idx) => ({
-    shortText: cat.shortName || '???',
-    longText: cat.name || '???',
-    color: tagColors[idx % tagColors.length],
-  })),
+  (props.conversation?.categoriesId || []).map((cat, idx) => {
+    if (cat && typeof cat === 'object' && !Array.isArray(cat)) {
+      return {
+        shortText: (cat as any).shortName || '???',
+        longText: (cat as any).name || '???',
+        color: tagColors[idx % tagColors.length],
+      }
+    } else {
+      return {
+        shortText: String(cat),
+        longText: String(cat),
+        color: tagColors[idx % tagColors.length],
+      }
+    }
+  }),
 )
-// Helpers pour formater les dates (à adapter selon ton format)
 function formatDate(dateStr?: string) {
   if (!dateStr) return ''
   const date = new Date(dateStr)
@@ -32,7 +41,7 @@ function formatDate(dateStr?: string) {
   >
     <div class="w-full">
       <img
-        :src="props?.conversation?.content?.interlocutor_avatar"
+        :src="props?.conversation?.content?.interlocutor_avatar ?? undefined"
         class="w-full h-full object-cover rounded-t-lg"
         style="max-height: 236px; min-height: 236px"
       />

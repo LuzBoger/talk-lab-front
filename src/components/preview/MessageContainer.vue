@@ -11,7 +11,7 @@ const props = defineProps({
   interlocutorAvatar: String,
   addReaction: {
     type: Function,
-    required: true,
+    required: false,
   },
 })
 

@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/useAuthStore';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/useAuthStore'
 import LoginIcon from '../components/icon/LoginIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
 import GoogleIcon from '../components/icon/GoogleIcon.vue'
 import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
-import TwoFactorModal from '../components/2FA/TwoFactorModal.vue';
+import TwoFactorModal from '../components/2FA/TwoFactorModal.vue'
 
-const router = useRouter();
+const router = useRouter()
 const authStore = useAuthStore()
 
-const email = ref('');
-const password = ref('');
-const errorMessage = ref('');
-const loading = ref(false);
+const email = ref('')
+const password = ref('')
+const errorMessage = ref('')
+const loading = ref(false)
 const showModalTwoFactor = ref(false)
 const errorMessageModal = ref('')
 
@@ -28,12 +28,12 @@ const login = async () => {
   errorMessage.value = ''
 
   try {
-     await authStore.login({
+    await authStore.login({
       email: email.value,
       password: password.value,
     })
 
-    if(authStore.isTwoFactorEnable) {
+    if (authStore.isTwoFactorEnable) {
       showModalTwoFactor.value = true
       return
     }
@@ -49,30 +49,25 @@ const login = async () => {
   }
 }
 
-
 const validateTotp = async (code: string) => {
-
   loading.value = true
 
   try {
     await authStore.verifyTotp(code)
     showModalTwoFactor.value = false
     router.push('/')
-  }catch (error: any) {
-    errorMessageModal.value = error.response?.data?.message || 'Code 2FA invalide'
+  } catch (error: any) {
+    errorMessageModal.value =
+      error.response?.data?.message || 'Code 2FA invalide'
   } finally {
     loading.value = false
   }
-
 }
 
 const closeModal = () => {
   showModalTwoFactor.value = false
   errorMessageModal.value = ''
 }
-
-
-
 </script>
 
 <template>
@@ -180,12 +175,11 @@ const closeModal = () => {
         </div>
       </div>
     </div>
-   </div>
-   <TwoFactorModal 
-      v-if="showModalTwoFactor"
-      :error-message="errorMessage"
-      @confirm="validateTotp"
-      @close="closeModal"
+  </div>
+  <TwoFactorModal
+    v-if="showModalTwoFactor"
+    :error-message="errorMessage"
+    @confirm="validateTotp"
+    @close="closeModal"
   />
-  
 </template>

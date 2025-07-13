@@ -23,7 +23,7 @@ const props = defineProps({
   index: Number,
   addReaction: {
     type: Function,
-    required: true,
+    required: false,
   },
 })
 
@@ -72,7 +72,7 @@ console.log('props.radiusClass:', props.radiusClass)
     :class="
       clsx(
         'max-w-[256px] px-[13.5px] py-[9px] w-fit my-[1px] leading-4.5 text-base flex items-center relative',
-        addReaction !== undefined && 'cursor-pointer',
+        props.addReaction !== undefined && 'cursor-pointer',
         props.message?.image ? '' : props.color,
         props.message.reaction !== '' && 'mb-5',
       )

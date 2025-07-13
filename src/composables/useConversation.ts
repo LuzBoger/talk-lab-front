@@ -5,8 +5,7 @@ import type { Conversation } from '../types/Conversation';
 
 export function useConversation(
   conversationId: Ref<number | null>,
-  formFields: any,
-  setFieldValue: (field: any, value:any)=> void){
+  formFields: any){
 
   const status = ref<'draft' | 'published'>('draft');
   const isPublic = ref<boolean>(false);

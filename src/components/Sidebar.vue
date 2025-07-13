@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import defaultProfileImg from '../assets/images/defaultAvatar.png'
 import MenuItem from './sidebarComponents/MenuItem.vue'
@@ -15,19 +15,14 @@ import ProfilIcon from './icon/ProfilIcon.vue'
 import HelpIcon from './icon/HelpIcon.vue'
 import LogoutIcon from './icon/LogoutIcon.vue'
 import DropDownButtonLogout from './sidebarComponents/dropdownButton/DropDownButtonLogout.vue'
-import { useNotificationsStore } from '../stores/useNotificationsStore'
 import { useAuthStore } from '../stores/useAuthStore'
 
 const emit = defineEmits(['sidebar-toggle', 'logout'])
 const authStore = useAuthStore()
-const notificationsStore = useNotificationsStore()
 const route = useRoute()
 const router = useRouter()
 const showProfileMenu = ref<boolean>(false)
 const baseUrl = import.meta.env.VITE_BASE_URL
-const unReadCount = computed(() => {
-  return notificationsStore.countUnReadNotifications
-})
 
 const isProfileRoute = computed(() => {
   return route.path.startsWith('/profil')
