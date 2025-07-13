@@ -13,7 +13,7 @@ RUN npm run build || true
 
 FROM nginx:alpine
 
-COPY --from=build /app/front-dist /var/www/html/front-dist
+COPY --from=build /app/dist /var/www/html/front-dist
 
 
 CMD ["nginx", "-g", "daemon off;"]
