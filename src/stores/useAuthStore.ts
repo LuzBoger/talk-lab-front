@@ -7,6 +7,7 @@ import type { User } from '../types/User'
 
 export const useAuthStore = defineStore('auth', () => {
   console.log('useAuthStore initialized')
+  console.log(import.meta.env.VITE_API_URL || '__VITE_API_URL__')
   const user = ref<User | null>(null)
   const isAuthenticated = ref(false)
   const isAuthLoading = ref(true)
@@ -56,17 +57,19 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
     isAuthenticated.value = false
     isTwoFactorEnable.value = false
-    
+
     try {
       await authService.logout()
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error)
     }
-    
+
     // Force la suppression des cookies côté client car le backend les recrée
     setTimeout(() => {
-      document.cookie = 'BEARER=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-      document.cookie = 'REFRESH_TOKEN=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+      document.cookie =
+        'BEARER=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+      document.cookie =
+        'REFRESH_TOKEN=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
       console.log('Cookies supprimés après logout')
     }, 100)
   }
