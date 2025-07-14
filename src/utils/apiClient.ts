@@ -1,9 +1,10 @@
 import axios from 'axios'
 import authService from '../api/authService'
 import { useAuthStore } from '../stores/useAuthStore'
-
+console.log('caca')
+console.log(import.meta.env.VITE_API_URL || '__VITE_API_URL__')
 export const apiClient = axios.create({
-  baseURL: 'http://localhost/api',
+  baseURL: import.meta.env.VITE_API_URL || '__VITE_API_URL__',
   headers: {
     Accept: 'application/json',
   },
