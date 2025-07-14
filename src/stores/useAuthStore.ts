@@ -7,6 +7,7 @@ import type { User } from '../types/User'
 
 export const useAuthStore = defineStore('auth', () => {
   console.log('useAuthStore initialized')
+  console.log('caca')
   console.log(import.meta.env.VITE_API_URL || '__VITE_API_URL__')
   const user = ref<User | null>(null)
   const isAuthenticated = ref(false)
