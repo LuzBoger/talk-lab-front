@@ -17,7 +17,6 @@ onMounted(async () => {
   await conversationStore.fetchPublicConversations()
   console.log(
     'Public conversation:',
-    await conversationStore.fetchPublicConversations(),
   )
 })
 

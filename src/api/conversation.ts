@@ -63,6 +63,22 @@ export const uploadMedia = async (media: { image?: Blob; audio?: Blob }) => {
 export const getPublicConversationByCategory = async (
   categoryId: number,
 ): Promise<Conversation[]> => {
-  const response = await apiClient.get(`/conversations/category/${categoryId}`)
+  const response = await apiClient.get(`/get-conversations-by-category/${categoryId}`)
   return response.data
 }
+
+
+export const searchPublicConversations = async (title: string , categoryNames: string[], page:number, limit:number): Promise<{ conversations: Conversation[], total: number}> => {
+       const response = await apiClient.get(`/public-conversations`, {
+        params: {title, category: categoryNames, page, limit}
+    })
+
+    const data = JSON.parse(response.data.content)
+    return {
+
+      conversations: data.conversations ?? [],
+      total: data.total ?? 0
+
+    }
+}
+
