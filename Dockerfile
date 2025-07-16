@@ -12,24 +12,26 @@ ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_BASE_URL=$VITE_BASE_URL
 ENV VITE_API_2FA_URL=$VITE_API_2FA_URL
 
-
 COPY package*.json ./
-
-RUN npm install
+RUN npm ci --only=production
 
 COPY . .
-
 RUN npm run build 
 
-FROM alpine:latest
-
-# Créer le répertoire et copier les fichiers
-RUN mkdir -p /usr/share/nginx/html
+# Stage final avec nginx ou serveur web léger
+FROM nginx:alpine
+COPY --from=build /app/dist/ /usr/share/nginx/html/
 COPY --from=build /app/dist/ /usr/share/nginx/html/
 
-# Juste garder les fichiers disponibles, pas de serveur nginx ici
-CMD ["tail", "-f", "/dev/null"]
+# Configuration nginx pour SPA
+RUN echo 'server { \
+    listen 80; \
+    location / { \
+    root /usr/share/nginx/html; \
+    index index.html; \
+    try_files $uri $uri/ /index.html; \
+    } \
+    }' > /etc/nginx/conf.d/default.conf
 
-
-
-
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
