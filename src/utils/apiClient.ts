@@ -22,9 +22,6 @@ apiClient.interceptors.response.use(
     const authStore = useAuthStore()
 
     if (error.response && error.response.status === 401 && !request._retry && authStore.isAuthenticated) {
- 
-     
-     
       request._retry = true;
 
       await authService.logout();

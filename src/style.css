@@ -39,6 +39,8 @@
   --color-publish-button: #1E90FF;
   --color-publish-button-hover: #4DA6FF;
   --color-cancel-color:#EC221F;
+  --color-cancel-hover: #ee3331;
+  --color-cancel-pressed: #b51b19;
   --color-mess-other: #262626;
   --color-mess-you: #3e73f5;
   --color-write-black: #191919;
@@ -51,10 +53,12 @@
   --font-sans: "SF", sans-serif;
   --color-mess-you: #3e73f5;
   --color-mess-other: #262626;
-  --border-radius-18: 18px;
+  --radius-default: 18px;
+  --radius-other: 18px;
   --line-height-18: 18px;
   --font-size-10: 10px;
   --font-size-15: 15px;
+
   --color-pseudo: #7E7E7E;
 }
 

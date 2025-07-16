@@ -12,12 +12,15 @@ import RecordRTC, { StereoAudioRecorder } from 'recordrtc'
 import { toast } from 'vue3-toastify'
 import { uploadMedia } from '../api/conversation'
 
-export function useConversationSimulator(props: { conversationId?: number }) {
+export function useConversationSimulator() {
   const route = useRoute()
   const router = useRouter()
   const conversationId = ref<number | null>(
-    props.conversationId ?? parseInt(route.params.id as string),
+    isNaN(parseInt(route.params.id as string))
+      ? null
+      : parseInt(route.params.id as string),
   )
+  console.log(conversationId.value)
   const messageUser = ref<string>('')
   const messageInterlocutor = ref<string>('')
   const showEmojiPickerUser = ref<boolean>(false)
@@ -41,7 +44,7 @@ export function useConversationSimulator(props: { conversationId?: number }) {
   const showCategoryModal = ref<boolean>(false)
   const categoryStore = useCategoryStore()
   const selectedCategories = ref<number[]>([])
-const baseUrl= import.meta.env.VITE_BASE_URL;
+  const baseUrl = import.meta.env.VITE_BASE_URL
 
   const { handleSubmit, errors, setFieldValue, values, submitCount } = useForm({
     validationSchema: toTypedSchema(conversationSchema),
@@ -152,7 +155,10 @@ const baseUrl= import.meta.env.VITE_BASE_URL;
         // Upload le fichier et récupère l'URL du backend
         const response = await uploadMedia({ image: file as Blob })
         console.log(response.data)
-        setFieldValue('content.interlocutor_avatar', baseUrl + response.data.imageUrl)
+        setFieldValue(
+          'content.interlocutor_avatar',
+          baseUrl + response.data.imageUrl,
+        )
         imageInterlocutorSend.value = response.data.imageUrl
       } catch (error) {
         toast.error("Erreur lors de l'upload de l'image")
@@ -223,7 +229,7 @@ const baseUrl= import.meta.env.VITE_BASE_URL;
     const updatedMessages = [...messages.value]
     updatedMessages[index].reaction = emoji
     messages.value = updatedMessages
-    setFieldValue('content.messages', updatedMessages as any)
+    setFieldValue('content.messages', updatedMessages)
   }
 
   const toggleEmojiPicker = (target: 'user' | 'interlocutor') => {
@@ -394,7 +400,7 @@ const baseUrl= import.meta.env.VITE_BASE_URL;
         const response = await getConversationById(conversationId.value)
         setFieldValue('title', response.title)
         setFieldValue('description', response.description)
-        setFieldValue('content', response.content)
+        setFieldValue('content', response.content as any)
         setFieldValue('categoriesId', response.categoriesId)
         status.value = response.status
         isPublic.value = response.isPublic

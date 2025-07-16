@@ -1,4 +1,5 @@
-import apiClient from './apiClient';
+import { apiClient } from '../utils/apiClient';
+
 
 interface Plan {
   id: number;
@@ -34,7 +35,7 @@ interface Invoice {
 const subscriptionService = {
   async getPlans() {
     try {
-      const response = await apiClient.get('/api/subscription/plans');
+      const response = await apiClient.get('/subscription/plans');
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération des plans:', error);
@@ -44,7 +45,7 @@ const subscriptionService = {
 
   async getCurrentSubscription() {
     try {
-      const response = await apiClient.get('/api/subscription/current');
+      const response = await apiClient.get('/subscription/current');
       return response.data;
     } catch (error: any) {
       // Ne pas logger les erreurs 404 car c'est normal quand l'utilisateur n'a pas d'abonnement
@@ -57,7 +58,7 @@ const subscriptionService = {
 
   async subscribe(planId: number) {
     try {
-      const response = await apiClient.post(`/api/subscription/subscribe/${planId}`);
+      const response = await apiClient.post(`/subscription/subscribe/${planId}`);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la souscription:', error);
@@ -67,7 +68,7 @@ const subscriptionService = {
 
   async changeSubscription(planId: number) {
     try {
-      const response = await apiClient.post(`/api/subscription/change/${planId}`);
+      const response = await apiClient.post(`/subscription/change/${planId}`);
       return response.data;
     } catch (error) {
       console.error('Erreur lors du changement d\'abonnement:', error);
@@ -77,7 +78,7 @@ const subscriptionService = {
 
   async cancelSubscription() {
     try {
-      const response = await apiClient.post('/api/subscription/cancel');
+      const response = await apiClient.post('/subscription/cancel');
       return response.data;
     } catch (error) {
       console.error('Erreur lors de l\'annulation de l\'abonnement:', error);
@@ -87,7 +88,7 @@ const subscriptionService = {
 
   async getSubscriptionHistory() {
     try {
-      const response = await apiClient.get('/api/subscription/history');
+      const response = await apiClient.get('/subscription/history');
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération de l\'historique:', error);
@@ -97,7 +98,7 @@ const subscriptionService = {
 
   async getInvoices() {
     try {
-      const response = await apiClient.get('/api/subscription/invoices');
+      const response = await apiClient.get('/subscription/invoices');
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération des factures:', error);

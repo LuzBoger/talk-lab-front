@@ -11,12 +11,13 @@ import MessageContainer from './preview/MessageContainer.vue';
 import BottomBar from './preview/BottomBar.vue';
 import clsx from 'clsx';
 import { useConversationSimulator } from '../composables/useConversationSimulator';
-const sim = useConversationSimulator({});
+const sim = useConversationSimulator();
+console.log(sim.conversationId.value)
 </script>
 
 <template>
   <div class="flex flex-col lg:flex-row p-4 min-h-screen text-white">
-    <form @submit.prevent="sim.onSubmit" class="space-y-4 p-4 rounded-lg w-form">
+    <form v-if="sim.conversationId.value == null" @submit.prevent="sim.onSubmit" class="space-y-4 p-4 rounded-lg w-form">
       <div class="flex items-center gap-1">
         <input type="text" v-model="sim.title.value" placeholder="Titre de la conversation"
           :class="clsx('w-80 bg-sidebar-bg text-white p-2 rounded', sim.submitCount.value > 0 && sim.errors.value.title && 'border border-red-700')" />

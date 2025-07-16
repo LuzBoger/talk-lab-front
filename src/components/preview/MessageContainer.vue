@@ -67,42 +67,56 @@ const getMessageRadiusClass = (index: number, currentAuthor: string) => {
     console.log(
       `Applying radius classes: tl-${topLeftRadius}, tr-${topRightRadius}, bl-${bottomLeftRadius}, br-${bottomRightRadius}`,
     )
-    return `rounded-tl-${topLeftRadius} rounded-tr-${topRightRadius} rounded-bl-${bottomLeftRadius} rounded-br-${bottomRightRadius}`
+    const clean = function (v: string) {
+      return v.replace(/[\[\]]/g, '') || '18px'
+    }
+    console.log({
+      borderTopLeftRadius: clean(topLeftRadius),
+      borderTopRightRadius: clean(topRightRadius),
+      borderBottomLeftRadius: clean(bottomLeftRadius),
+      borderBottomRightRadius: clean(bottomRightRadius),
+    })
+    return {
+      borderTopLeftRadius: clean(topLeftRadius),
+      borderTopRightRadius: clean(topRightRadius),
+      borderBottomLeftRadius: clean(bottomLeftRadius),
+      borderBottomRightRadius: clean(bottomRightRadius),
+    }
   }
 
   // Gérer le cas où le message actuel a une réaction et aucun message précédent du même auteur
   if (currentMessageHasReaction && !previousMessageSameAuthor) {
     console.log('Case: currentMessageHasReaction && !previousMessageSameAuthor')
-    return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+    return getRadiusClasses('18px', '18px', '18px', '18px')
   }
   // Gérer le cas où il y a une image avant ou après le message actuel
   if (hasImageBefore || hasImageAfter) {
     console.log('Case: hasImageBefore || hasImageAfter')
-    return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+    return getRadiusClasses('18px', '18px', '18px', '18px')
   }
 
   // Gérer le cas où le message actuel est un audio
   if (currentMessageHasAudio) {
     console.log('Case: currentMessageHasAudio')
     if (currentMessageHasReaction && !previousMessageSameAuthor) {
-      return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+      return getRadiusClasses('18px', '18px', '18px', '18px')
     }
     if (previousMessageSameAuthor && nextMessageSameAuthor) {
       return currentAuthor === 'user'
-        ? getRadiusClasses('[18px]', '[2px]', '[18px]', '[2px]')
-        : getRadiusClasses('[2px]', '[18px]', '[2px]', '[18px]')
+        ? getRadiusClasses('18px', '2px', '18px', '2px')
+        : getRadiusClasses('2px', '18px', '2px', '18px')
     }
     if (previousMessageSameAuthor) {
       return currentAuthor === 'user'
-        ? getRadiusClasses('[18px]', '[2px]', '[18px]', '[18px]')
-        : getRadiusClasses('[2px]', '[18px]', '[18px]', '[18px]')
+        ? getRadiusClasses('18px', '2px', '18px', '18px')
+        : getRadiusClasses('2px', '18px', '18px', '18px')
     }
     if (nextMessageSameAuthor) {
       return currentAuthor === 'user'
-        ? getRadiusClasses('[18px]', '[18px]', '[18px]', '[2px]')
-        : getRadiusClasses('[18px]', '[18px]', '[2px]', '[18px]')
+        ? getRadiusClasses('18px', '18px', '18px', '2px')
+        : getRadiusClasses('18px', '18px', '2px', '18px')
     }
-    return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+    return getRadiusClasses('18px', '18px', '18px', '18px')
   }
 
   // Gérer le cas où les messages précédent et suivant sont du même auteur
@@ -114,24 +128,24 @@ const getMessageRadiusClass = (index: number, currentAuthor: string) => {
           'Subcase: currentMessageHasReaction && previousMessageHasReaction',
         )
         return currentAuthor === 'user'
-          ? getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
-          : getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+          ? getRadiusClasses('18px', '18px', '18px', '18px')
+          : getRadiusClasses('18px', '18px', '18px', '18px')
       }
       console.log('Subcase: currentMessageHasReaction')
       return currentAuthor === 'user'
-        ? getRadiusClasses('[18px]', '[2px]', '[18px]', '[18px]')
-        : getRadiusClasses('[2px]', '[18px]', '[18px]', '[18px]')
+        ? getRadiusClasses('18px', '2px', '18px', '18px')
+        : getRadiusClasses('2px', '18px', '18px', '18px')
     } else {
       if (previousMessageHasReaction) {
         console.log('Subcase: previousMessageHasReaction')
         return currentAuthor === 'user'
-          ? getRadiusClasses('[18px]', '[18px]', '[18px]', '[2px]')
-          : getRadiusClasses('[18px]', '[18px]', '[2px]', '[18px]')
+          ? getRadiusClasses('18px', '18px', '18px', '2px')
+          : getRadiusClasses('18px', '18px', '2px', '18px')
       }
       console.log('Subcase: default')
       return currentAuthor === 'user'
-        ? getRadiusClasses('[18px]', '[2px]', '[18px]', '[2px]')
-        : getRadiusClasses('[2px]', '[18px]', '[2px]', '[18px]')
+        ? getRadiusClasses('18px', '2px', '18px', '2px')
+        : getRadiusClasses('2px', '18px', '2px', '18px')
     }
   }
 
@@ -141,13 +155,13 @@ const getMessageRadiusClass = (index: number, currentAuthor: string) => {
     if (previousMessageHasReaction) {
       console.log('Subcase: previousMessageHasReaction')
       return currentAuthor === 'user'
-        ? getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
-        : getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+        ? getRadiusClasses('18px', '18px', '18px', '18px')
+        : getRadiusClasses('18px', '18px', '18px', '18px')
     } else {
       console.log('Subcase: default')
       return currentAuthor === 'user'
-        ? getRadiusClasses('[18px]', '[2px]', '[18px]', '[18px]')
-        : getRadiusClasses('[2px]', '[18px]', '[18px]', '[18px]')
+        ? getRadiusClasses('18px', '2px', '18px', '18px')
+        : getRadiusClasses('2px', '18px', '18px', '18px')
     }
   }
 
@@ -155,13 +169,13 @@ const getMessageRadiusClass = (index: number, currentAuthor: string) => {
   if (nextMessageSameAuthor) {
     console.log('Case: nextMessageSameAuthor')
     return currentAuthor === 'user'
-      ? getRadiusClasses('[18px]', '[18px]', '[18px]', '[2px]')
-      : getRadiusClasses('[18px]', '[18px]', '[2px]', '[18px]')
+      ? getRadiusClasses('18px', '18px', '18px', '2px')
+      : getRadiusClasses('18px', '18px', '2px', '18px')
   }
 
   // Cas par défaut
   console.log('Case: default')
-  return getRadiusClasses('[18px]', '[18px]', '[18px]', '[18px]')
+  return getRadiusClasses('18px', '18px', '18px', '18px')
 }
 </script>
 <template>

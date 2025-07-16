@@ -1,4 +1,4 @@
-import apiClient from './apiClient';
+import { apiClient } from "../utils/apiClient";
 
 interface PlanFormData {
   name: string;
@@ -9,7 +9,7 @@ interface PlanFormData {
 const adminService = {
   async getPlans() {
     try {
-      const response = await apiClient.get('/api/admin/subscription/plans');
+      const response = await apiClient.get('/admin/subscription/plans');
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération des plans:', error);
@@ -19,9 +19,14 @@ const adminService = {
   
   async createPlan(planData: PlanFormData) {
     try {
-      const response = await apiClient.post('/api/admin/subscription/plans', planData);
+      const planDataForApi = {
+        ...planData,
+        price: String(planData.price)
+      };
+      
+      const response = await apiClient.post('/admin/subscription/plans', planDataForApi);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erreur lors de la création du plan:', error);
       throw error;
     }
@@ -29,9 +34,14 @@ const adminService = {
   
   async updatePlan(id: number, planData: PlanFormData) {
     try {
-      const response = await apiClient.put(`/api/admin/subscription/plans/${id}`, planData);
+      const planDataForApi = {
+        ...planData,
+        price: String(planData.price)
+      };
+      
+      const response = await apiClient.put(`/admin/subscription/plans/${id}`, planDataForApi);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erreur lors de la mise à jour du plan:', error);
       throw error;
     }
@@ -39,7 +49,7 @@ const adminService = {
   
   async deletePlan(id: number) {
     try {
-      const response = await apiClient.delete(`/api/admin/subscription/plans/${id}`);
+      const response = await apiClient.delete(`/admin/subscription/plans/${id}`);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la suppression du plan:', error);
@@ -49,7 +59,7 @@ const adminService = {
   
   async getSubscriptions() {
     try {
-      const response = await apiClient.get('/api/admin/subscription/subscriptions');
+      const response = await apiClient.get('/admin/subscription/subscriptions');
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération des abonnements:', error);
@@ -59,7 +69,7 @@ const adminService = {
   
   async getPayments() {
     try {
-      const response = await apiClient.get('/api/admin/subscription/payments');
+      const response = await apiClient.get('/admin/subscription/payments');
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération des paiements:', error);
@@ -69,7 +79,7 @@ const adminService = {
   
   async getReports() {
     try {
-      const response = await apiClient.get('/api/admin/subscription/reports');
+      const response = await apiClient.get('/admin/subscription/reports');
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération des rapports:', error);

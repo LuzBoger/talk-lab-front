@@ -14,15 +14,15 @@ const UserNotifications = () => import('../pages/profil/mes-notifications.vue')
 const Parameter = () => import('../pages/parametre.vue')
 const LoginPage = () => import('../pages/LoginPage.vue')
 const RegisterPage = () => import('../pages/RegisterPage.vue')
-const SubscriptionPlansView = () => import('../views/SubscriptionPlansView.vue')
-const MySubscriptionView = () => import('../views/MySubscriptionView.vue')
+const SubscriptionPlansView = () => import('../pages/SubscriptionPlansView.vue')
+const MySubscriptionView = () => import('../pages/MySubscriptionView.vue')
 
-const AdminDashboardView = () => import('../views/admin/AdminDashboardView.vue')
-const PlanListView = () => import('../views/admin/PlanListView.vue')
-const PlanFormView = () => import('../views/admin/PlanFormView.vue')
-const SubscriptionListView = () => import('../views/admin/SubscriptionListView.vue')
-const SubscriptionManagementView = () => import('../views/admin/SubscriptionManagementView.vue')
-const ReportsView = () => import('../views/admin/ReportsView.vue')
+const AdminDashboardView = () => import('../pages/admin/AdminDashboardView.vue')
+const PlanListView = () => import('../pages/admin/PlanListView.vue')
+const PlanFormView = () => import('../pages/admin/PlanFormView.vue')
+const SubscriptionListView = () => import('../pages/admin/SubscriptionListView.vue')
+const SubscriptionManagementView = () => import('../pages/admin/SubscriptionManagementView.vue')
+const ReportsView = () => import('../pages/admin/ReportsView.vue')
 
 const routes = [
   {
@@ -141,6 +141,14 @@ const routes = [
         },
       },
       {
+        path: '/my-subscription',
+        name: 'MySubscriptionShort',
+        component: MySubscriptionView,
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
         path: '/admin',
         name: 'AdminDashboard',
         component: AdminDashboardView,
@@ -212,11 +220,20 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  
   const authStore = useAuthStore()
+  
+  
+
+  if (to.meta?.requiresAuth && !authStore.user) {
+    await authStore.getUser()
+  }
 
   const isAuthenticated = authStore.isAuthenticated
   const isAdmin = authStore.user?.role?.includes('ROLE_ADMIN')
+
+  
 
   if (!to.meta || to.meta.requiresAuth === false) {
     next()

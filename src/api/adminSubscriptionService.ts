@@ -1,4 +1,4 @@
-import apiClient from './apiClient';
+import { apiClient } from "../utils/apiClient";
 
 interface User {
   id: number;
@@ -60,7 +60,7 @@ interface Plan {
 const adminSubscriptionService = {
   async getUsers() {
     try {
-      const response = await apiClient.get('/api/admin/subscription/users');
+      const response = await apiClient.get('/admin/subscription/users');
       return response.data.users;
     } catch (error) {
       console.error('Erreur lors de la récupération des utilisateurs:', error);
@@ -70,7 +70,7 @@ const adminSubscriptionService = {
 
   async getUserSubscription(userId: number) {
     try {
-      const response = await apiClient.get(`/api/admin/subscription/users/${userId}/subscription`);
+      const response = await apiClient.get(`/admin/subscription/users/${userId}/subscription`);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération de l\'abonnement utilisateur:', error);
@@ -80,7 +80,7 @@ const adminSubscriptionService = {
 
   async getSubscriptions() {
     try {
-      const response = await apiClient.get('/api/admin/subscription/subscriptions');
+      const response = await apiClient.get('/admin/subscription/subscriptions');
       return response.data.subscriptions;
     } catch (error) {
       console.error('Erreur lors de la récupération des abonnements:', error);
@@ -90,7 +90,7 @@ const adminSubscriptionService = {
 
   async cancelSubscription(subscriptionId: number) {
     try {
-      const response = await apiClient.post(`/api/admin/subscription/subscriptions/${subscriptionId}/cancel`);
+      const response = await apiClient.post(`/admin/subscription/subscriptions/${subscriptionId}/cancel`);
       return response.data;
     } catch (error: any) {
       console.error('Erreur lors de l\'annulation de l\'abonnement:', error);
@@ -101,7 +101,7 @@ const adminSubscriptionService = {
 
   async deleteSubscription(subscriptionId: number) {
     try {
-      const response = await apiClient.delete(`/api/admin/subscription/subscriptions/${subscriptionId}`);
+      const response = await apiClient.delete(`/admin/subscription/subscriptions/${subscriptionId}`);
       return response.data;
     } catch (error: any) {
       console.error('Erreur lors de la suppression de l\'abonnement:', error);
@@ -112,7 +112,7 @@ const adminSubscriptionService = {
 
   async getPlans() {
     try {
-      const response = await apiClient.get('/api/admin/subscription/plans');
+      const response = await apiClient.get('/admin/subscription/plans');
       return response.data.plans;
     } catch (error) {
       console.error('Erreur lors de la récupération des plans:', error);
@@ -122,7 +122,7 @@ const adminSubscriptionService = {
 
   async createPlan(planData: { name: string; price: string; description: string }) {
     try {
-      const response = await apiClient.post('/api/admin/subscription/plans', planData);
+      const response = await apiClient.post('/admin/subscription/plans', planData);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la création du plan:', error);
@@ -132,7 +132,7 @@ const adminSubscriptionService = {
 
   async updatePlan(planId: number, planData: { name: string; price: string; description: string }) {
     try {
-      const response = await apiClient.put(`/api/admin/subscription/plans/${planId}`, planData);
+      const response = await apiClient.put(`/admin/subscription/plans/${planId}`, planData);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la mise à jour du plan:', error);
@@ -142,7 +142,7 @@ const adminSubscriptionService = {
 
   async deletePlan(planId: number) {
     try {
-      const response = await apiClient.delete(`/api/admin/subscription/plans/${planId}`);
+      const response = await apiClient.delete(`/admin/subscription/plans/${planId}`);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la suppression du plan:', error);
@@ -152,7 +152,7 @@ const adminSubscriptionService = {
 
   async getPayments() {
     try {
-      const response = await apiClient.get('/api/admin/subscription/payments');
+      const response = await apiClient.get('/admin/subscription/payments');
       return response.data.payments;
     } catch (error) {
       console.error('Erreur lors de la récupération des paiements:', error);
@@ -162,7 +162,7 @@ const adminSubscriptionService = {
 
   async getReports() {
     try {
-      const response = await apiClient.get('/api/admin/subscription/reports');
+      const response = await apiClient.get('/admin/subscription/reports');
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération des rapports:', error);

@@ -74,7 +74,7 @@ const fetchConversations = async (name: string) => {
 <template>
     <div class="p-6 space-y-6">
         <h1 class="text-2xl font-bold text-white text-center">
-            Toutes les conversations de la cataégorie : {{ category?.name || 'Aucune catégorie trouvée'}}
+            Toutes les conversations de la catégorie : {{ category?.name || 'Aucune catégorie trouvée'}}
         </h1>
         <div class="flex justify-center">
             <SearchBar v-model="searchConversation" />

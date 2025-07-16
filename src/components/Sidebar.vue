@@ -9,59 +9,43 @@ import MyCreationIcon from './icon/MyCreationIcon.vue'
 import CreateDiscussionIcon from './icon/CreateDiscussionIcon.vue'
 import ForumIcon from './icon/ForumIcon.vue'
 import TarificationIcon from './icon/TarificationIcon.vue'
+import SubscriptionIcon from './icon/SubscriptionIcon.vue'
 import LogoIcon from './icon/LogoIcon.vue'
 import DropdownButton from './sidebarComponents/dropdownButton/DropdownButton.vue'
 import ProfilIcon from './icon/ProfilIcon.vue'
 import HelpIcon from './icon/HelpIcon.vue'
 import LogoutIcon from './icon/LogoutIcon.vue'
-import DropDownButtonLogout from './sidebarComponents/dropdownButton/DropDownButtonLogout.vue';
-import { useNotificationsStore } from '../stores/useNotificationsStore';
-import {useAuthStore} from '../stores/useAuthStore';
-import authService from '../api/authService';
-
+import DropDownButtonLogout from './sidebarComponents/dropdownButton/DropDownButtonLogout.vue'
+import { useNotificationsStore } from '../stores/useNotificationsStore'
+import { useAuthStore } from '../stores/useAuthStore'
 
 const emit = defineEmits(['sidebar-toggle', 'logout'])
-const authStore = useAuthStore();
-const notificationsStore = useNotificationsStore();
-const route = useRoute();
+const authStore = useAuthStore()
+const notificationsStore = useNotificationsStore()
+const route = useRoute()
 const router = useRouter()
 const showProfileMenu = ref<boolean>(false)
-const baseUrl= import.meta.env.VITE_BASE_URL;
-
+const baseUrl = import.meta.env.VITE_BASE_URL
 const unReadCount = computed(() => {
-  return notificationsStore.countUnReadNotifications ;
+  return notificationsStore.countUnReadNotifications
 })
 
 const isProfileRoute = computed(() => {
   return route.path.startsWith('/profil')
 })
-
-const logout = async  () => {
+const logout = async () => {
   await authStore.logout()
-  router.push('/login');
-};
+  router.push('/login')
+}
 
 const toggleProfileMenu = () => {
   showProfileMenu.value = !showProfileMenu.value
 }
-
-const navigateToProfile = () => {
-  router.push('/profil')
-  showProfileMenu.value = false
-}
-
-const navigateToHelp = () => {
-  router.push('/aide')
-  showProfileMenu.value = false
-}
-const user = computed(() => {
-  return authStore.user?.username || 'Utilisateur'
-})
 const avatarurl = computed(() => {
-  if(authStore.user?.avatarUrl) {
-    return `${baseUrl}${authStore.user.avatarUrl}`;
+  if (authStore.user?.avatarUrl) {
+    return `${baseUrl}${authStore.user.avatarUrl}`
   }
-  return defaultProfileImg;
+  return defaultProfileImg
 })
 
 const isAdmin = computed(() => {
@@ -74,6 +58,10 @@ watch(() => authStore.isAuthenticated, (newVal) => {
 
 onMounted(() => {
   console.log('Sidebar component mounted')
+  console.log('isAuthenticated:', authStore.isAuthenticated)
+  console.log('User:', authStore.user)
+  console.log('User role:', authStore.user?.role)
+  console.log('Is admin?:', authStore.user?.role?.includes('ROLE_ADMIN'))
 })
 </script>
 
@@ -111,14 +99,15 @@ onMounted(() => {
           <template #icon><HomeIcon /></template>
           Accueil
         </MenuItem>
-        <MenuItem to="/categories" activePath="/categories">
+        
+        <MenuItem to="/categories" activePath="/categories" v-if="!isAdmin">
           <template #icon><CategoriesIcon /></template>
           Catégories
         </MenuItem>
         <MenuItem
           to="/decouverte"
           activePath="/decouverte"
-          v-if="authStore.isAuthenticated"
+          v-if="authStore.isAuthenticated && !isAdmin"
         >
           <template #icon><MyCreationIcon /></template>
           Découverte de conversation
@@ -126,11 +115,12 @@ onMounted(() => {
         <MenuItem
           to="/conversation/nouvelle"
           activePath="/conversation/nouvelle"
+          v-if="!isAdmin"
         >
           <template #icon><CreateDiscussionIcon /></template>
           Créer une discussion
         </MenuItem>
-        <MenuItem to="/forum" activePath="/forum">
+        <MenuItem to="/forum" activePath="/forum" v-if="!isAdmin">
           <template #icon><ForumIcon /></template>
           Forum
         </MenuItem>
@@ -138,6 +128,15 @@ onMounted(() => {
         <MenuItem to="/subscription/plans" activePath="/subscription/plans">
           <template #icon><TarificationIcon /></template>
           Tarification
+        </MenuItem>
+        
+        <MenuItem 
+          to="/my-subscription" 
+          activePath="/my-subscription"
+          v-if="authStore.isAuthenticated"
+        >
+          <template #icon><SubscriptionIcon /></template>
+          Mon abonnement
         </MenuItem>
         
         <template v-if="isAdmin">
@@ -179,9 +178,9 @@ onMounted(() => {
             :src="avatarurl"
             alt="Avatar utilisateur"
           />
-          <span class="font-semibold text-text-primary whitespace-nowrap"
-            >{{user || 'Utilisateur'}}</span
-          >
+          <span class="font-semibold text-text-primary whitespace-nowrap">{{
+            authStore.user?.name
+          }}</span>
         </div>
         <div
           v-if="showProfileMenu"
