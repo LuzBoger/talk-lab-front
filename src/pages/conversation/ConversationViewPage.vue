@@ -3,6 +3,8 @@ import { useRoute } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { useConversationStore } from '../../stores/useConversationStore'
 import ConversationSimulatorView from '../../components/ConversationSimulatorView.vue'
+import CommentList from '../../components/Comment/CommentList.vue'
+
 const conversationStore = useConversationStore()
 const route = useRoute()
 const id = ref(parseInt(route.params.id as string))
@@ -11,7 +13,8 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <div class="p-6">
+  <div class="p-6 flex flex-col gap-6">
     <ConversationSimulatorView />
+    <CommentList />
   </div>
 </template>
