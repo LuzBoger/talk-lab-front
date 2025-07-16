@@ -13,7 +13,7 @@ ENV VITE_BASE_URL=$VITE_BASE_URL
 ENV VITE_API_2FA_URL=$VITE_API_2FA_URL
 
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 COPY . .
 RUN npm run build 
