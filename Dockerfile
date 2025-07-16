@@ -14,8 +14,9 @@ ENV VITE_API_2FA_URL=$VITE_API_2FA_URL
 
 COPY package*.json ./
 
-# CORRECTION : Installer TOUTES les dépendances (y compris devDependencies)
-RUN npm ci
+# Nettoyer le cache et installer proprement
+RUN npm cache clean --force
+RUN npm install
 
 COPY . .
 RUN npm run build 
