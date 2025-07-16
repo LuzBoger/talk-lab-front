@@ -2,6 +2,17 @@ FROM node:latest AS build
 
 WORKDIR /app
 
+ARG VITE_API_URL=http://localhost:8080/api
+ARG VITE_BASE_URL=http://localhost
+ARG VITE_API_2FA_URL=http://localhost/twofactor
+ARG NODE_ENV=production
+
+ENV NODE_ENV=$NODE_ENV
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_BASE_URL=$VITE_BASE_URL
+ENV VITE_API_2FA_URL=$VITE_API_2FA_URL
+
+
 COPY package*.json ./
 
 RUN npm install
