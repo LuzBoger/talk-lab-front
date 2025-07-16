@@ -15,7 +15,7 @@ ENV VITE_API_2FA_URL=$VITE_API_2FA_URL
 
 COPY package*.json ./
 RUN npm cache clean --force
-RUN npm install
+RUN npm install --include=dev
 
 COPY . .
 RUN npm run build
