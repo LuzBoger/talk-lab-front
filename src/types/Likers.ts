@@ -1,4 +1,4 @@
 export interface Likers {
     id: number;
-    name: string
+    username: string
 }

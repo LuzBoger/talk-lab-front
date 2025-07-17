@@ -6,9 +6,11 @@ const props = defineProps<{
     modelValue: number
     totalItems: number
     pageSize: number
+    paginationColor?: string
 }>()
 
 const emit = defineEmits(['update:modelValue'])
+const paginationColor = props.paginationColor ?? 'text-white'
 
 const currentPage = computed(()=> {
     return props.modelValue
@@ -83,8 +85,8 @@ const showNbPage = computed(() => {
                 :class="[
                 'px-4 py-2 transition-colors transform rounded-md',
                 page === currentPage
-                    ? 'text-white'
-                    : 'text-gray-700'
+                    ? `${paginationColor}`
+                    : 'text-white'
                 ]"
             >
                 {{ page }}
