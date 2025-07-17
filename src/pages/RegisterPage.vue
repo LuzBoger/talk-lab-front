@@ -43,7 +43,6 @@ const register = async () => {
       email: email.value,
       password: password.value
     });
-    // Remplacez par votre logique d'inscription
     console.log('Inscription réussie')
     router.push('/login')
   } catch (error: any) {
@@ -65,7 +64,6 @@ const register = async () => {
       <ArrowIcon :width="25" :height="25" fillColor="black" />
     </router-link>
     <div class="flex w-full h-full overflow-hidden">
-      <!-- Cette section sera masquée sur les petits écrans -->
       <div
         class="flex-1 justify-center items-center bg-white border-r border-gray-300 hidden md:flex"
       >

@@ -9,6 +9,7 @@ import MyCreationIcon from './icon/MyCreationIcon.vue'
 import CreateDiscussionIcon from './icon/CreateDiscussionIcon.vue'
 import ForumIcon from './icon/ForumIcon.vue'
 import TarificationIcon from './icon/TarificationIcon.vue'
+import SubscriptionIcon from './icon/SubscriptionIcon.vue'
 import LogoIcon from './icon/LogoIcon.vue'
 import DropdownButton from './sidebarComponents/dropdownButton/DropdownButton.vue'
 import ProfilIcon from './icon/ProfilIcon.vue'
@@ -35,16 +36,23 @@ const logout = async () => {
 const toggleProfileMenu = () => {
   showProfileMenu.value = !showProfileMenu.value
 }
-const avatarurl = computed(() => {
+const avatarUrl = computed(() => {
   if (authStore.user?.avatarUrl) {
     return `${baseUrl}${authStore.user.avatarUrl}`
   }
   return defaultProfileImg
 })
 
+const isAdmin = computed(() => {
+  return authStore.user?.role?.includes('ROLE_ADMIN') || false
+})
+
 onMounted(() => {
   console.log('Sidebar component mounted')
-  console.log(authStore.isAuthenticated)
+  console.log('isAuthenticated:', authStore.isAuthenticated)
+  console.log('User:', authStore.user)
+  console.log('User role:', authStore.user?.role)
+  console.log('Is admin?:', authStore.user?.role?.includes('ROLE_ADMIN'))
 })
 </script>
 
@@ -84,30 +92,71 @@ onMounted(() => {
           <template #icon><HomeIcon /></template>
           Accueil
         </MenuItem>
-        <MenuItem to="/categories" activePath="/categories">
+        
+        <MenuItem to="/categories" activePath="/categories" v-if="!isAdmin">
           <template #icon><CategoriesIcon /></template>
           Catégories
         </MenuItem>
         <MenuItem
           to="/decouverte"
           activePath="/decouverte"
-          v-if="authStore.isAuthenticated"
+          v-if="authStore.isAuthenticated && !isAdmin"
         >
           <template #icon><MyCreationIcon /></template>
           Découverte de conversation
         </MenuItem>
-        <MenuItem to="/create-conversation" activePath="/create-conversation">
+        <MenuItem
+          to="/conversation/nouvelle"
+          activePath="/conversation/nouvelle"
+          v-if="!isAdmin"
+        >
           <template #icon><CreateDiscussionIcon /></template>
           Créer une discussion
         </MenuItem>
-        <MenuItem to="/forum" activePath="/forum">
+        <MenuItem to="/forum" activePath="/forum" v-if="!isAdmin">
           <template #icon><ForumIcon /></template>
           Forum
         </MenuItem>
-        <MenuItem to="/tarification" activePath="/tarification">
+        
+        <MenuItem to="/subscription/plans" activePath="/subscription/plans">
           <template #icon><TarificationIcon /></template>
           Tarification
         </MenuItem>
+        
+        <MenuItem 
+          to="/my-subscription" 
+          activePath="/my-subscription"
+          v-if="authStore.isAuthenticated"
+        >
+          <template #icon><SubscriptionIcon /></template>
+          Mon abonnement
+        </MenuItem>
+        
+        <template v-if="isAdmin">
+          <div class="border-t border-border-auth-button mt-4 pt-4">
+            <div class="text-xs text-gray-400 mb-2 px-3">ADMINISTRATION</div>
+            <MenuItem to="/admin" activePath="/admin">
+              <template #icon><HomeIcon /></template>
+              Dashboard Admin
+            </MenuItem>
+            <MenuItem to="/admin/plans" activePath="/admin/plans">
+              <template #icon><TarificationIcon /></template>
+              Gestion des Plans
+            </MenuItem>
+            <MenuItem to="/admin/subscriptions" activePath="/admin/subscriptions">
+              <template #icon><MyCreationIcon /></template>
+              Abonnements
+            </MenuItem>
+            <MenuItem to="/admin/subscription-management" activePath="/admin/subscription-management">
+              <template #icon><CategoriesIcon /></template>
+              Gestion Abonnements
+            </MenuItem>
+            <MenuItem to="/admin/reports" activePath="/admin/reports">
+              <template #icon><ForumIcon /></template>
+              Rapports
+            </MenuItem>
+          </div>
+        </template>
       </template>
     </nav>
 
@@ -119,9 +168,12 @@ onMounted(() => {
         >
           <img
             class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2 border-avatar-border"
-            :src="avatarurl"
+            :src="avatarUrl"
             alt="Avatar utilisateur"
           />
+          <span class="font-semibold text-text-primary whitespace-nowrap">{{
+            authStore.user?.name
+          }}</span>
           <span class="font-semibold text-text-primary whitespace-nowrap">{{
             authStore.user?.name
           }}</span>
@@ -132,6 +184,9 @@ onMounted(() => {
         >
           <DropdownButton label="Profil" to="/profil">
             <template #icon><ProfilIcon /></template>
+          </DropdownButton>
+          <DropdownButton v-if="isAdmin" label="Administration" to="/admin">
+            <template #icon><CategoriesIcon /></template>
           </DropdownButton>
           <DropdownButton label="Aide" to="/aide">
             <template #icon><HelpIcon /> </template
