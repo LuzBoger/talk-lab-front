@@ -15,14 +15,14 @@ const Parameter = () => import('../pages/parametre.vue')
 const LoginPage = () => import('../pages/LoginPage.vue')
 const RegisterPage = () => import('../pages/RegisterPage.vue')
 const SubscriptionPlansView = () => import('../pages/SubscriptionPlansView.vue')
-const MySubscriptionView = () => import('../pages/MySubscriptionView.vue')
+const MySubscriptionPage = () => import('../pages/MySubscriptionPage.vue')
 
-const AdminDashboardView = () => import('../pages/admin/AdminDashboardView.vue')
-const PlanListView = () => import('../pages/admin/PlanListView.vue')
-const PlanFormView = () => import('../pages/admin/PlanFormView.vue')
-const SubscriptionListView = () => import('../pages/admin/SubscriptionListView.vue')
-const SubscriptionManagementView = () => import('../pages/admin/SubscriptionManagementView.vue')
-const ReportsView = () => import('../pages/admin/ReportsView.vue')
+const AdminDashboardPage = () => import('../pages/admin/AdminDashboardPage.vue')
+const PlanListPage = () => import('../pages/admin/PlanListPage.vue')
+const PlanFormPage = () => import('../pages/admin/PlanFormPage.vue')
+const SubscriptionListPage = () => import('../pages/admin/SubscriptionListPage.vue')
+const SubscriptionManagementPage = () => import('../pages/admin/SubscriptionManagementPage.vue')
+const ReportsPage = () => import('../pages/admin/ReportsPage.vue')
 
 const routes = [
   {
@@ -135,7 +135,7 @@ const routes = [
       {
         path: '/subscription/my-subscription',
         name: 'MySubscription',
-        component: MySubscriptionView,
+        component: MySubscriptionPage,
         meta: {
           requiresAuth: true,
         },
@@ -143,7 +143,7 @@ const routes = [
       {
         path: '/my-subscription',
         name: 'MySubscriptionShort',
-        component: MySubscriptionView,
+        component: MySubscriptionPage,
         meta: {
           requiresAuth: true,
         },
@@ -151,63 +151,63 @@ const routes = [
       {
         path: '/admin',
         name: 'AdminDashboard',
-        component: AdminDashboardView,
-        meta: {
-          requiresAuth: true,
+        component: AdminDashboardPage,
+        meta: { 
+          requiresAuth: true, 
           requiresAdmin: true,
         },
       },
       {
         path: '/admin/plans',
         name: 'AdminPlans',
-        component: PlanListView,
-        meta: {
-          requiresAuth: true,
+        component: PlanListPage,
+        meta: { 
+          requiresAuth: true, 
           requiresAdmin: true,
         },
       },
       {
         path: '/admin/plans/new',
         name: 'AdminPlanNew',
-        component: PlanFormView,
-        meta: {
-          requiresAuth: true,
+        component: PlanFormPage,
+        meta: { 
+          requiresAuth: true, 
           requiresAdmin: true,
         },
       },
       {
         path: '/admin/plans/:id/edit',
         name: 'AdminPlanEdit',
-        component: PlanFormView,
-        meta: {
-          requiresAuth: true,
+        component: PlanFormPage,
+        meta: { 
+          requiresAuth: true, 
           requiresAdmin: true,
         },
       },
       {
         path: '/admin/subscriptions',
         name: 'AdminSubscriptions',
-        component: SubscriptionListView,
-        meta: {
-          requiresAuth: true,
+        component: SubscriptionListPage,
+        meta: { 
+          requiresAuth: true, 
           requiresAdmin: true,
         },
       },
       {
         path: '/admin/subscription-management',
         name: 'AdminSubscriptionManagement',
-        component: SubscriptionManagementView,
-        meta: {
-          requiresAuth: true,
+        component: SubscriptionManagementPage,
+        meta: { 
+          requiresAuth: true, 
           requiresAdmin: true,
         },
       },
       {
         path: '/admin/reports',
         name: 'AdminReports',
-        component: ReportsView,
-        meta: {
-          requiresAuth: true,
+        component: ReportsPage,
+        meta: { 
+          requiresAuth: true, 
           requiresAdmin: true,
         },
       },
