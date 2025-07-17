@@ -180,9 +180,6 @@ onMounted(() => {
           <span class="font-semibold text-text-primary whitespace-nowrap">{{
             authStore.user?.name
           }}</span>
-          <span class="font-semibold text-text-primary whitespace-nowrap">{{
-            authStore.user?.name
-          }}</span>
         </div>
         <div
           v-if="showProfileMenu"
