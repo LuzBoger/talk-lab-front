@@ -92,7 +92,7 @@ onMounted(() => {
           <template #icon><HomeIcon /></template>
           Accueil
         </MenuItem>
-        
+
         <MenuItem to="/categories" activePath="/categories" v-if="!isAdmin">
           <template #icon><CategoriesIcon /></template>
           Catégories
@@ -117,21 +117,21 @@ onMounted(() => {
           <template #icon><ForumIcon /></template>
           Forum
         </MenuItem>
-        
+
         <MenuItem to="/subscription/plans" activePath="/subscription/plans">
           <template #icon><TarificationIcon /></template>
           Tarification
         </MenuItem>
-        
-        <MenuItem 
-          to="/my-subscription" 
+
+        <MenuItem
+          to="/my-subscription"
           activePath="/my-subscription"
           v-if="authStore.isAuthenticated"
         >
           <template #icon><SubscriptionIcon /></template>
           Mon abonnement
         </MenuItem>
-        
+
         <template v-if="isAdmin">
           <div class="border-t border-border-auth-button mt-4 pt-4">
             <div class="text-xs text-gray-400 mb-2 px-3">ADMINISTRATION</div>
@@ -143,11 +143,17 @@ onMounted(() => {
               <template #icon><TarificationIcon /></template>
               Gestion des Plans
             </MenuItem>
-            <MenuItem to="/admin/subscriptions" activePath="/admin/subscriptions">
+            <MenuItem
+              to="/admin/subscriptions"
+              activePath="/admin/subscriptions"
+            >
               <template #icon><MyCreationIcon /></template>
               Abonnements
             </MenuItem>
-            <MenuItem to="/admin/subscription-management" activePath="/admin/subscription-management">
+            <MenuItem
+              to="/admin/subscription-management"
+              activePath="/admin/subscription-management"
+            >
               <template #icon><CategoriesIcon /></template>
               Gestion Abonnements
             </MenuItem>
