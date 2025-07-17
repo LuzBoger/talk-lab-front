@@ -1,5 +1,6 @@
 import { apiClient } from '../utils/apiClient'
 import type { Conversation } from '../types/Conversation'
+import type { Likers } from '../types/Likers'
 
 export const createConversation = async (conversation: Conversation) => {
   const response = await apiClient.post('/create-conversation', conversation)
@@ -81,4 +82,27 @@ export const searchPublicConversations = async (title: string , categoryNames: s
 
     }
 }
+
+export const getLikesCount = async (conversationId: number): Promise<number> => {
+  const response = await apiClient.get(`/conversation/${conversationId}/likes`)
+  return response.data
+}
+
+export const getLikers = async (conversationId: number): Promise<Likers[]> => {
+  const response = await apiClient.get(`/conversation/${conversationId}/likers`)
+  return response.data
+}
+
+export const addLike = async (conversationId: number): Promise<void> => {
+  const response = await apiClient.post(`/conversation/like`, {conversationId} )
+  return response.data
+}
+
+export const removeLike = async (conversationId: number): Promise<void> => {
+  const response = await apiClient.post(`/conversation/remove-like`, {conversationId })
+  return response.data
+}
+
+
+
 

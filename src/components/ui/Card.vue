@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps, computed } from 'vue'
 import type { ConversationListing } from '../../types/ConversationListing'
+import Like from '../like/Like.vue';
 const props = defineProps<{
   conversation: ConversationListing
   isCanBeModified: boolean
@@ -45,6 +46,9 @@ function formatDate(dateStr?: string) {
         class="w-full h-full object-cover rounded-t-lg"
         style="max-height: 236px; min-height: 236px"
       />
+            <div class="absolute top-2 right-2 z-20">
+        <Like :conversation-id="props.conversation.id!" />
+      </div>
     </div>
     <div class="p-2.5 w-full box-border mt-0 rounded-none">
       <h3 class="text-md font-semibold mb-1 text-text-primary">
@@ -121,4 +125,5 @@ function formatDate(dateStr?: string) {
       </div>
     </div>
   </div>
+
 </template>
