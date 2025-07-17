@@ -15,7 +15,10 @@ const authStore = useAuthStore()
 onMounted(async () => {
   await categoryStore.fetchCategories()
   await conversationStore.fetchPublicConversations()
-  console.log("Public conversation:",  await conversationStore.fetchPublicConversations())
+  console.log(
+    'Public conversation:',
+    await conversationStore.fetchPublicConversations(),
+  )
 })
 
 watch(

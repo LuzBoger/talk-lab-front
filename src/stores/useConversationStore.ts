@@ -62,6 +62,7 @@ export const useConversationStore = defineStore('conversation', () => {
     return await uploadMedia(media)
   }
 
+
   return {
     publicConversations,
     userConversations,
@@ -76,4 +77,5 @@ export const useConversationStore = defineStore('conversation', () => {
     removeConversation,
     uploadConversationMedia,
   }
+  
 })
