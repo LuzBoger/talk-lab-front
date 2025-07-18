@@ -4,7 +4,7 @@ import Card from '../components/ui/Card.vue'
 import CategoryList from '../components/CategoryList.vue'
 import { useRoute, useRouter } from 'vue-router'
 import SearchBar from '../components/ui/SearchBar.vue'
-import {searchPublicConversations} from '../api/conversation'
+import {getMostLikedPublicConversation, searchPublicConversations} from '../api/conversation'
 import type { Conversation } from '../types/Conversation'
 import Pagination from '../components/ui/Pagination.vue'
 
@@ -15,6 +15,7 @@ const selectedCategories = ref<string[]>([])
 const searchQuery = ref<string>('')
 const isLoading= ref<boolean>(false)
 const publicConversations = ref<Conversation[]>([])
+const mostLikedConversation = ref<Conversation[]>([])
 const currentPage = ref<number>(1)
 const convPerPage = 20
 const totalConversations = ref<number>(0)
@@ -39,6 +40,26 @@ const loadConversations = async (title: string, categories: string[], page: numb
       isLoading.value = false
     }
 }
+
+const loadMostLikedConversations = async () => {
+  try {
+    isLoading.value = true
+    const res = await getMostLikedPublicConversation()
+
+    mostLikedConversation.value =
+      res.map((conversation: any) => ({
+        ...conversation,
+        author: conversation.content.interlocutor_name ?? 'Unknown',
+      }))
+    } catch(error) {
+      console.error('Erruer lors du chagement des conversations filtrées', error)
+    } finally {
+      isLoading.value = false
+    }
+}
+
+
+
 watch(selectedCategories, async (newSelectedCategory) => {
 
   try {
@@ -68,6 +89,7 @@ watch(searchQuery, async (newQuery) => {
     }
     await router.replace({query})
     await loadConversations(newQuery,selectedCategories.value, currentPage.value)
+    await loadMostLikedConversations()
   } catch(erorr) {
     console.error('Erreru lors du chargement ')
 
