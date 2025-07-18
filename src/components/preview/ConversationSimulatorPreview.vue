@@ -13,7 +13,7 @@ const props = defineProps<{
 <template>
   <div>
     <div
-      class="w-preview h-preview flex flex-col justify-between font-sans bg-white"
+      class="w-preview h-preview flex flex-col justify-between bg-white font-sans-sf"
     >
       <div>
         <PreviewHeader

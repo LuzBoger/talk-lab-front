@@ -211,7 +211,7 @@ watch(() => sim.imageInterlocutorSend.value, (newVal) => {
       </div>
     </form>
     <div>
-      <div class="w-preview h-preview flex flex-col justify-between font-sans bg-white">
+      <div class="w-preview h-preview flex flex-col justify-between font-sans-sf bg-white">
         <div>
           <PreviewHeader :Hour="sim.startTime.value" :signalSelected="sim.signal.value" :networks="sim.reseau.value"
             :batSelected="sim.batteryLevel.value" />

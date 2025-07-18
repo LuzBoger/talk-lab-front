@@ -33,6 +33,6 @@ watch(
 )
 </script>
 
-<template>
+<template class="font-sans-roboto">
   <router-view></router-view>
 </template>

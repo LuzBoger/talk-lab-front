@@ -1,66 +1,131 @@
+<script setup lang="ts">
+import { type PropType } from 'vue'
+
+interface User {
+  id: number
+  name: string
+  email: string
+  hasSubscription: boolean
+  subscriptionStatus?: string | null
+  planName?: string | null
+}
+
+const props = defineProps({
+  users: {
+    type: Array as PropType<User[]>,
+    required: true,
+    default: () => [],
+  },
+})
+
+const emit = defineEmits([
+  'viewSubscription',
+  'cancelSubscription',
+  'deleteSubscription',
+])
+
+const formatStatus = (status: string) => {
+  switch (status) {
+    case 'active':
+      return 'Actif'
+    case 'canceled':
+      return 'Annulé'
+    case 'expired':
+      return 'Expiré'
+    default:
+      return status
+  }
+}
+</script>
+
 <template>
-  <div class="users-grid">
-    <div class="users-header">
-      <h2>Liste des Utilisateurs ({{ users.length }})</h2>
+  <div>
+    <div class="mb-6">
+      <h2 class="text-xl font-bold text-gray-100">
+        Liste des Utilisateurs ({{ users.length }})
+      </h2>
     </div>
-    
-    <div class="table-container">
-      <table class="users-table">
+    <div
+      class="bg-card-bg border border-gray-700 rounded-lg shadow overflow-x-auto"
+    >
+      <table class="min-w-full text-sm text-left text-gray-200">
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Abonnement</th>
-            <th>Statut</th>
-            <th>Plan</th>
-            <th>Actions</th>
+          <tr class="border-b border-gray-700">
+            <th class="px-4 py-3 font-semibold">ID</th>
+            <th class="px-4 py-3 font-semibold">Nom</th>
+            <th class="px-4 py-3 font-semibold">Email</th>
+            <th class="px-4 py-3 font-semibold">Abonnement</th>
+            <th class="px-4 py-3 font-semibold">Statut</th>
+            <th class="px-4 py-3 font-semibold">Plan</th>
+            <th class="px-4 py-3 font-semibold text-end">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id">
-            <td>{{ user.id }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
-            <td>
-              <span 
-                class="subscription-badge"
-                :class="{ 'has-subscription': user.hasSubscription, 'no-subscription': !user.hasSubscription }"
+          <tr
+            v-for="user in users"
+            :key="user.id"
+            class="border-b border-gray-700 hover:bg-gray-700/30 transition"
+          >
+            <td class="px-4 py-3">{{ user.id }}</td>
+            <td class="px-4 py-3">{{ user.name }}</td>
+            <td class="px-4 py-3">{{ user.email }}</td>
+            <td class="px-4 py-3">
+              <span
+                :class="
+                  user.hasSubscription
+                    ? 'bg-green-600 text-white'
+                    : 'bg-gray-900 text-gray-200 border border-gray-600'
+                "
+                class="inline-block px-3 py-1 rounded-full font-medium text-xs"
               >
                 {{ user.hasSubscription ? 'Oui' : 'Non' }}
               </span>
             </td>
-            <td>
-              <span 
+            <td class="px-4 py-3">
+              <span
                 v-if="user.subscriptionStatus"
-                class="status-badge"
-                :class="user.subscriptionStatus"
+                :class="{
+                  'bg-green-600 text-white':
+                    user.subscriptionStatus === 'active',
+                  'bg-yellow-400 text-gray-900':
+                    user.subscriptionStatus === 'expired',
+                  'bg-red-600 text-white':
+                    user.subscriptionStatus === 'canceled',
+                  'bg-gray-700 text-white': ![
+                    'active',
+                    'expired',
+                    'canceled',
+                  ].includes(user.subscriptionStatus || ''),
+                }"
+                class="inline-block px-3 py-1 rounded-full font-medium text-xs"
               >
                 {{ formatStatus(user.subscriptionStatus) }}
               </span>
               <span v-else>-</span>
             </td>
-            <td>{{ user.planName || '-' }}</td>
-            <td>
-              <div class="actions">
-                <button 
+            <td class="px-4 py-3">{{ user.planName || '-' }}</td>
+            <td class="px-4 py-3">
+              <div class="flex flex-wrap gap-2 justify-end">
+                <button
                   v-if="user.hasSubscription"
-                  class="btn btn-info"
-                  @click="$emit('viewSubscription', user.id)"
+                  class="px-3 py-1 rounded bg-publish-button hover:bg-publish-button-hover cursor-pointer text-white font-semibold text-xs transition"
+                  @click="emit('viewSubscription', user.id)"
                 >
                   Détails
                 </button>
-                <button 
-                  v-if="user.hasSubscription && user.subscriptionStatus === 'active'"
-                  class="btn btn-warning"
-                  @click="$emit('cancelSubscription', user)"
+                <button
+                  v-if="
+                    user.hasSubscription && user.subscriptionStatus === 'active'
+                  "
+                  class="px-3 py-1 rounded bg-yellow-400 hover:bg-yellow-500 text-gray-900 cursor-pointer font-semibold text-xs transition"
+                  @click="emit('cancelSubscription', user)"
                 >
                   Annuler
                 </button>
-                <button 
+                <button
                   v-if="user.hasSubscription"
-                  class="btn btn-danger"
-                  @click="$emit('deleteSubscription', user)"
+                  class="px-3 py-1 rounded bg-cancel-color hover:bg-cancel-hover cursor-pointer text-white font-semibold text-xs transition"
+                  @click="emit('deleteSubscription', user)"
                 >
                   Supprimer
                 </button>
@@ -72,140 +137,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent, type PropType } from 'vue';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  hasSubscription: boolean;
-  subscriptionStatus?: string | null;
-  planName?: string | null;
-}
-
-export default defineComponent({
-  name: 'UsersTable',
-  props: {
-    users: {
-      type: Array as PropType<User[]>,
-      required: true,
-      default: () => []
-    }
-  },
-  emits: ['viewSubscription', 'cancelSubscription', 'deleteSubscription'],
-  setup() {
-    const formatStatus = (status: string) => {
-      switch (status) {
-        case 'active': return 'Actif';
-        case 'canceled': return 'Annulé';
-        case 'expired': return 'Expiré';
-        default: return status;
-      }
-    };
-
-    return {
-      formatStatus
-    };
-  }
-});
-</script>
-
-<style scoped>
-@import '../../styles/admin.css';
-
-.table-container {
-  background: var(--color-card-bg);
-  border: 1px solid var(--color-border-auth-button);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  overflow-x: auto;
-}
-
-.users-table {
-  width: 100%;
-  border-collapse: collapse;
-  color: var(--color-text-primary);
-}
-
-.users-table th,
-.users-table td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid var(--color-border-auth-button);
-}
-
-.users-table th {
-  background: var(--color-sidebar-bg);
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-.subscription-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.subscription-badge.has-subscription {
-  background-color: var(--color-validate-button);
-  color: white;
-}
-
-.subscription-badge.no-subscription {
-  background-color: var(--color-card-bg);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border-auth-button);
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.status-badge.active {
-  background-color: var(--color-validate-button);
-  color: white;
-}
-
-.status-badge.canceled {
-  background-color: var(--color-cancel-color);
-  color: white;
-}
-
-.status-badge.expired {
-  background-color: var(--color-tag-yellow);
-  color: var(--color-bg-dark);
-}
-
-.actions {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-@media (max-width: 768px) {
-  .table-container {
-    font-size: 0.875rem;
-  }
-
-  .users-table th,
-  .users-table td {
-    padding: 0.5rem;
-  }
-
-  .actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-  }
-}
-</style> 

@@ -16,12 +16,17 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  className: {
+    type: String,
+    required: false,
+    default: '',
+  },
 })
 
 const route = useRoute()
 
 const isActive = computed(() => {
-  if (props.activePath === '/') {
+  if (props.activePath === '/' || props.activePath === '/admin') {
     return route.path === props.activePath
   }
   return (
@@ -48,16 +53,17 @@ const isActive = computed(() => {
         {
           'bg-[#444071]': isActive,
         },
+        props.className,
       )
     "
   >
     <RouterLink
       :to="props.to"
-      class="flex items-center gap-[12px] text-inherit no-underline w-full h-full"
+      class="flex items-center md:gap-[12px] text-inherit no-underline w-full h-full"
     >
       <slot name="icon"></slot>
       <span
-        class="whitespace-nowrap overflow-hidden text-ellipsis font-medium text-[16px]"
+        class="whitespace-nowrap overflow-hidden text-ellipsis font-medium text-[16px] max-md:hidden"
       >
         <slot></slot>
       </span>
