@@ -47,6 +47,28 @@ export const useAuthStore = defineStore('auth', () => {
     return true
   }
 
+
+    const loginGoogle = async (token: string) => {
+        try {
+            const response = await authService.loginWithGoogle(token)
+            if(response.isTwoFactorEnabled) {
+                isTwoFactorEnable.value = true
+                return false
+        }
+
+            isTwoFactorEnable.value = false
+            await getUser();
+            return true
+        } catch (error) {
+            console.error('Erreur lors de la connexion avec Google:', error);
+            throw error;
+        }
+    }
+
+    const register = async (userData : RegisterData) => {
+        await authService.register(userData)
+        await getUser();
+    }
   const register = async (userData: RegisterData) => {
     await authService.register(userData)
     await loadUser()
@@ -99,7 +121,7 @@ export const useAuthStore = defineStore('auth', () => {
     verifyTotp,
     loadUser,
     setUser,
-    login,
+    login,loginGoogle,
     register,
     logout,
   }
