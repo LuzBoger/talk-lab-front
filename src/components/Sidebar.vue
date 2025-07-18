@@ -92,11 +92,6 @@ onMounted(() => {
           <template #icon><HomeIcon /></template>
           Accueil
         </MenuItem>
-
-        <MenuItem to="/categories" activePath="/categories" v-if="!isAdmin">
-          <template #icon><CategoriesIcon /></template>
-          Catégories
-        </MenuItem>
         <MenuItem
           to="/decouverte"
           activePath="/decouverte"

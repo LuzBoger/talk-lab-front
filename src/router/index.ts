@@ -5,7 +5,6 @@ import { useAuthStore } from '../stores/useAuthStore'
 
 const HomePage = () => import('../pages/index.vue')
 const DiscoverPublicConversation = () => import('../pages/decouverte/index.vue')
-const Categories = () => import('../pages/categories/index.vue')
 const ConversationByCategories = () =>
   import('../pages/categorie/[categoryName].vue')
 const UserProfile = () => import('../pages/profil/mes-information.vue')
@@ -27,8 +26,10 @@ const MySubscriptionPage = () => import('../pages/MySubscriptionPage.vue')
 const AdminDashboardPage = () => import('../pages/admin/AdminDashboardPage.vue')
 const PlanListPage = () => import('../pages/admin/PlanListPage.vue')
 const PlanFormPage = () => import('../pages/admin/PlanFormPage.vue')
-const SubscriptionListPage = () => import('../pages/admin/SubscriptionListPage.vue')
-const SubscriptionManagementPage = () => import('../pages/admin/SubscriptionManagementPage.vue')
+const SubscriptionListPage = () =>
+  import('../pages/admin/SubscriptionListPage.vue')
+const SubscriptionManagementPage = () =>
+  import('../pages/admin/SubscriptionManagementPage.vue')
 const ReportsPage = () => import('../pages/admin/ReportsPage.vue')
 
 const routes = [
@@ -40,11 +41,6 @@ const routes = [
         path: '',
         name: 'Home',
         component: HomePage,
-      },
-      {
-        path: '/categories',
-        name: 'Catégories',
-        component: Categories,
       },
       {
         path: '/decouverte',
@@ -168,8 +164,8 @@ const routes = [
         path: '/admin',
         name: 'AdminDashboard',
         component: AdminDashboardPage,
-        meta: { 
-          requiresAuth: true, 
+        meta: {
+          requiresAuth: true,
           requiresAdmin: true,
         },
       },
@@ -177,8 +173,8 @@ const routes = [
         path: '/admin/plans',
         name: 'AdminPlans',
         component: PlanListPage,
-        meta: { 
-          requiresAuth: true, 
+        meta: {
+          requiresAuth: true,
           requiresAdmin: true,
         },
       },
@@ -186,8 +182,8 @@ const routes = [
         path: '/admin/plans/new',
         name: 'AdminPlanNew',
         component: PlanFormPage,
-        meta: { 
-          requiresAuth: true, 
+        meta: {
+          requiresAuth: true,
           requiresAdmin: true,
         },
       },
@@ -195,8 +191,8 @@ const routes = [
         path: '/admin/plans/:id/edit',
         name: 'AdminPlanEdit',
         component: PlanFormPage,
-        meta: { 
-          requiresAuth: true, 
+        meta: {
+          requiresAuth: true,
           requiresAdmin: true,
         },
       },
@@ -204,8 +200,8 @@ const routes = [
         path: '/admin/subscriptions',
         name: 'AdminSubscriptions',
         component: SubscriptionListPage,
-        meta: { 
-          requiresAuth: true, 
+        meta: {
+          requiresAuth: true,
           requiresAdmin: true,
         },
       },
@@ -213,8 +209,8 @@ const routes = [
         path: '/admin/subscription-management',
         name: 'AdminSubscriptionManagement',
         component: SubscriptionManagementPage,
-        meta: { 
-          requiresAuth: true, 
+        meta: {
+          requiresAuth: true,
           requiresAdmin: true,
         },
       },
@@ -222,8 +218,8 @@ const routes = [
         path: '/admin/reports',
         name: 'AdminReports',
         component: ReportsPage,
-        meta: { 
-          requiresAuth: true, 
+        meta: {
+          requiresAuth: true,
           requiresAdmin: true,
         },
       },
@@ -246,8 +242,6 @@ router.beforeEach(async (to, _from, next) => {
 
   const isAuthenticated = authStore.isAuthenticated
   const isAdmin = authStore.user?.role?.includes('ROLE_ADMIN')
-
-  
 
   if (!to.meta || to.meta.requiresAuth === false) {
     next()
