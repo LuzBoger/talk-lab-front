@@ -106,8 +106,8 @@ onMounted(() => {
           Découverte de conversation
         </MenuItem>
         <MenuItem
-          to="/conversation/nouvelle"
-          activePath="/conversation/nouvelle"
+          to="/create-conversation"
+          activePath="/create-conversation"
           v-if="!isAdmin"
         >
           <template #icon><CreateDiscussionIcon /></template>
