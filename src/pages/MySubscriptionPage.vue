@@ -364,11 +364,7 @@ export default defineComponent({
                 </p>
               </div>
             </template>
-            <template v-else>
-              <p class="text-gray-400 font-medium">
-                Contactez l'administration pour obtenir un abonnement.
-              </p>
-            </template>
+            
           </div>
 
           <div
@@ -397,9 +393,7 @@ export default defineComponent({
         <p class="text-gray-300 mb-4">
           Vous n'avez actuellement aucun abonnement actif.
         </p>
-        <p class="text-gray-400 font-medium">
-          Contactez l'administration pour obtenir un abonnement.
-        </p>
+       
       </div>
 
       <div
