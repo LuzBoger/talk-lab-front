@@ -59,7 +59,14 @@ export function useConversationSimulator() {
   const categoryStore = useCategoryStore()
   const selectedCategories = ref<number[]>([])
   const baseUrl = import.meta.env.VITE_BASE_URL
-
+  watch(
+    selectedCategories,
+    (newVal) => {
+      console.log('selectedCategories a changé :', newVal)
+      setFieldValue('categoriesId', newVal)
+    },
+    { deep: true },
+  )
   const { handleSubmit, errors, setFieldValue, values, submitCount } = useForm({
     validationSchema: toTypedSchema(conversationSchema),
     initialValues: {
@@ -171,7 +178,10 @@ export function useConversationSimulator() {
     }
   })
 
-  const saveChanges = async () => {
+  const saveChanges = async (categories?: number[]) => {
+    if (categories) {
+      setFieldValue('categoriesId', categories)
+    }
     try {
       await saveConversationChanges()
       toast.success('Changements sauvegardés avec succès')
@@ -345,11 +355,13 @@ export function useConversationSimulator() {
             ...response.content,
             interlocutor_avatar: response.content.interlocutor_avatar ?? '',
           })
-          console.log(response.categoriesId)
-          setFieldValue(
-            'categoriesId',
-            response.categoriesId.map((cat: any) => cat.id),
+          // Correction ici : normalise les catégories
+          const catIds = response.categoriesId.map((cat: any) =>
+            typeof cat === 'object' && cat !== null ? cat.id : cat,
           )
+          setFieldValue('categoriesId', catIds)
+          selectedCategories.value = [...catIds]
+
           status.value = response.status
           isPublic.value = response.isPublic
           initialvalues.value = JSON.parse(JSON.stringify(values))

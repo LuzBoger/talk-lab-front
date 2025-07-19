@@ -17,7 +17,9 @@ import HelpIcon from './icon/HelpIcon.vue'
 import LogoutIcon from './icon/LogoutIcon.vue'
 import DropDownButtonLogout from './sidebarComponents/dropdownButton/DropDownButtonLogout.vue'
 import { useAuthStore } from '../stores/useAuthStore'
-
+import LoginIcon from './icon/LoginIcon.vue'
+import ConnexionIcon from './icon/ConnexionIcon.vue'
+import InscriptionIcon from './icon/InscriptionIcon.vue'
 const emit = defineEmits(['sidebar-toggle', 'logout'])
 const authStore = useAuthStore()
 const route = useRoute()
@@ -192,7 +194,11 @@ onMounted(() => {
           v-if="showProfileMenu"
           class="mt-2 bg-dropdown-bg rounded-2xl shadow-lg flex flex-col p-2 absolute left-20 md:left-auto bottom-20 w-36 gap-1 z-80"
         >
-          <DropdownButton label="Profil" to="/profil" @click="showProfileMenu = false">
+          <DropdownButton
+            label="Profil"
+            to="/profil"
+            @click="showProfileMenu = false"
+          >
             <template #icon><ProfilIcon /></template>
           </DropdownButton>
           <DropdownButton v-if="isAdmin" label="Administration" to="/admin">
@@ -207,24 +213,45 @@ onMounted(() => {
         </div>
       </template>
       <template v-else>
+        <!-- Desktop : texte visible, icône cachée -->
         <button
           @click="$router.push('/register')"
-          class="border border-signup-button text-signup-button p-2.5 font-semibold rounded-lg cursor-pointer transition-colors duration-200 hover:bg-signup-button hover:text-white w-full hidden md:block"
+          class="border border-signup-button text-signup-button p-2.5 font-semibold rounded-lg cursor-pointer transition-colors duration-200 hover:bg-signup-button hover:text-white w-full hidden md:flex items-center justify-center"
         >
           S'inscrire
         </button>
         <button
           @click="$router.push('/login')"
-          class="border border-text-primary text-text-primary p-2.5 font-semibold rounded-lg cursor-pointer transition-colors duration-200 hover:bg-auth-button-hover hover:text-white w-full hidden md:block"
+          class="border border-text-primary text-text-primary p-2.5 font-semibold rounded-lg cursor-pointer transition-colors duration-200 hover:bg-auth-button-hover hover:text-white w-full hidden md:flex items-center justify-center"
         >
           Se connecter
         </button>
-        <!-- Icône connexion mobile -->
+
+        <!-- Mobile : icône visible, texte caché -->
+        <button
+          @click="$router.push('/register')"
+          class="border border-signup-button text-signup-button p-2 font-semibold rounded-lg cursor-pointer transition-colors duration-200 hover:bg-signup-button hover:text-white w-full md:hidden flex items-center justify-center"
+          aria-label="S'inscrire"
+        >
+          <!-- Exemple d'icône register (utilise ton propre SVG ou composant) -->
+          <InscriptionIcon
+            :width="24"
+            :height="24"
+            fillColor="#e3e3e3"
+            className="h-6 w-6"
+          />
+        </button>
         <button
           @click="$router.push('/login')"
-          class="flex flex-col items-center md:hidden"
+          class="border border-text-primary text-text-primary p-2 font-semibold rounded-lg cursor-pointer transition-colors duration-200 hover:bg-auth-button-hover hover:text-white w-full md:hidden flex items-center justify-center"
+          aria-label="Se connecter"
         >
-          <ProfilIcon class="w-8 h-8" />
+          <ConnexionIcon
+            :width="24"
+            :height="24"
+            fillColor="#e3e3e3"
+            className="h-6 w-6"
+          />
         </button>
       </template>
     </div>

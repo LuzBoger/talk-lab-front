@@ -18,10 +18,12 @@ const saveCategories = () => {
 }
 
 const close = () => {
+  console.log('[CategorySelectedModal] close called')
   emit('close')
 }
 
 const resetSelectedCategory = () => {
+  console.log('[CategorySelectedModal] resetSelectedCategory called')
   selectedCategories.value = []
 }
 
