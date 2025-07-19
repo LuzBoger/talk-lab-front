@@ -27,7 +27,7 @@ watch(() => sim.imageInterlocutorSend.value, (newVal) => {
       <div class="flex items-center gap-1">
         <input type="text" v-model="sim.title.value" placeholder="Titre de la conversation"
           :class="clsx('w-80 bg-sidebar-bg text-white p-2 rounded', sim.submitCount.value > 0 && sim.errors.value.title && 'border border-red-700')" />
-        <button @click="sim.showCategoryModal.value = true"
+        <button type="button" @click="sim.showCategoryModal.value = true"
           :class="clsx('w-80 bg-sidebar-bg text-white p-2 rounded cursor-pointer')">
           Ouvrir la modale des catégories
         </button>
@@ -104,8 +104,8 @@ watch(() => sim.imageInterlocutorSend.value, (newVal) => {
             <div class="relative">
               <div v-if="sim.imageUserSend.value" class="mb-2 w-16 h-16">
                 <div class="relative">
-                  <img :src="sim?.imageUserSend.value" alt="Prévisualisation"
-                    class="w-16 h-16 object-cover rounded-md shadow border border-white" />
+                  <img :src="sim?.imageUserSend.value" alt="Prévisualisation de l'image transmise par l'utilisateur"
+                    class="w-16 h-16 object-cover rounded-md shadow border border-white" loading="lazy" />
                   <button type="button" @click="sim.removeImage('user')"
                     class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center shadow hover:bg-red-600">
                     &#10060
@@ -137,8 +137,8 @@ watch(() => sim.imageInterlocutorSend.value, (newVal) => {
             <div class="relative">
               <div v-if="sim.imageInterlocutorSend.value" class="mb-2 w-16 h-16">
                 <div class="relative">
-                  <img :src="sim?.imageInterlocutorSend.value" alt="Prévisualisation"
-                    class="w-16 h-16 object-cover rounded-md shadow border border-white" />
+                  <img :src="sim?.imageInterlocutorSend.value" alt="Prévisualisation de l'image trasnmise par l'interlocuteur" 
+                    class="w-16 h-16 object-cover rounded-md shadow border border-white" loading="lazy" />
                   <button type="button" @click="sim.removeImage('interlocutor')"
                     class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center shadow hover:bg-red-600">
                     &#10060

@@ -43,8 +43,10 @@ function formatDate(dateStr?: string) {
     <div class="w-full">
       <img
         :src="props?.conversation?.content?.interlocutor_avatar ?? undefined"
+        alt="Avatar Interlocuteur"
         class="w-full h-full object-cover rounded-t-lg"
         style="max-height: 236px; min-height: 236px"
+        loading="lazy"
       />
             <div class="absolute top-2 right-2 z-20">
         <Like :conversation-id="props.conversation.id!" />

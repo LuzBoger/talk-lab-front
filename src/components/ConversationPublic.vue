@@ -22,7 +22,7 @@ const filteredConversationByCategory = (categoryId: number) => {
       <div v-if="filteredConversationByCategory(category.id).length === 0" class="text-gray-400 italic mb-4 text-center">Aucune conversation disponible pour cette catégorie</div>
       <div v-for="conversation in filteredConversationByCategory(category.id).slice(0, NB_CONV)" :key="conversation.id" class="p-4 mb-4 bg-gray-700 rounded-xl hover:bg-gray-600 transition flex items-center justify-between space-x-4">
         <div class="flex items-center space-x-4">
-          <img :src="conversation.content.interlocutor_avatar || defaultAvatar" alt="avatar" class="w-12 h-12 rounded-full border-2 border-blue-400 object-cover">
+          <img :src="conversation.content.interlocutor_avatar || defaultAvatar" alt="Avatar de l'interlocuteur" class="w-12 h-12 rounded-full border-2 border-blue-400 object-cover" loading="lazy">
           <div>
             <div class="font-semibold text-lg">{{ conversation.content.interlocutor_username || 'Utilisateur' }}</div>
           </div>

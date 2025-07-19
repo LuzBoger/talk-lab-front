@@ -158,10 +158,10 @@ onMounted(async() => {
 <template>
   <div>
     <header class="flex flex-col md:flex-row justify-between items-center m-4">
-      <div class="text-xl text-white welcome-message-shadow">
+      <h1 class="text-xl text-white welcome-message-shadow">
         Bienvenue sur
         <span class="font-semibold text-main-color">TalkLabs</span>
-      </div>
+      </h1>
             <SearchBar v-model="searchQuery"/>
 
     </header>

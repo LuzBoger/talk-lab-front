@@ -29,7 +29,7 @@ const toggleFavorite = async (conversationId: number) => {
 <template>
       <div v-for="conversation in props.conversations" :key="conversation.id" class="p-4 mb-4 bg-gray-700 rounded-xl hover:bg-gray-600 transition flex items-center justify-between space-x-4">
         <div class="flex items-center space-x-4">
-          <img :src="conversation.content.interlocutor_avatar || defaultAvatar" alt="avatar" class="w-12 h-12 rounded-full border-2 border-blue-400 object-cover">
+          <img :src="conversation.content.interlocutor_avatar || defaultAvatar" alt="Avatar interlocuteur" class="w-12 h-12 rounded-full border-2 border-blue-400 object-cover" loading="lazy">
           <div>
             <div class="font-semibold text-lg">{{ conversation.title || 'Aucun titre pour cette conversation' }}</div>
             <div class="font-semibold text-lg">{{ conversation.content.interlocutor_username || 'Utilisateur' }}</div>
@@ -38,6 +38,7 @@ const toggleFavorite = async (conversationId: number) => {
         <div class="flex item-center space-x-2">
           <router-link :to="`/conversation/${conversation.id}`" class="px-3 py-1 bg-blue-500 rounded-md text-white font-medium ">Visualiser</router-link>
           <button
+          type="button"
             @click.stop="toggleFavorite(conversation.id!)"
             class="ml-3"
             :title="favoriteStore.isFavorite(conversation.id!) ? 'Retirer des favoris' : 'Ajouter aux favoris'"

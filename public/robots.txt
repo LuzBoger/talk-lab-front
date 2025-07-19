@@ -1,0 +1,11 @@
+User-agent: *
+
+Disallow: /profil/
+Disallow: /create-conversation
+Disallow: /edit-conversation/
+Disallow: /view-conversation/
+
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://talklab.fr/sitemap.xml

@@ -4,3 +4,5 @@ declare module '*.vue' {
   export default component
 }
 declare module 'vue3-emoji-picker/css'
+declare module '@vueuse/head'
+declare module 'vue3-google-login'

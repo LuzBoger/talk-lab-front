@@ -102,8 +102,7 @@ const toggleReplyForm = () => {
 
     <div class="mb-4  rounded p-3 text-white">
         <div class="flex items-center space-x-2 mb-2">
-            <img  v-if="props.comment.publisher.avatarUrl" :src=" `${baseUrl}${props.comment.publisher.avatarUrl}`" alt="avatar" class="w-8 h-8 rounded-full"
-                />
+            <img  v-if="props.comment.publisher.avatarUrl" :src=" `${baseUrl}${props.comment.publisher.avatarUrl}`" alt="Chemin contenant l'url avatar de l'utilsateur" class="w-8 h-8 rounded-full" loading="lazy" />
             <strong>{{ props.comment.publisher.name }}</strong>
             <small class="text-gray-500 ml-auto">{{ props.comment.createdAt }}</small>
         </div>

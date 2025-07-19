@@ -26,10 +26,10 @@ const fomattedTime = computed(() => {
     </div>
 
     <div class="bg-white rounded-lg shadow p-4 text-sm">
-      <h3 class="font-semibold text-gray-800 mb-2">Conversaiton</h3>
+      <h1 class="font-semibold text-gray-800 mb-2">Conversaiton</h1>
 
       <div class="flex items-center space-x-3 mb-4">
-        <img :src="content.interlocutor_avatar_url" alt="avatar" class="w-10 h-10 rounded-full object-cover" />
+        <img :src="content.interlocutor_avatar_url" alt="Avatar de l'interlocuteur" class="w-10 h-10 rounded-full object-cover" loading="lazy" />
         <div>
           <p class="text-sm font-medium text-gray-900">{{ content.interlocutor_name }}</p>
           <p class="text-xs text-gray-500">{{ content.interlocutor_username }}</p>
@@ -41,7 +41,7 @@ const fomattedTime = computed(() => {
       </div>
 
       <div class="mt-4">
-        <button class="w-full bg-gray-800 text-white py-1 px-3 rounded hover:bg-gray-700 text-xs">
+        <button type="button" class="w-full bg-gray-800 text-white py-1 px-3 rounded hover:bg-gray-700 text-xs">
           Télécharger la conversation
         </button>
       </div>

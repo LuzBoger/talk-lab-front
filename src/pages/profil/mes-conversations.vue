@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import ConversationList from "../../components/ConversationList.vue";
+import {useHead} from '@vueuse/head';
+
+useHead({
+  title: 'Voir mes conversations',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },
+  ]
+})
+
 </script>
 
 <template>

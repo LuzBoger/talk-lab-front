@@ -122,6 +122,7 @@ onMounted(() => {
             class="w-9 h-9 rounded-full object-cover flex-shrink-0 border-2 border-avatar-border"
             :src="avatarurl"
             alt="Avatar utilisateur"
+            loading="lazy"
           />
           <span class="font-semibold text-text-primary whitespace-nowrap">{{
             authStore.user?.name
@@ -146,12 +147,14 @@ onMounted(() => {
       <template v-else>
         <button
           @click="$router.push('/register')"
+          type="button"
           class="border border-signup-button text-signup-button p-2.5 font-semibold rounded-lg cursor-pointer transition-colors duration-200 hover:bg-signup-button hover:text-white"
         >
           S'inscrire
         </button>
         <button
           @click="$router.push('/login')"
+          type="button"
           class="border border-text-primary text-text-primary p-2.5 font-semibold rounded-lg cursor-pointer transition-colors duration-200 hover:bg-auth-button-hover hover:text-white"
         >
           Se connecter

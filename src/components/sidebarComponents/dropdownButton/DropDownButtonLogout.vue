@@ -11,6 +11,7 @@ const emitActionListener = () => {
 
 <template>
   <button
+    type="button"
     @click="emitActionListener"
     class="flex gap-2 bg-none border-none text-text-primary p-2.5 text-left w-full rounded-lg text-sm cursor-pointer transition-colors duration-200 hover:bg-dropdown-hover"
   >

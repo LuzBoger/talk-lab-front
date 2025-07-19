@@ -28,7 +28,7 @@ watch(() => props.isVisible, (newValue) => {
             
             <div class="flex justify-between items-center mb-5">
                 <h2 class="text-lg font-bold text-gray-800">Publier votre conversation</h2>
-                <button @click="$emit('cancel')" class="bg-transparent border-none text-2xl text-gray-400 cursor-pointer">
+                <button @click="$emit('cancel')" type="button" class="bg-transparent border-none text-2xl text-gray-400 cursor-pointer">
                     &times;
                 </button>
             </div>
@@ -38,8 +38,8 @@ watch(() => props.isVisible, (newValue) => {
             </div>
 
             <div class="flex justify-end space-x-3">
-                <button @click="$emit('cancel')" class="bg-gray-100 text-gray-800 px-4 py-2 rounded text-sm">Annuler</button>
-                <button @click="$emit('confirm')" class="bg-green-600 text-white px-4 py-2 rounded text-sm">Confirmer</button>
+                <button @click="$emit('cancel')" type="button" class="bg-gray-100 text-gray-800 px-4 py-2 rounded text-sm">Annuler</button>
+                <button @click="$emit('confirm')" type="button" class="bg-green-600 text-white px-4 py-2 rounded text-sm">Confirmer</button>
             </div> 
         </div>
     </div>

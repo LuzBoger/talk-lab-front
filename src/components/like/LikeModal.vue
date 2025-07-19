@@ -46,7 +46,7 @@ watch(() => props.isModalOpen, (newVal) => {
             </li>
         </ul>
         <Pagination v-model="currentPage" :total-items="likers.length" :page-size="userPerPage" pagination-color="text-black" class="mb-4 text-black"  />
-        <button @click="emit('close')" class="w-full py-2 bg-red-600 text-white rounded transition">Fermer</button>
+        <button @click="emit('close')" type="button" class="w-full py-2 bg-red-600 text-white rounded transition">Fermer</button>
     </div>
     </div>
 

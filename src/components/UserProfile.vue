@@ -37,8 +37,9 @@ onMounted(() => {
     <div class="relative">
       <img
         :src="profileAvatar"
-        alt="Profile"
+        alt="Avatar de l'utilisateur connecté"
         class="w-32 h-32 rounded-full object-cover border-4 border-[#1E1E2F]"
+        loading="lazy"
       />
       <label
         for="image-upload"
@@ -100,6 +101,7 @@ onMounted(() => {
 
       <button
         @click="updateProfile"
+        type="button"
         class="w-full bg-[#3A3A4F] hover:bg-[#4A4A5F] text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-[#5A5A6F]"
       >
         Mettre à jour

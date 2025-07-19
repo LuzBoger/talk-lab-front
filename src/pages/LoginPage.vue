@@ -1,13 +1,22 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/useAuthStore';
 import LoginIcon from '../components/icon/LoginIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
-import GoogleIcon from '../components/icon/GoogleIcon.vue'
 import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
 import TwoFactorModal from '../components/2FA/TwoFactorModal.vue'
+import {useHead} from '@vueuse/head';
 
+useHead({
+  title: 'Connexion',
+  meta:[
+    {name: 'description', content: 'Connectez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
+    {name: 'robots', content: 'noindex, nofollow' },
+    {property: 'og:description', content: 'Connectez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
+    { name: 'twitter:description', content:'Connectez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.' },
+  ]
+})
 const router = useRouter()
 const authStore = useAuthStore()
 
