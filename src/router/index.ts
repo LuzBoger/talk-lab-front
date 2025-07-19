@@ -5,7 +5,6 @@ import { useAuthStore } from '../stores/useAuthStore'
 
 const HomePage = () => import('../pages/index.vue')
 const DiscoverPublicConversation = () => import('../pages/decouverte/index.vue')
-const Categories = () => import('../pages/categories/index.vue')
 const ConversationByCategories = () =>
   import('../pages/categorie/[categoryName].vue')
 const UserProfile = () => import('../pages/profil/mes-information.vue')
@@ -21,6 +20,18 @@ const ConversationSimulatorEditPage = () =>
   import('../pages/conversation/ConversationEditPage.vue')
 const ConversationSimulatorViewPage = () =>
   import('../pages/conversation/ConversationViewPage.vue')
+const SubscriptionPlansView = () => import('../pages/SubscriptionPlansView.vue')
+const MySubscriptionPage = () => import('../pages/MySubscriptionPage.vue')
+
+const AdminDashboardPage = () => import('../pages/admin/AdminDashboardPage.vue')
+const PlanListPage = () => import('../pages/admin/PlanListPage.vue')
+const PlanFormPage = () => import('../pages/admin/PlanFormPage.vue')
+const SubscriptionListPage = () =>
+  import('../pages/admin/SubscriptionListPage.vue')
+const SubscriptionManagementPage = () =>
+  import('../pages/admin/SubscriptionManagementPage.vue')
+const ReportsPage = () => import('../pages/admin/ReportsPage.vue')
+
 const HomePagePublic = () => import('../pages/indexPublic.vue')
 const routes = [
   {
@@ -138,6 +149,91 @@ const routes = [
           requiresGuest: true,
         },
       },
+      {
+        path: '/subscription/plans',
+        name: 'SubscriptionPlans',
+        component: SubscriptionPlansView,
+        // Page publique - accessible sans connexion
+      },
+      {
+        path: '/subscription/my-subscription',
+        name: 'MySubscription',
+        component: MySubscriptionPage,
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: '/my-subscription',
+        name: 'MySubscriptionShort',
+        component: MySubscriptionPage,
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: '/admin',
+        name: 'AdminDashboard',
+        component: AdminDashboardPage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
+      {
+        path: '/admin/plans',
+        name: 'AdminPlans',
+        component: PlanListPage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
+      {
+        path: '/admin/plans/new',
+        name: 'AdminPlanNew',
+        component: PlanFormPage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
+      {
+        path: '/admin/plans/:id/edit',
+        name: 'AdminPlanEdit',
+        component: PlanFormPage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
+      {
+        path: '/admin/subscriptions',
+        name: 'AdminSubscriptions',
+        component: SubscriptionListPage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
+      {
+        path: '/admin/subscription-management',
+        name: 'AdminSubscriptionManagement',
+        component: SubscriptionManagementPage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
+      {
+        path: '/admin/reports',
+        name: 'AdminReports',
+        component: ReportsPage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
     ],
   },
 ]
@@ -156,6 +252,7 @@ router.beforeEach(async (to, _from, next) => {
   }
 
   const isAuthenticated = authStore.isAuthenticated
+  const isAdmin = authStore.user?.role?.includes('ROLE_ADMIN')
 
   if (!to.meta || to.meta.requiresAuth === false) {
     next()
@@ -177,6 +274,8 @@ router.beforeEach(async (to, _from, next) => {
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login')
   } else if (to.meta.requiresGuest && isAuthenticated) {
+    next('/')
+  } else if (to.meta.requiresAdmin && !isAdmin) {
     next('/')
   } else {
     next()

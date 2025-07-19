@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/useAuthStore';
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/useAuthStore'
 import LoginIcon from '../components/icon/LoginIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
 import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
@@ -59,25 +59,24 @@ const login = async () => {
 }
 
 const handleCredentialResponse = async (response: any) => {
-  const googleToken = response.credential;
+  const googleToken = response.credential
   try {
     loading.value = true
     errorMessage.value = ''
     await authStore.loginGoogle(googleToken)
-    if(authStore.isTwoFactorEnable) {
+    if (authStore.isTwoFactorEnable) {
       showModalTwoFactor.value = true
       return
     }
     router.push('/')
-
   } catch (error: any) {
     console.error("Détails de l'erreur:", error)
-    errorMessage.value = error.response?.data?.message || 'Erreur de connexion avec Google'
+    errorMessage.value =
+      error.response?.data?.message || 'Erreur de connexion avec Google'
   } finally {
     loading.value = false
   }
 }
-
 
 const validateTotp = async (code: string) => {
   loading.value = true
@@ -107,41 +106,36 @@ onMounted(() => {
 
   window.google?.accounts.id.renderButton(
     document.getElementById('google-button') as HTMLElement,
-    { theme: 'outline', size: 'large', type: 'standard', shape: 'pill' }
+    { theme: 'outline', size: 'large', type: 'standard', shape: 'pill' },
   )
 })
-
-
-
-
-
 </script>
 
 <template>
-  <div class="flex w-screen h-screen">
+  <div class="flex w-screen h-screen relative">
     <router-link
       to="/"
       class="absolute top-5 left-5 z-10 cursor-pointer transition duration-300 ease-in-out hover:scale-110"
     >
-      <ArrowIcon :width="25" :height="25" fillColor="black" />
+      <ArrowIcon :width="25" :height="25" fillColor="white" />
     </router-link>
     <div class="flex w-full h-full overflow-hidden">
       <!-- Cette section sera masquée sur les petits écrans -->
       <div
-        class="flex-1 justify-center items-center bg-white border-r border-gray-300 hidden md:flex"
+        class="flex-1 justify-center items-center border-r border-gray-800 hidden md:flex"
       >
         <LoginIcon />
       </div>
       <div
-        class="flex-1 flex flex-col justify-center items-center bg-white relative overflow-y-auto w-full"
+        class="flex-1 flex flex-col justify-center items-center relative overflow-y-auto w-full"
       >
         <div class="relative flex flex-col gap-4">
           <h1
-            class="text-lg md:text-2xl font-semibold text-center text-gray-800 mb-2"
+            class="text-lg md:text-2xl font-semibold text-center text-white mb-2"
           >
             Connectez-vous à votre compte
           </h1>
-          <p class="text-sm text-center text-gray-700 mb-4">
+          <p class="text-sm text-center text-gray-100 mb-4">
             Avec <span class="font-semibold">Google</span> ou par
             <span class="font-semibold">Email</span>, c'est rapide et simple.
           </p>
@@ -157,7 +151,7 @@ onMounted(() => {
             <div class="">
               <label
                 for="email"
-                class="block mb-1 text-gray-800 text-xs font-medium"
+                class="block mb-1 text-white text-xs font-medium"
                 >E-mail</label
               >
               <input
@@ -166,14 +160,14 @@ onMounted(() => {
                 v-model="email"
                 placeholder="exemple@mail.com"
                 required
-                class="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm"
+                class="w-full p-2.5 border border-gray-800 rounded-lg bg-card-bg text-white text-sm"
               />
             </div>
 
             <div>
               <label
                 for="password"
-                class="block mb-1 text-gray-800 text-xs font-medium"
+                class="block mb-1 text-white text-xs font-medium"
                 >Mot de passe</label
               >
               <input
@@ -182,7 +176,7 @@ onMounted(() => {
                 v-model="password"
                 placeholder="******"
                 required
-                class="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm"
+                class="w-full p-2.5 border border-gray-800 rounded-lg bg-card-bg text-white text-sm"
               />
             </div>
 
@@ -200,13 +194,13 @@ onMounted(() => {
             </button>
           </form>
 
-          <div class="text-center text-gray-900 relative font-semibold">Ou</div>
+          <div class="text-center text-white relative font-semibold">Ou</div>
 
           <div class="flex justify-center">
-            <div id="google-button" ></div>
+            <div id="google-button"></div>
           </div>
 
-          <p class="text-center mt-4 text-sm">
+          <p class="text-center text-white mt-4 text-sm">
             Pas encore de compte ?
             <router-link
               to="/register"

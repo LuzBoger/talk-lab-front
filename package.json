@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write ."
@@ -15,6 +15,7 @@
     "@vee-validate/yup": "^4.15.0",
     "@vueuse/head": "^2.0.0",
     "axios": "^1.9.0",
+    "bootstrap": "^5.3.6",
     "clsx": "^2.1.1",
     "event-source-polyfill": "^1.0.31",
     "pinia": "^3.0.3",

@@ -17,6 +17,7 @@ onMounted(async () => {
   await conversationStore.fetchPublicConversations()
   console.log(
     'Public conversation:',
+    await conversationStore.fetchPublicConversations(),
   )
 })
 
@@ -32,6 +33,6 @@ watch(
 )
 </script>
 
-<template>
+<template class="font-sans-roboto">
   <router-view></router-view>
 </template>

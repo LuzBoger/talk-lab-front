@@ -2,12 +2,13 @@
 import { ref, onMounted, computed } from 'vue'
 import { useUserProfile } from '../composables/useUserProfile'
 import defaultProfileImg from '../assets/images/defaultAvatar.png'
-
+import LoadingSpinnerIcon from './icon/LoadingSpinnerIcon.vue'
 const { form, avatarFile, loadUserProfile, updateProfilAvatar, submit } =
   useUserProfile()
 
 const baseUrl = import.meta.env.VITE_BASE_URL
 const url = ref<string | null>(null)
+const loading = ref(false)
 
 const profileAvatar = computed(() => {
   if (avatarFile.value) {
@@ -24,7 +25,14 @@ const profileAvatar = computed(() => {
 })
 
 const updateProfile = async () => {
-  await submit()
+  loading.value = true
+  try {
+    await submit()
+  } catch (error) {
+    // Gère l'erreur si besoin
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(() => {
@@ -74,7 +82,7 @@ onMounted(() => {
           v-model="form.name"
           type="text"
           id="name"
-          class="mt-1 p-2 bg-[#1E1E2F] rounded border border-[#2C2C3F] focus:outline-none focus:ring-2 focus:ring-[#3A3A4F]"
+          class="mt-1 p-2 bg-bg-dark rounded focus:outline-none focus:ring-2 focus:ring-[#3A3A4F]"
           disabled
         />
       </div>
@@ -100,10 +108,14 @@ onMounted(() => {
       </div>
 
       <button
-        @click="updateProfile"
         type="button"
-        class="w-full bg-[#3A3A4F] hover:bg-[#4A4A5F] text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-[#5A5A6F]"
+        @click="updateProfile"
+        :disabled="loading"
+        class="w-full p-2.5 bg-[#3A3A4F] hover:bg-[#4A4A5F] text-white rounded font-semibold text-sm mt-2.5 disabled:bg-gray-500 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
       >
+        <span v-if="loading" class="inline-block mr-2 align-middle">
+          <LoadingSpinnerIcon :className="'animate-spin h-5 w-5 text-white'" />
+        </span>
         Mettre à jour
       </button>
     </div>

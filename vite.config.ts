@@ -6,4 +6,15 @@ import Pages from 'vite-plugin-pages'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), tailwindcss(), Pages({ dirs: ['src/pages'] })],
+  optimizeDeps: {
+    include: ['bootstrap'],
+  },
+  build: {
+    rollupOptions: {
+      external: [],
+      output: {
+        globals: {},
+      },
+    },
+  },
 })

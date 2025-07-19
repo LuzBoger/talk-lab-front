@@ -1,46 +1,62 @@
 <script setup lang="ts">
-
-import { watch } from 'vue';
+import { watch } from 'vue'
 
 const props = defineProps<{
-    isVisible: boolean
+  isVisible: boolean
 }>()
 
-const emit = defineEmits(
-    ['confirm', 'cancel']
-)
+const emit = defineEmits(['confirm', 'cancel'])
 
-watch(() => props.isVisible, (newValue) => {
-    if(newValue) {
-        document.body.classList.add('overflow-hidden')
+watch(
+  () => props.isVisible,
+  (newValue) => {
+    if (newValue) {
+      document.body.classList.add('overflow-hidden')
     } else {
-        document.body.classList.remove('overflow-hidden')
+      document.body.classList.remove('overflow-hidden')
     }
-})
-
+  },
+)
 </script>
 
 <template>
-    <div v-if="props.isVisible" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50"
-        :class="[props.isVisible ? 'opacity-100' : 'opacity-0']">
-        <div class="bg-white rounded-lg p-8 shadow-xl w-full max-w-md"
-            :class="[props.isVisible ? 'scale-100' : 'scale-80']">
-            
-            <div class="flex justify-between items-center mb-5">
-                <h2 class="text-lg font-bold text-gray-800">Publier votre conversation</h2>
-                <button @click="$emit('cancel')" type="button" class="bg-transparent border-none text-2xl text-gray-400 cursor-pointer">
-                    &times;
-                </button>
-            </div>
-            
-            <div class="mb-6 text-gray-600 leading-relaxed">
-                <p>Vous vous apprêter à rendre votre conversation publique</p>
-            </div>
+  <div
+    v-if="props.isVisible"
+    class="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50"
+    :class="[props.isVisible ? 'opacity-100' : 'opacity-0']"
+  >
+    <div
+      class="bg-card-bg rounded-lg p-8 shadow-xl w-full max-w-md"
+      :class="[props.isVisible ? 'scale-100' : 'scale-80']"
+    >
+      <div class="flex justify-between items-center mb-5">
+        <h2 class="text-lg font-bold text-white">Publier votre conversation</h2>
+        <button
+          @click="$emit('cancel')"
+          class="bg-transparent border-none text-2xl text-gray-400 cursor-pointer"
+        >
+          &times;
+        </button>
+      </div>
 
-            <div class="flex justify-end space-x-3">
-                <button @click="$emit('cancel')" type="button" class="bg-gray-100 text-gray-800 px-4 py-2 rounded text-sm">Annuler</button>
-                <button @click="$emit('confirm')" type="button" class="bg-green-600 text-white px-4 py-2 rounded text-sm">Confirmer</button>
-            </div> 
-        </div>
+      <div class="mb-6 text-gray-100 leading-relaxed">
+        <p>Vous vous apprêter à rendre votre conversation publique</p>
+      </div>
+
+      <div class="flex justify-end space-x-3">
+        <button
+          @click="$emit('cancel')"
+          class="bg-cancel-color hover:bg-cancel-hover cursor-pointer px-4 py-2 rounded text-sm"
+        >
+          Annuler
+        </button>
+        <button
+          @click="$emit('confirm')"
+          class="bg-validate-button hover:bg-validate-button-hover text-white px-4 py-2 cursor-pointer rounded text-sm"
+        >
+          Confirmer
+        </button>
+      </div>
     </div>
+  </div>
 </template>
