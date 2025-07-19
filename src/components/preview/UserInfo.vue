@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import ArrowLeftIcon from '../icon/ArrowLeftIcon.vue'
 import CallIcon from '../icon/CallIcon.vue'
-import InfoIcon from '../icon/InfoIcon.vue'
 import VideoCallIcon from '../icon/VideoCallIcon.vue'
 
 const props = defineProps({

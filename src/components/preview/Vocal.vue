@@ -109,14 +109,18 @@ watch(duration, (newVal, oldVal) => {
 
 onMounted(async () => {
   let blob: Blob
-  audioUrl.value = props.audio
+  audioUrl.value = props.audio ?? ''
   try {
-    const response = await fetch(props.audio)
-    if (!response.ok) {
-      throw new Error('Impossible de récupérer le fichier audio')
+    if (typeof props.audio === 'string' && props.audio) {
+      const response = await fetch(props.audio)
+      if (!response.ok) {
+        throw new Error('Impossible de récupérer le fichier audio')
+      }
+      blob = await response.blob()
+      await generateWaveform(blob)
+    } else {
+      throw new Error("L'URL audio est invalide ou non définie")
     }
-    blob = await response.blob()
-    await generateWaveform(blob)
   } catch (error) {
     console.error("Erreur lors du chargement de l'audio:", error)
   }
@@ -156,14 +160,19 @@ console.log(props.author)
             :class="
               clsx({
                 'bg-black opacity-30':
-                  playbackStarted &&
-                  index / waveform.length > currentProgress / duration,
+                  playbackStarted && duration && duration > 0
+                    ? index / waveform.length > currentProgress / duration
+                    : false,
                 'bg-white':
                   props.author === 'user' &&
+                  duration &&
+                  duration > 0 &&
                   (!playbackStarted ||
                     index / waveform.length <= currentProgress / duration),
                 'bg-black':
                   props.author !== 'user' &&
+                  duration &&
+                  duration > 0 &&
                   (!playbackStarted ||
                     index / waveform.length <= currentProgress / duration),
               })

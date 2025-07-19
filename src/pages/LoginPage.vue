@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/useAuthStore';
 import LoginIcon from '../components/icon/LoginIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
-import GoogleIcon from '../components/icon/GoogleIcon.vue'
 import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
-import TwoFactorModal from '../components/2FA/TwoFactorModal.vue';
+import TwoFactorModal from '../components/2FA/TwoFactorModal.vue'
 
-const router = useRouter();
+const router = useRouter()
 const authStore = useAuthStore()
 
-const email = ref('');
-const password = ref('');
-const errorMessage = ref('');
-const loading = ref(false);
+const email = ref('')
+const password = ref('')
+const errorMessage = ref('')
+const loading = ref(false)
 const showModalTwoFactor = ref(false)
 const errorMessageModal = ref('')
 
@@ -28,12 +27,12 @@ const login = async () => {
   errorMessage.value = ''
 
   try {
-     await authStore.login({
+    await authStore.login({
       email: email.value,
       password: password.value,
     })
 
-    if(authStore.isTwoFactorEnable) {
+    if (authStore.isTwoFactorEnable) {
       showModalTwoFactor.value = true
       return
     }
@@ -49,27 +48,60 @@ const login = async () => {
   }
 }
 
+const handleCredentialResponse = async (response: any) => {
+  const googleToken = response.credential;
+  try {
+    loading.value = true
+    errorMessage.value = ''
+    await authStore.loginGoogle(googleToken)
+    if(authStore.isTwoFactorEnable) {
+      showModalTwoFactor.value = true
+      return
+    }
+    router.push('/')
+
+  } catch (error: any) {
+    console.error("Détails de l'erreur:", error)
+    errorMessage.value = error.response?.data?.message || 'Erreur de connexion avec Google'
+  } finally {
+    loading.value = false
+  }
+}
+
 
 const validateTotp = async (code: string) => {
-
   loading.value = true
 
   try {
     await authStore.verifyTotp(code)
     showModalTwoFactor.value = false
     router.push('/')
-  }catch (error: any) {
-    errorMessageModal.value = error.response?.data?.message || 'Code 2FA invalide'
+  } catch (error: any) {
+    errorMessageModal.value =
+      error.response?.data?.message || 'Code 2FA invalide'
   } finally {
     loading.value = false
   }
-
 }
 
 const closeModal = () => {
   showModalTwoFactor.value = false
   errorMessageModal.value = ''
 }
+
+onMounted(() => {
+  window.google?.accounts.id.initialize({
+    client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+    callback: handleCredentialResponse,
+  })
+
+  window.google?.accounts.id.renderButton(
+    document.getElementById('google-button') as HTMLElement,
+    { theme: 'outline', size: 'large', type: 'standard', shape: 'pill' }
+  )
+})
+
+
 
 
 
@@ -161,12 +193,7 @@ const closeModal = () => {
           <div class="text-center text-gray-900 relative font-semibold">Ou</div>
 
           <div class="flex justify-center">
-            <GoogleIcon
-              :width="60"
-              :height="60"
-              fillColor="none"
-              :className="'transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 cursor-pointer'"
-            />
+            <div id="google-button" ></div>
           </div>
 
           <p class="text-center mt-4 text-sm">
@@ -180,12 +207,11 @@ const closeModal = () => {
         </div>
       </div>
     </div>
-   </div>
-   <TwoFactorModal 
-      v-if="showModalTwoFactor"
-      :error-message="errorMessage"
-      @confirm="validateTotp"
-      @close="closeModal"
+  </div>
+  <TwoFactorModal
+    v-if="showModalTwoFactor"
+    :error-message="errorMessage"
+    @confirm="validateTotp"
+    @close="closeModal"
   />
-  
 </template>

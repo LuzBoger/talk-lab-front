@@ -1,49 +1,106 @@
+<script setup lang="ts">
+import { type PropType } from 'vue'
+
+interface Plan {
+  name: string
+  price: string
+}
+
+interface Subscription {
+  id: number
+  plan: Plan
+  duration: number
+  status: string
+  users?: any[]
+}
+
+const props = defineProps({
+  subscriptions: {
+    type: Array as PropType<Subscription[]>,
+    required: true,
+    default: () => [],
+  },
+})
+
+const emit = defineEmits(['cancelSubscription', 'deleteSubscription'])
+
+const formatStatus = (status: string) => {
+  switch (status) {
+    case 'active':
+      return 'Actif'
+    case 'canceled':
+      return 'Annulé'
+    case 'expired':
+      return 'Expiré'
+    default:
+      return status
+  }
+}
+</script>
+
 <template>
-  <div class="subscriptions-grid">
-    <div class="subscriptions-header">
-      <h2>Tous les Abonnements ({{ subscriptions.length }})</h2>
+  <div>
+    <div class="mb-6">
+      <h2 class="text-xl font-bold text-gray-100">
+        Tous les Abonnements ({{ subscriptions.length }})
+      </h2>
     </div>
-    
-    <div class="table-container">
-      <table class="subscriptions-table">
+    <div
+      class="bg-card-bg border border-gray-700 rounded-lg shadow overflow-x-auto"
+    >
+      <table class="min-w-full text-sm text-left text-gray-200">
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Plan</th>
-            <th>Prix</th>
-            <th>Durée</th>
-            <th>Statut</th>
-            <th>Utilisateurs</th>
-            <th>Actions</th>
+          <tr class="border-b border-gray-700">
+            <th class="px-4 py-3 font-semibold">ID</th>
+            <th class="px-4 py-3 font-semibold">Plan</th>
+            <th class="px-4 py-3 font-semibold">Prix</th>
+            <th class="px-4 py-3 font-semibold">Durée</th>
+            <th class="px-4 py-3 font-semibold">Statut</th>
+            <th class="px-4 py-3 font-semibold">Utilisateurs</th>
+            <th class="px-4 py-3 font-semibold text-end">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="subscription in subscriptions" :key="subscription.id">
-            <td>{{ subscription.id }}</td>
-            <td>{{ subscription.plan.name }}</td>
-            <td>{{ subscription.plan.price }}€</td>
-            <td>{{ subscription.duration }} jours</td>
-            <td>
-              <span 
-                class="status-badge"
-                :class="subscription.status"
+          <tr
+            v-for="subscription in subscriptions"
+            :key="subscription.id"
+            class="border-b border-gray-700 hover:bg-gray-700/30 transition"
+          >
+            <td class="px-4 py-3">{{ subscription.id }}</td>
+            <td class="px-4 py-3">{{ subscription.plan.name }}</td>
+            <td class="px-4 py-3">{{ subscription.plan.price }}€</td>
+            <td class="px-4 py-3">{{ subscription.duration }} jours</td>
+            <td class="px-4 py-3">
+              <span
+                :class="{
+                  'bg-green-600 text-white': subscription.status === 'active',
+                  'bg-yellow-400 text-gray-900':
+                    subscription.status === 'expired',
+                  'bg-red-600 text-white': subscription.status === 'canceled',
+                  'bg-gray-700 text-white': ![
+                    'active',
+                    'expired',
+                    'canceled',
+                  ].includes(subscription.status),
+                }"
+                class="inline-block px-3 py-1 rounded-full font-medium text-xs"
               >
                 {{ formatStatus(subscription.status) }}
               </span>
             </td>
-            <td>{{ subscription.users?.length || 0 }}</td>
-            <td>
-              <div class="actions">
-                <button 
+            <td class="px-4 py-3">{{ subscription.users?.length || 0 }}</td>
+            <td class="px-4 py-3">
+              <div class="flex flex-wrap gap-2 justify-end">
+                <button
                   v-if="subscription.status === 'active'"
-                  class="btn btn-warning"
-                  @click="$emit('cancelSubscription', subscription)"
+                  class="px-3 py-1 rounded bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold text-xs transition cursor-pointer"
+                  @click="emit('cancelSubscription', subscription)"
                 >
                   Annuler
                 </button>
-                <button 
-                  class="btn btn-danger"
-                  @click="$emit('deleteSubscription', subscription)"
+                <button
+                  class="px-3 py-1 rounded bg-cancel-color hover:bg-cancel-hover text-white font-semibold text-xs transition cursor-pointer"
+                  @click="emit('deleteSubscription', subscription)"
                 >
                   Supprimer
                 </button>
@@ -55,125 +112,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent, type PropType } from 'vue';
-
-interface Plan {
-  name: string;
-  price: string;
-}
-
-interface Subscription {
-  id: number;
-  plan: Plan;
-  duration: number;
-  status: string;
-  users?: any[];
-}
-
-export default defineComponent({
-  name: 'SubscriptionsTable',
-  props: {
-    subscriptions: {
-      type: Array as PropType<Subscription[]>,
-      required: true,
-      default: () => []
-    }
-  },
-  emits: ['cancelSubscription', 'deleteSubscription'],
-  setup() {
-    const formatStatus = (status: string) => {
-      switch (status) {
-        case 'active': return 'Actif';
-        case 'canceled': return 'Annulé';
-        case 'expired': return 'Expiré';
-        default: return status;
-      }
-    };
-
-    return {
-      formatStatus
-    };
-  }
-});
-</script>
-
-<style scoped>
-@import '../../styles/admin.css';
-
-.table-container {
-  background: var(--color-card-bg);
-  border: 1px solid var(--color-border-auth-button);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  overflow-x: auto;
-}
-
-.subscriptions-table {
-  width: 100%;
-  border-collapse: collapse;
-  color: var(--color-text-primary);
-}
-
-.subscriptions-table th,
-.subscriptions-table td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid var(--color-border-auth-button);
-}
-
-.subscriptions-table th {
-  background: var(--color-sidebar-bg);
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.status-badge.active {
-  background-color: var(--color-validate-button);
-  color: white;
-}
-
-.status-badge.canceled {
-  background-color: var(--color-cancel-color);
-  color: white;
-}
-
-.status-badge.expired {
-  background-color: var(--color-tag-yellow);
-  color: var(--color-bg-dark);
-}
-
-.actions {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-@media (max-width: 768px) {
-  .table-container {
-    font-size: 0.875rem;
-  }
-
-  .subscriptions-table th,
-  .subscriptions-table td {
-    padding: 0.5rem;
-  }
-
-  .actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-  }
-}
-</style> 

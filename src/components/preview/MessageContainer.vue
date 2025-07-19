@@ -11,7 +11,7 @@ const props = defineProps({
   interlocutorAvatar: String,
   addReaction: {
     type: Function,
-    required: true,
+    required: false,
   },
 })
 
@@ -70,12 +70,6 @@ const getMessageRadiusClass = (index: number, currentAuthor: string) => {
     const clean = function (v: string) {
       return v.replace(/[\[\]]/g, '') || '18px'
     }
-    console.log({
-      borderTopLeftRadius: clean(topLeftRadius),
-      borderTopRightRadius: clean(topRightRadius),
-      borderBottomLeftRadius: clean(bottomLeftRadius),
-      borderBottomRightRadius: clean(bottomRightRadius),
-    })
     return {
       borderTopLeftRadius: clean(topLeftRadius),
       borderTopRightRadius: clean(topRightRadius),

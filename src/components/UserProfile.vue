@@ -100,7 +100,7 @@ onMounted(() => {
 
       <button
         @click="updateProfile"
-        class="w-full bg-[#3A3A4F] hover:bg-[#4A4A5F] text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-[#5A5A6F]"
+        class="w-full bg-[#3A3A4F] hover:bg-[#4A4A5F] cursor-pointer text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-[#5A5A6F]"
       >
         Mettre à jour
       </button>

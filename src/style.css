@@ -12,7 +12,10 @@
   font-weight: 400;
   src: url('fonts/sf-pro-display_regular.woff2') format('woff2'),
 }
+
 @theme {
+  --font-sans-roboto: "Roboto", sans-serif;
+  --font-sans-sf: "SF", "sans-serif"; 
   --color-sidebar-bg: #1a192c;
   --color-text-primary: #e3e3e3;
   --color-toggle-button-bg: rgb(26 25 44 / 0.8);
@@ -41,6 +44,8 @@
   --color-cancel-color:#EC221F;
   --color-cancel-hover: #ee3331;
   --color-cancel-pressed: #b51b19;
+  --color-cancel-hover: #ee3331;
+  --color-cancel-pressed: #b51b19;
   --color-mess-other: #262626;
   --color-mess-you: #3e73f5;
   --color-write-black: #191919;
@@ -50,7 +55,6 @@
   --height-preview: calc(2532px / 3.3333);
   --height-message-preview: calc(1927px / 3.3333);
   --width-preview: calc(1170px / 3.3333);
-  --font-sans: "SF", sans-serif;
   --color-mess-you: #3e73f5;
   --color-mess-other: #262626;
   --radius-default: 18px;
