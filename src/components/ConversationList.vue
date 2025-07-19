@@ -35,6 +35,7 @@ onMounted(async () => {
     />
   </div>
   <Pagination
+    v-if="conversations.length > 0"
     :modelValue="currentPage"
     :totalItems="conversations.length"
     :pageSize="pagesize"

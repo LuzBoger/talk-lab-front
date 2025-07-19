@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/useAuthStore';
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/useAuthStore'
 import LoginIcon from '../components/icon/LoginIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
 import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
@@ -49,25 +49,24 @@ const login = async () => {
 }
 
 const handleCredentialResponse = async (response: any) => {
-  const googleToken = response.credential;
+  const googleToken = response.credential
   try {
     loading.value = true
     errorMessage.value = ''
     await authStore.loginGoogle(googleToken)
-    if(authStore.isTwoFactorEnable) {
+    if (authStore.isTwoFactorEnable) {
       showModalTwoFactor.value = true
       return
     }
     router.push('/')
-
   } catch (error: any) {
     console.error("Détails de l'erreur:", error)
-    errorMessage.value = error.response?.data?.message || 'Erreur de connexion avec Google'
+    errorMessage.value =
+      error.response?.data?.message || 'Erreur de connexion avec Google'
   } finally {
     loading.value = false
   }
 }
-
 
 const validateTotp = async (code: string) => {
   loading.value = true
@@ -97,14 +96,9 @@ onMounted(() => {
 
   window.google?.accounts.id.renderButton(
     document.getElementById('google-button') as HTMLElement,
-    { theme: 'outline', size: 'large', type: 'standard', shape: 'pill' }
+    { theme: 'outline', size: 'large', type: 'standard', shape: 'pill' },
   )
 })
-
-
-
-
-
 </script>
 
 <template>
@@ -193,7 +187,7 @@ onMounted(() => {
           <div class="text-center text-gray-900 relative font-semibold">Ou</div>
 
           <div class="flex justify-center">
-            <div id="google-button" ></div>
+            <div id="google-button"></div>
           </div>
 
           <p class="text-center mt-4 text-sm">
