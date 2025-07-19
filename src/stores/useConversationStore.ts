@@ -5,7 +5,6 @@ import {
   getPublicConversations,
   getConversationById,
   getConversationsByUser,
-  createConversation,
   updateConversation,
   deleteConversation,
   uploadMedia,
@@ -33,11 +32,6 @@ export const useConversationStore = defineStore('conversation', () => {
   const fetchConversationsByCategory = async (categoryId: number) => {
     categoryConversations.value =
       await getPublicConversationByCategory(categoryId)
-  }
-
-  const addConversation = async (conversation: Conversation) => {
-    const newConv = await createConversation(conversation)
-    userConversations.value.push(newConv)
   }
 
   const updateConversationById = async (
@@ -72,7 +66,6 @@ export const useConversationStore = defineStore('conversation', () => {
     fetchConversationById,
     fetchConversationsByUser,
     fetchConversationsByCategory,
-    addConversation,
     updateConversationById,
     removeConversation,
     uploadConversationMedia,

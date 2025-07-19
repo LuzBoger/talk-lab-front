@@ -64,7 +64,6 @@ onBeforeUnmount(() => {
     URL.revokeObjectURL(imageUrl.value)
   }
 })
-console.log('props.radiusClass:', props.radiusClass)
 </script>
 <template>
   <div
