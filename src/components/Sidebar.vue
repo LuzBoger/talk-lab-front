@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import defaultProfileImg from '../assets/images/defaultAvatar.png'
 import MenuItem from './sidebarComponents/MenuItem.vue'
@@ -192,7 +192,7 @@ onMounted(() => {
           v-if="showProfileMenu"
           class="mt-2 bg-dropdown-bg rounded-2xl shadow-lg flex flex-col p-2 absolute left-20 md:left-auto bottom-20 w-36 gap-1 z-80"
         >
-          <DropdownButton label="Profil" to="/profil">
+          <DropdownButton label="Profil" to="/profil" @click="showProfileMenu = false">
             <template #icon><ProfilIcon /></template>
           </DropdownButton>
           <DropdownButton v-if="isAdmin" label="Administration" to="/admin">

@@ -3,7 +3,6 @@ import { ref, onMounted, computed } from 'vue'
 import { useAuthStore } from '../../stores/useAuthStore';
 import { getLikesCount, getLikers, addLike, removeLike } from '../../api/conversation';
 import HandThumbUp from '../icon/HandThumbUp.vue';
-import LikeModal from './LikeModal.vue';
 import type { Likers } from '../../types/Likers';
 
 
@@ -75,8 +74,7 @@ onMounted(async () => {
                 {{ likesCount }}
             </span>
         </button>
-
-        <LikeModal :conversation-id="props.conversationId" :is-modal-open="isModalOpen" @close="closeModal" />
+        <slot name="modal" :is-modal-open="isModalOpen" :conversation-id="props.conversationId" :close="closeModal"></slot>
     </div>
 
     <p v-if="error" class="text-red-500 text-sm mt-2">{{ error }}</p>
