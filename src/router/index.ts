@@ -21,6 +21,7 @@ const ConversationSimulatorEditPage = () =>
   import('../pages/conversation/ConversationEditPage.vue')
 const ConversationSimulatorViewPage = () =>
   import('../pages/conversation/ConversationViewPage.vue')
+const HomePagePublic = () => import('../pages/indexPublic.vue')
 const routes = [
   {
     path: '/',
@@ -30,6 +31,11 @@ const routes = [
         path: '',
         name: 'Home',
         component: HomePage,
+      },
+      {
+      path: '/accueil',
+      name: "Page Accueil publique",
+      component: HomePagePublic,
       },
       {
         path: '/categories',
@@ -155,6 +161,18 @@ router.beforeEach(async (to, _from, next) => {
     next()
     return
   }
+
+  if(to.path === '/') {
+    if(!isAuthenticated) {
+      next("/accueil")
+      return
+    }
+  } else if(to.path === "/accueil" && isAuthenticated) {
+    next('/')
+    return
+  }
+
+
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login')
