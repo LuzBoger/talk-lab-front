@@ -62,7 +62,7 @@ const fetchConversations = async (name: string) => {
     }
 
     try {
-        conversations.value = await getPublicConversationByCategory(category.id)
+        conversations.value = await getPublicConversationByCategory(category.id!)
     } catch(error) {
         console.error("Erreur lors de la recuperation des conversations publique pour la categorie séléectionnés", error)
         conversations.value = []

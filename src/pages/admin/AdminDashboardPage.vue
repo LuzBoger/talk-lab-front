@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import adminService from '../../api/adminService'
+import type { DashBoardStats } from '../../types/DashBoardStats'
+import {useHead} from '@vueuse/head';
 
-interface DashboardStats {
-  activeSubscriptions: number
-  currentMonthRevenue: number
-  conversionRate: number
-}
+useHead({
+  title: 'DashBoard- Admin',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },   
+  ]
+})
+
 
 const loading = ref(true)
 const successMessage = ref('')
 const errorMessage = ref('')
-const stats = ref<DashboardStats>({
+const stats = ref<DashBoardStats>({
   activeSubscriptions: 0,
   currentMonthRevenue: 0,
   conversionRate: 0,
@@ -121,6 +125,18 @@ onMounted(() => {
               class="inline-flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-6 py-3 transition"
             >
               Voir les rapports détaillés
+            </router-link>
+                        <router-link
+              to="/admin/categories"
+              class="inline-flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-6 py-3 transition"
+            >
+              Voir les catégories
+            </router-link>
+            <router-link
+              to="/admin/comment"
+              class="inline-flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-6 py-3 transition"
+            >
+              Gestion des commentaire 
             </router-link>
           </div>
         </div>

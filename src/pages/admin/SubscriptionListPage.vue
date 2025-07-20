@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import adminService from '../../api/adminService'
+import {useHead} from '@vueuse/head';
+
+useHead({
+  title: 'Liste des abonnements - Admin',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },   
+  ]
+})
 
 const subscriptions = ref<any[]>([])
 const loading = ref(true)

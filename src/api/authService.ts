@@ -1,6 +1,6 @@
 import { apiClient } from '../utils/apiClient'
-import type { LoginCredentials } from '../types/LoginCredentials'
-import type { RegisterData } from '../types/RegisterData'
+import type { LoginCredentials } from '../types/login/LoginCredentials'
+import type { RegisterData } from '../types/register/RegisterData'
 
 const authService = {
   async login(credentials: LoginCredentials) {

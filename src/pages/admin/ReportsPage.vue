@@ -3,6 +3,14 @@ import { ref, onMounted } from 'vue'
 import adminService from '../../api/adminService'
 import MonthlyRevenueTable from '../../components/MonthlyRevenueTable.vue'
 import PlanRevenueTable from '../../components/PlanRevenueTable.vue'
+import {useHead} from '@vueuse/head';
+
+useHead({
+  title: 'Rapports d’abonnement et statistiques - Admin',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },   
+  ]
+})
 
 const loading = ref(true)
 const errorMessage = ref('')

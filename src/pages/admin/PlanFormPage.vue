@@ -3,7 +3,14 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import adminService from '../../api/adminService'
 import type { PlanFormData } from '../../api/adminService'
+import {useHead} from '@vueuse/head';
 
+useHead({
+  title: 'Formulaire Plan - Admin',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },   
+  ]
+})
 const route = useRoute()
 const router = useRouter()
 

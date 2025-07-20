@@ -2,18 +2,16 @@
 import { ref, onMounted } from 'vue'
 import adminService from '../../api/adminService'
 import PlanTable from '../../components/PlanTable.vue'
+import type { Plan } from '../../types/Plan'
+import {useHead} from '@vueuse/head';
 
-interface Subscription {
-  status: string
-}
+useHead({
+  title: 'Liste des plans - Admin',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },   
+  ]
+})
 
-interface Plan {
-  id: number
-  name: string
-  price: string
-  description: string
-  subscriptions?: Subscription[]
-}
 
 const plans = ref<Plan[]>([])
 const loading = ref(true)
@@ -97,7 +95,6 @@ onMounted(() => {
 
     <PlanTable :plans="plans" :loading="loading" @delete="confirmDeletePlan" />
 
-    <!-- Modal -->
     <div
       v-if="showModal"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60"

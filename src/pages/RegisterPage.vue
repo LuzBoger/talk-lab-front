@@ -2,63 +2,90 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import RegisterIcon from '../components/icon/RegisterIcon.vue'
-import GoogleIcon from '../components/icon/GoogleIcon.vue'
 import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
 import authService from '../api/authService'
 import { useAuthStore } from '../stores/useAuthStore'
-import {useHead} from '@vueuse/head';
+import { useHead } from '@vueuse/head';
+import type { RegisterData } from '../types/register/RegisterData'
+import type { RegisterDataError } from '../types/register/RegisterDataError'
+import * as yup from 'yup'
+import { registerSchema } from '../validation/registerSchema'
+import RegisterForm from '../components/RegisterForm.vue'
 
 useHead({
   title: 'Inscription',
-  meta:[
-    {name: 'description', content: 'Inscrivez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
-    {name: 'robots', content: 'noindex, nofollow' },
-    {property: 'og:description', content: 'Inscrivez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
-    { name: 'twitter:description', content:'Inscrivez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.' },
+  meta: [
+    { name: 'description', content: 'Inscrivez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.' },
+    { name: 'robots', content: 'noindex, nofollow' },
+    { property: 'og:description', content: 'Inscrivez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.' },
+    { name: 'twitter:description', content: 'Inscrivez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.' },
   ]
 })
+
 const authStore = useAuthStore()
-const name = ref('')
-const username = ref('')
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const errorMessage = ref('')
-const loading = ref(false)
 const router = useRouter()
 
+const form = ref<RegisterData>({
+  name: '',
+  username: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+})
+const errors = ref<RegisterDataError>({
+  nameError: '',
+  usernameError: '',
+  emailError: '',
+  passwordError: '',
+  confirmPasswordError: ''
+})
+const resetErrors = () => {
+  errors.value = {
+    nameError: '',
+    usernameError: '',
+    emailError: '',
+    passwordError: '',
+    confirmPasswordError: ''
+  }
+}
+const errorMessage = ref('')
+const loading = ref(false)
+
+const validateForm = async () => {
+  resetErrors()
+  try {
+    await registerSchema.validate(form.value, { abortEarly: false });
+    return true;
+  } catch (err: any) {
+    err.inner.forEach((error: yup.ValidationError) => {
+      const errorField = `${error.path}Error` as keyof RegisterDataError;
+      errors.value[errorField] = error.message;
+    });
+    return false;
+  }
+};
+
 const register = async () => {
-  if (
-    !name.value ||
-    !username.value ||
-    !email.value ||
-    !password.value ||
-    !confirmPassword.value
-  ) {
-    errorMessage.value = 'Veuillez remplir tous les champs'
-    return
-  }
 
-  if (password.value !== confirmPassword.value) {
-    errorMessage.value = 'Les mots de passe ne correspondent pas'
-    return
-  }
-
-  loading.value = true
   errorMessage.value = ''
+  loading.value = true
+
+  const isValid = await validateForm()
+  if (!isValid) {
+    loading.value = false
+    return
+  }
 
   try {
     await authService.register({
-      name: name.value,
-      username: username.value,
-      email: email.value,
-      password: password.value,
+      name: form.value.name,
+      username: form.value.username,
+      email: form.value.email,
+      password: form.value.password,
     })
-    console.log('Inscription réussie')
     router.push('/login')
   } catch (error: any) {
-    console.error('Registration error:', error)
     errorMessage.value =
       error.response?.data?.message || "Erreur lors de l'inscription"
   } finally {
@@ -104,25 +131,17 @@ onMounted(() => {
 
 <template>
   <div class="flex w-screen h-screen">
-    <router-link
-      to="/"
-      class="absolute top-5 left-5 z-10 cursor-pointer transition duration-300 ease-in-out hover:scale-110"
-    >
+    <router-link to="/"
+      class="absolute top-5 left-5 z-10 cursor-pointer transition duration-300 ease-in-out hover:scale-110">
       <ArrowIcon :width="25" :height="25" fillColor="white" />
     </router-link>
     <div class="flex w-full h-full overflow-hidden">
-      <div
-        class="flex-1 justify-center items-center border-r border-gray-800 hidden md:flex"
-      >
+      <div class="flex-1 justify-center items-center border-r border-gray-800 hidden md:flex">
         <RegisterIcon :width="250" :height="250" :fillColor="'none'" />
       </div>
-      <div
-        class="flex-1 flex flex-col justify-center items-center relative overflow-y-auto w-full md:w-1/2"
-      >
+      <div class="flex-1 flex flex-col justify-center items-center relative overflow-y-auto w-full md:w-1/2">
         <div class="flex flex-col items-center justify-center">
-          <h1
-            class="text-lg md:text-2xl font-semibold text-center text-white mb-2"
-          >
+          <h1 class="text-lg md:text-2xl font-semibold text-center text-white mb-2">
             Inscrivez-vous et donnez du style à vos messages.
           </h1>
           <p class="text-sm text-center text-white mb-4">
@@ -138,102 +157,13 @@ onMounted(() => {
             Ou
           </div>
 
-          <form class="w-80" @submit.prevent="register">
-            <div
-              v-if="errorMessage"
-              class="bg-errror-message-light text-error-message p-2.5 rounded mb-3 text-center text-sm"
-            >
-              {{ errorMessage }}
-            </div>
-
-            <div class="mb-3">
-              <label
-                for="name"
-                class="block mb-1 text-white text-xs font-medium"
-                >Nom complet</label
-              >
-              <input
-                type="text"
-                id="name"
-                v-model="name"
-                placeholder="Prénom Nom"
-                class="w-full p-2.5 border border-gray-800 rounded-lg bg-card-bg text-white text-sm"
-              />
-            </div>
-
-            <div class="mb-3">
-              <label
-                for="username"
-                class="block mb-1 text-white text-xs font-medium"
-                >Nom d'utilisateur</label
-              >
-              <input
-                type="text"
-                id="username"
-                v-model="username"
-                placeholder="Pseudo"
-                class="w-full p-2.5 border border-gray-800 rounded-lg bg-card-bg text-white text-sm"
-              />
-            </div>
-
-            <div class="mb-3">
-              <label
-                for="email"
-                class="block mb-1 text-white text-xs font-medium"
-                >E-mail</label
-              >
-              <input
-                type="email"
-                id="email"
-                v-model="email"
-                placeholder="exemple@mail.com"
-                class="w-full p-2.5 border border-gray-800 rounded-lg bg-card-bg text-white text-sm"
-              />
-            </div>
-
-            <div class="mb-3">
-              <label
-                for="password"
-                class="block mb-1 text-white text-xs font-medium"
-                >Mot de passe</label
-              >
-              <input
-                type="password"
-                id="password"
-                v-model="password"
-                placeholder="******"
-                class="w-full p-2.5 border border-gray-800 rounded-lg bg-card-bg text-white text-sm"
-              />
-            </div>
-
-            <div class="mb-3">
-              <label
-                for="confirmPassword"
-                class="block mb-1 text-white text-xs font-medium"
-                >Confirmation mot de passe</label
-              >
-              <input
-                type="password"
-                id="confirmPassword"
-                v-model="confirmPassword"
-                placeholder="******"
-                class="w-full p-2.5 border border-gray-800 rounded-lg bg-card-bg text-white text-sm"
-              />
-            </div>
-
-            <button
-              type="submit"
-              :disabled="loading"
-              class="w-full p-2.5 bg-validate-button hover:bg-validate-button-hover text-white rounded-lg font-semibold text-sm mt-2.5 disabled:bg-gray-500 disabled:cursor-not-allowed cursor-pointer"
-            >
-              <span v-if="loading" class="inline-block mr-2 align-middle">
-                <LoadingSpinnerIcon
-                  :className="'animate-spin h-5 w-5 text-white'"
-                />
-              </span>
-              S'inscrire
-            </button>
-          </form>
+          <RegisterForm
+          :form="form"
+          :errors="errors"
+          :loading="loading"
+          :errorMessage="errorMessage"
+          @submit="register"
+          />
         </div>
       </div>
     </div>
