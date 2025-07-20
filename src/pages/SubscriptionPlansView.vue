@@ -78,7 +78,6 @@ export default defineComponent({
         this.isSubscribing = false
       }
     },
-
   },
 })
 </script>
@@ -99,7 +98,7 @@ export default defineComponent({
       >
         {{ error }}
       </div>
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6 w-fit max-w-6xl">
+      <div v-else class="grid grid-cols-1 gap-6 w-fit max-w-6xl">
         <PlanCard
           v-for="plan in plans"
           :key="plan.id"
