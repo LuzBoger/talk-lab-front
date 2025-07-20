@@ -35,14 +35,10 @@ const authService = {
       return response.data
     } catch (error: any) {
       console.error("Erreur d'inscription détaillée:", error)
-      console.error("Erreur d'inscription détaillée:", error)
       if (error.response) {
         console.error("Statut de l'erreur:", error.response.status)
         console.error("Données de l'erreur:", error.response.data)
-        console.error("Statut de l'erreur:", error.response.status)
-        console.error("Données de l'erreur:", error.response.data)
       } else if (error.request) {
-        console.error('Pas de réponse reçue:', error.request)
         console.error('Pas de réponse reçue:', error.request)
       } else {
         console.error('Erreur de configuration de la requête:', error.message)
@@ -69,7 +65,6 @@ const authService = {
 
   async logout() {
     await apiClient.post('/logout', {}, { withCredentials: true })
-    await apiClient.post('/logout', {}, { withCredentials: true })
   },
 
   async getCurrentUser() {
@@ -78,9 +73,7 @@ const authService = {
 
     if (response) {
       return response.data.user
-      return response.data.user
     }
-    return null
     return null
   },
 }
