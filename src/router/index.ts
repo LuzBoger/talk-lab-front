@@ -31,7 +31,6 @@ const SubscriptionListPage = () =>
 const SubscriptionManagementPage = () =>
   import('../pages/admin/SubscriptionManagementPage.vue')
 const ReportsPage = () => import('../pages/admin/ReportsPage.vue')
-const AdminReportsPage = () => import('../pages/admin/AdminReportsPage.vue')
 
 const routes = [
   {
@@ -210,15 +209,6 @@ const routes = [
         path: '/admin/subscription-management',
         name: 'AdminSubscriptionManagement',
         component: SubscriptionManagementPage,
-        meta: {
-          requiresAuth: true,
-          requiresAdmin: true,
-        },
-      },
-      {
-        path: '/admin/reports',
-        name: 'AdminReports',
-        component: ReportsPage,
         meta: {
           requiresAuth: true,
           requiresAdmin: true,
