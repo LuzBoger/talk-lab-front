@@ -201,7 +201,7 @@ function handlePlayVocal(audioEl: HTMLAudioElement) {
       @click="startRecording"
       class="w-full mb-2 px-4 py-2 bg-validate-button hover:bg-validate-button-hover cursor-pointer text-white rounded font-semibold"
     >
-      Démarrer l'enregistrement vidéo + audio (div)
+      BETA Démarrer l'enregistrement vidéo (no audio)
     </button>
     <button
       v-else
