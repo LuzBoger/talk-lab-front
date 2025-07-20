@@ -20,7 +20,7 @@ const props = defineProps({
         <SignalGoodIcon v-if="props.signalSelected == 'Bien'" />
         <SignalMidIcon v-if="props.signalSelected == 'Moyen'" />
       </div>
-      <span class="text-sm flex text-black">{{ props.networks }}</span>
+      <span class="text-sm text-black">{{ props.networks }}</span>
       <div class="flex items-center">
         <BatterieFullIcon v-if="props.batSelected == 'full'" />
         <BatterieGoodIcon v-if="props.batSelected == 'green'" />

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, computed, type Ref } from 'vue'
 import clsx from 'clsx'
 import PlayPreviewIcon from './previewIcon/PlayPreviewIcon.vue'
 const props = defineProps({
@@ -8,6 +8,7 @@ const props = defineProps({
 })
 const isPlaying = ref(false)
 const audioPlayer = ref<HTMLAudioElement | null>(null)
+const emit = defineEmits(['play-vocal'])
 const duration = ref<number | null>(null)
 const audioUrl = ref('')
 const remaining = ref<number | null>(null)
@@ -72,6 +73,10 @@ const startCountdown = () => {
 }
 
 const togglePlay = () => {
+  console.log('Audio player:', audioPlayer.value)
+  if (audioPlayer.value) {
+    emit('play-vocal', audioPlayer.value)
+  }
   if (isPlaying.value) {
     audioPlayer.value?.pause()
     stopCountdown()

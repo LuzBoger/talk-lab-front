@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, type Ref } from 'vue'
 import Reaction from '../Reaction.vue'
 import clsx from 'clsx'
 import type { Messages } from '../../types/Messages'
@@ -99,9 +99,11 @@ onBeforeUnmount(() => {
       {{ props.message.reaction }}
     </span>
     <Vocal
+      ref="vocalRef"
       v-if="props.message.audio"
       :audio="props.message.audio"
       :author="props.message.author"
+      @play-vocal="$emit('play-vocal', $event)"
     />
     <button
       v-if="showPlusButton"

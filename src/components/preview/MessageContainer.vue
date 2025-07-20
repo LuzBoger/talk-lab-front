@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type { Messages } from '../../types/Messages'
 import Message from './Message.vue'
 
@@ -190,6 +190,7 @@ const getMessageRadiusClass = (index: number, currentAuthor: string) => {
         :radiusClass="getMessageRadiusClass(index, message.author)"
         :index="index"
         :addReaction="addReaction"
+        @play-vocal="$emit('play-vocal', $event)"
       />
     </div>
   </div>

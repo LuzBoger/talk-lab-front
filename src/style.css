@@ -76,6 +76,9 @@
     scrollbar-width: none; /* Pour Firefox */
     -ms-overflow-style: none; /* Pour Internet Explorer et Edge */
 }
+img {
+  @apply inline-block;
+}
 @tailwind utilities;
 
 
