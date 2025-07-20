@@ -53,15 +53,4 @@ const onReport = () => {
       Signaler
     </button>
   </div>
-  <div class="flex space-x-4 text-sm text-white">
-
-    <button
-      v-if="isCommentCanReport"
-      type="button"
-      @click="onReport"
-      class="cursor-pointer text-white bg-cancel-color hover:bg-cancel-hover px-2 py-1 rounded"
-    >
-      Signaler
-    </button>
-  </div>
 </template>

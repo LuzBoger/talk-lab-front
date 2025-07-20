@@ -74,7 +74,7 @@ onMounted(() => {
       />
     </div>
 
-    <div class="w-full max-w-sm mt-8 space-y-4">
+    <div class="w-full max-w-sm mt-8 space-y-4 max-md:px-4">
       <div class="flex flex-col">
         <label for="name" class="text-sm font-medium">Nom Prénom</label>
         <input

@@ -47,7 +47,7 @@ const toggleFavorite = async (conversationId: number) => {
     </div>
     <div class="flex item-center space-x-2">
       <router-link
-        :to="`/conversation/${conversation.id}`"
+        :to="`/view-conversation/${conversation.id}`"
         class="px-3 py-1 bg-blue-500 rounded-md text-white font-medium"
         >Visualiser</router-link
       >

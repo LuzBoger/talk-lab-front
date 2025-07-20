@@ -224,7 +224,7 @@ onMounted(() => {
       v-if="showModal && selectedSubscription"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
     >
-      <div class="bg-gray-800 rounded-xl shadow-lg w-full max-w-3xl">
+      <div class="bg-card-bg rounded-xl shadow-lg w-full max-w-3xl">
         <div
           class="px-6 py-4 border-b border-gray-700 flex items-center justify-between rounded-t-xl"
         >
@@ -399,7 +399,7 @@ onMounted(() => {
         >
           <button
             type="button"
-            class="inline-flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-6 py-2 transition"
+            class="inline-flex items-center justify-center cursor-pointer gap-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg px-6 py-2 transition"
             @click="closeModal"
           >
             Fermer
