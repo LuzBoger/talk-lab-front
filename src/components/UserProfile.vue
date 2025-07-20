@@ -45,8 +45,9 @@ onMounted(() => {
     <div class="relative">
       <img
         :src="profileAvatar"
-        alt="Profile"
+        alt="Avatar de l'utilisateur connecté"
         class="w-32 h-32 rounded-full object-cover border-4 border-[#1E1E2F]"
+        loading="lazy"
       />
       <label
         for="image-upload"

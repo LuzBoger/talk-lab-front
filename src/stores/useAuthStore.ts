@@ -14,7 +14,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthLoading = ref(true)
   const isTwoFactorEnable = ref(false)
   const tempCredentials = ref<LoginCredentials | null>(null)
-  
+
   const userHasSubscription = ref(false)
   const userSubscriptionStatus = ref<string | null>(null)
 
@@ -29,7 +29,7 @@ export const useAuthStore = defineStore('auth', () => {
       userSubscriptionStatus.value = null
       return
     }
-    
+
     try {
       const response = await subscriptionService.getCurrentSubscription()
       userHasSubscription.value = response?.status === 'active'
@@ -39,7 +39,7 @@ export const useAuthStore = defineStore('auth', () => {
         userHasSubscription.value = false
         userSubscriptionStatus.value = null
       } else {
-        console.error('Erreur lors de la récupération de l\'abonnement:', error)
+        console.error("Erreur lors de la récupération de l'abonnement:", error)
         userHasSubscription.value = false
         userSubscriptionStatus.value = null
       }
@@ -53,7 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = currentUser
       isAuthenticated.value = !!currentUser
       isTwoFactorEnable.value = !!currentUser?.isTwofactorEnabled
-      
+
       await loadSubscriptionInfo()
     } catch (e) {
       user.value = null

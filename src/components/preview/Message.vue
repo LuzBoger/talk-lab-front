@@ -85,6 +85,7 @@ onBeforeUnmount(() => {
       :src="imageUrl"
       alt="Image from Blob"
       class="rounded-[18px]"
+      loading="lazy"
     />
     <span
       v-if="props.message.reaction !== ''"
@@ -107,6 +108,7 @@ onBeforeUnmount(() => {
     />
     <button
       v-if="showPlusButton"
+      type="button"
       @click.stop="toggleReaction"
       :class="[
         'absolute left-0 rounded-full px-3 py-0.5 border-2 bg-white border-white text-green-700 cursor-pointer bottom-[-22px] z-50',

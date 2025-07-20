@@ -22,7 +22,8 @@ console.log(props)
         <img
           v-if="interlocutorAvatar"
           :src="interlocutorAvatar"
-          alt="Selected Image"
+          alt="Interlocuteur avatar"
+          loading="lazy"
           class="rounded-full max-h-[35px] w-[35px]"
         />
       </div>

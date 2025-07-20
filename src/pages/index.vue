@@ -4,7 +4,7 @@ import Card from '../components/ui/Card.vue'
 import CategoryList from '../components/CategoryList.vue'
 import { useRoute, useRouter } from 'vue-router'
 import SearchBar from '../components/ui/SearchBar.vue'
-import { searchPublicConversations } from '../api/conversation'
+import { getMostLikedPublicConversation, searchPublicConversations } from '../api/conversation'
 import type { Conversation } from '../types/Conversation'
 import Pagination from '../components/ui/Pagination.vue'
 
@@ -15,6 +15,7 @@ const selectedCategories = ref<string[]>([])
 const searchQuery = ref<string>('')
 const isLoading = ref<boolean>(false)
 const publicConversations = ref<Conversation[]>([])
+const mostLikedConversation = ref<Conversation[]>([])
 const currentPage = ref<number>(1)
 const convPerPage = 20
 const totalConversations = ref<number>(0)
@@ -46,6 +47,26 @@ const loadConversations = async (
     isLoading.value = false
   }
 }
+
+const loadMostLikedConversations = async () => {
+  try {
+    isLoading.value = true
+    const res = await getMostLikedPublicConversation()
+
+    mostLikedConversation.value =
+      res.map((conversation: any) => ({
+        ...conversation,
+        author: conversation.content.interlocutor_name ?? 'Unknown',
+      }))
+    } catch(error) {
+      console.error('Erruer lors du chagement des conversations filtrées', error)
+    } finally {
+      isLoading.value = false
+    }
+}
+
+
+
 watch(selectedCategories, async (newSelectedCategory) => {
   try {
     isLoading.value = true
@@ -83,6 +104,7 @@ watch(searchQuery, async (newQuery) => {
       selectedCategories.value,
       currentPage.value,
     )
+    await loadMostLikedConversations()
   } catch (erorr) {
     console.error('Erreru lors du chargement ')
   } finally {
@@ -151,10 +173,10 @@ onMounted(async () => {
 <template>
   <div>
     <header class="flex flex-col md:flex-row justify-between items-center m-4">
-      <div class="text-xl text-white welcome-message-shadow max-md:mb-4">
+      <h1 class="text-xl text-white welcome-message-shadow max-md:mb-4">
         Bienvenue sur
         <span class="font-semibold text-main-color">TalkLabs</span>
-      </div>
+      </h1>
       <SearchBar v-model="searchQuery" />
     </header>
 

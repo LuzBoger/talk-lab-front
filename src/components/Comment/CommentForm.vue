@@ -45,7 +45,7 @@ const onCancel = () => {
     </textarea>
     <div class="mt-2 flex space-x-2">
       <button
-        type="submit"
+        type="button"
         @click="onSubmit"
         :disabled="disabled || content.trim() === ''"
         class="bg-validate-button hover:bg-validate-button-hover text-white px-4 cursor-pointer py-2 rounded"

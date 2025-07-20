@@ -4,7 +4,14 @@ import  { disable2FA, enable2FA, config2FA } from '../api/twoFactor';
 import QRCode from '../components/2FA/QRCode.vue';
 import { useAuthStore } from '../stores/useAuthStore';
 import Input from '../components/2FA/Input.vue';
+import {useHead} from '@vueuse/head';
 
+useHead({
+  title: 'Parametres',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },
+  ]
+})
 
 
 const authStore = useAuthStore()

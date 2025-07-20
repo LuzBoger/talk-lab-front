@@ -33,6 +33,7 @@ watch(
         <h2 class="text-lg font-bold">Sauvegarder votre conversation</h2>
         <button
           @click="$emit('cancel')"
+          type="button"
           class="bg-transparent border-none text-gray-200 cursor-pointer text-3xl"
         >
           &times;
@@ -49,12 +50,14 @@ watch(
       <div class="flex justify-end space-x-3">
         <button
           @click="$emit('cancel')"
+          type="button"
           class="bg-gray-200 hover:bg-gray-100 text-gray-900 px-4 py-2 rounded-lg text-sm cursor-pointer"
         >
           Annuler
         </button>
         <button
           @click="$emit('confirm')"
+          type="button"
           class="bg-main-color hover:bg-main-color-hover text-black px-4 py-2 rounded-lg text-sm cursor-pointer"
         >
           Confirmer

@@ -7,7 +7,17 @@ import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
 import authService from '../api/authService'
 import { useAuthStore } from '../stores/useAuthStore'
+import {useHead} from '@vueuse/head';
 
+useHead({
+  title: 'Inscription',
+  meta:[
+    {name: 'description', content: 'Inscrivez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
+    {name: 'robots', content: 'noindex, nofollow' },
+    {property: 'og:description', content: 'Inscrivez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
+    { name: 'twitter:description', content:'Inscrivez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.' },
+  ]
+})
 const authStore = useAuthStore()
 const name = ref('')
 const username = ref('')

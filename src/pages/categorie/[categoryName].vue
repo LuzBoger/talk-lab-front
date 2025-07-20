@@ -9,10 +9,21 @@ import ConversationsByCategory from '../../components/ConversationsByCategory.vu
 import Pagination from '../../components/ui/Pagination.vue';
 import type {Category} from '../../types/Category';
 import type {Conversation} from '../../types/Conversation'
+import {useHead} from '@vueuse/head';
 
 const route = useRoute();
-const categoryStore = useCategoryStore()
 const categoryName = ref(route.params.categoryName as string | undefined)
+
+useHead({
+  title: `Conversations - ${categoryName}`,
+  meta:[
+    { name: 'description', content: `Découvrez les conversations pour la catégorie ${categoryName} sur TalkLabs.` },
+    { property: 'og:description', content: `Découvrez les conversations pour la catégorie ${categoryName}` },
+    { name: 'twitter:description', content: `Découvrez les conversations pour la catégorie ${categoryName}` },
+  ]
+})
+
+const categoryStore = useCategoryStore()
 const conversations = ref<Conversation[]>([])
 const categories = ref<Category[]>([])
 const searchConversation = ref('')

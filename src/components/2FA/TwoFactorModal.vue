@@ -43,6 +43,7 @@ const submitCode = () => {
 
       <div class="flex justify-between gap-2">
         <button
+          type="button"
           class="flex-1 py-2 bg-gray-300 hover:bg-gray-200 text-black rounded cursor-pointer"
           @click="submitCode"
         >

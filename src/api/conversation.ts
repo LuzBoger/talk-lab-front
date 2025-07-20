@@ -1,6 +1,7 @@
 import { apiClient } from '../utils/apiClient'
 import type { Conversation } from '../types/Conversation'
 import type { Likers } from '../types/Likers'
+import type { array } from 'yup'
 
 export const createConversation = async (conversation: Conversation) => {
   const response = await apiClient.post('/create-conversation', conversation)
@@ -102,7 +103,10 @@ export const removeLike = async (conversationId: number): Promise<void> => {
   const response = await apiClient.post(`/conversation/remove-like`, {conversationId })
   return response.data
 }
-
+export const getMostLikedPublicConversation = async (): Promise<Conversation[]> => {
+  const response = await apiClient.get('/most-liked-conversation')
+  return response.data
+}
 
 
 

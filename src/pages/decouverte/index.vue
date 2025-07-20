@@ -5,7 +5,16 @@ import { useCategoryStore } from '../../stores/useCategoryStore'
 import ConversationPublic from '../../components/ConversationPublic.vue'
 import CategoryFilter from '../../components/ui/CategoryFilter.vue'
 import type { Category } from '../../types/Category'
+import {useHead} from '@vueuse/head';
 
+useHead({
+  title: 'Découverte des conversations publiques',
+  meta:[
+    {name: 'description', content: 'Explorez des conversations publiques créées par les utilisateurs de TalkLabs.' },
+    {property: 'og:description', content: 'Explorez des conversations publiques créées par les utilisateurs de TalkLabs.' },
+    {name: 'twitter:description', content:'Explorez des conversations publiques créées par les utilisateurs de TalkLabs.' },
+  ]
+})
 const conversationStore = useConversationStore()
 const categoriesStore = useCategoryStore()
 

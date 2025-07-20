@@ -6,7 +6,14 @@ import ConversationSimulatorView from '../../components/ConversationSimulatorVie
 import CommentList from '../../components/Comment/CommentList.vue'
 import LikeModal from '../../components/like/LikeModal.vue'
 import Like from '../../components/like/Like.vue'
+import {useHead} from '@vueuse/head';
 
+useHead({
+  title: 'Visualisez vos conversation',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },
+  ]
+})
 const conversationStore = useConversationStore()
 const route = useRoute()
 const id = ref(parseInt(route.params.id as string))

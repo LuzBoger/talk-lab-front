@@ -6,7 +6,17 @@ import LoginIcon from '../components/icon/LoginIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
 import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
 import TwoFactorModal from '../components/2FA/TwoFactorModal.vue'
+import {useHead} from '@vueuse/head';
 
+useHead({
+  title: 'Connexion',
+  meta:[
+    {name: 'description', content: 'Connectez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
+    {name: 'robots', content: 'noindex, nofollow' },
+    {property: 'og:description', content: 'Connectez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
+    { name: 'twitter:description', content:'Connectez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.' },
+  ]
+})
 const router = useRouter()
 const authStore = useAuthStore()
 

@@ -53,7 +53,7 @@ const formatedDate = (date: string) => {
              :class="notification.isRead ? 'border-gray-300' : 'border-blue-500'"
              >
                 <div>
-                   <h2 class="text-sm font-semibold text-white">{{ notification.message }}</h2>
+                   <p class="text-sm font-semibold text-white">{{ notification.message }}</p>
                     <p class=" text-xs text-gray-500 mt-1">{{ formatedDate(notification.createdAt) }}</p>
                 </div>
 

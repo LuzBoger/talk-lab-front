@@ -35,11 +35,11 @@ const toggleFavorite = async (conversationId: number) => {
                 class="flex items-center bg-[#1c1c2b] rounded-xl p-4 transition"
             >        
         
-             <img :src="conversation.content.interlocutor_avatar || defaultAvatar" alt="avatar" class="w-14 h-14 rounded-full object-cover mr-4"/>
+             <img :src="conversation.content.interlocutor_avatar || defaultAvatar" alt="Avatar de l'interlocuteur" class="w-14 h-14 rounded-full object-cover mr-4" loading="lazy"/>
 
         <div class="flex-1 overflow-hidden">
           <div class="flex justify-between items-center">
-            <h2 class="text-white font-semibold truncate">{{ conversation.content.interlocutor_username || 'Anonyme' }}</h2>
+            <p class="text-white font-semibold truncate">{{ conversation.content.interlocutor_username || 'Anonyme' }}</p>
             <span class="text-xs text-gray-400 whitespace-nowrap">{{ getTimeAgo(conversation.createdAt!) }}</span> 
           </div>
           <p class="text-sm text-gray-400 truncate mt-1">
@@ -48,6 +48,7 @@ const toggleFavorite = async (conversationId: number) => {
         </div>
 
       <button
+        type="button"
         @click.stop="toggleFavorite(conversation.id!)"
         class="ml-3"
         :title="favoriteStore.isFavorite(conversation.id!) ? 'Retirer des favoris' : 'Ajouter aux favoris'"

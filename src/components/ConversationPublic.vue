@@ -43,8 +43,8 @@ const filteredConversationByCategory = (categoryId: number) => {
       <div class="flex items-center space-x-4">
         <img
           :src="conversation.content.interlocutor_avatar || defaultAvatar"
-          alt="avatar"
-          class="w-12 h-12 rounded-full border-2 border-blue-400 object-cover"
+          alt="Avatar de l'interlocuteur"
+          class="w-12 h-12 rounded-full border-2 border-blue-400 object-cover" loading="lazy"
         />
         <div>
           <div class="font-semibold text-lg">

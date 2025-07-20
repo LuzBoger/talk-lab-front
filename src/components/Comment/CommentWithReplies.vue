@@ -110,8 +110,9 @@ const toggleReplyForm = () => {
       <img
         v-if="props.comment.publisher.avatarUrl"
         :src="`${baseUrl}${props.comment.publisher.avatarUrl}`"
-        alt="avatar"
+        alt="Chemin contenant l'url avatar de l'utilsateur"
         class="w-8 h-8 rounded-full"
+        loading="lazy" 
       />
       <strong>{{ props.comment.publisher.name }}</strong>
       <small class="text-white ml-auto px-2 py-1 rounded-lg">{{

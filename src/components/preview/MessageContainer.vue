@@ -176,8 +176,9 @@ const getMessageRadiusClass = (index: number, currentAuthor: string) => {
       >
         <img
           :src="interlocutorAvatar"
-          alt="Interlocutor Avatar"
+          alt="Avatar de l'interlocuteur"
           class="rounded-full h-[25px] w-[25px] absolute bottom-0 right-3"
+          loading="lazy"
         />
       </div>
       <div v-else>
