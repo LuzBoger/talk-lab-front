@@ -203,7 +203,7 @@ function handlePlayVocal(audioEl: HTMLAudioElement) {
         @click="startRecording"
         class="w-full mb-2 px-4 py-2 bg-validate-button hover:bg-validate-button-hover cursor-pointer text-white rounded font-semibold"
       >
-        BETA Démarrer l'enregistrement vidéo (no audio)
+        Démarrer l'enregistrement vidéo
       </button>
       <button
         v-else
@@ -213,32 +213,6 @@ function handlePlayVocal(audioEl: HTMLAudioElement) {
         Arrêter et télécharger l'enregistrement
       </button>
     </div>
-    <div
-      class="w-[350px] h-fit bg-card-bg rounded-lg shadow-md p-6 flex flex-col gap-4"
-    >
-      <h2 class="text-xl font-bold mb-2 text-white">
-        Titre : {{ props.conversation.title }}
-      </h2>
-      <p class="text-gray-100 mb-2">
-        Description : {{ props.conversation.description }}
-      </p>
-      <div
-        v-if="
-          props.conversation.categoriesId &&
-          props.conversation.categoriesId.length
-        "
-      >
-        <h3 class="font-semibold mb-2 text-white">Catégories :</h3>
-        <ul class="flex gap-2">
-          <li
-            v-for="cat in props.conversation.categoriesId"
-            :key="cat.id"
-            class="text-sm text-white"
-          >
-            {{ cat.name }}
-          </li>
-        </ul>
-      </div>
-    </div>
+   
   </div>
 </template>

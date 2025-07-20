@@ -31,25 +31,29 @@ const toggleCategory = (categoryName: string) => {
 
 <template>
   <div
-    class="grid grid-cols-2 xl:flex xl:flex-nowrap items-center bg-[#232234] rounded-2xl px-3 xl:px-6 py-2 w-full xl:w-fit mx-auto gap-2 xl:gap-0"
+    class="max-md:overflow-x-auto max-md:scrollbar-hide md:flex md:flex-nowrap md:justify-center"
   >
-    <span
-      v-for="category in categoriesStore.categories"
-      :key="category.id"
-      class="flex items-center w-full xl:w-auto"
+    <div
+      class="max-md:flex max-md:gap-3 max-md:px-4 max-md:py-3 max-md:min-w-max md:flex md:flex-nowrap md:items-center md:bg-card-bg md:rounded-2xl md:px-6 md:py-2 md:w-fit md:mx-auto md:gap-0"
     >
-      <button
-        type="button"
-        @click="toggleCategory(category.name)"
-        :class="[
-          'w-full xl:w-auto px-3 py-1 text-base font-normal rounded cursor-pointer',
-          selectedCategories.includes(category.name)
-            ? 'bg-main-color'
-            : 'hover:underline bg-transparent text-white',
-        ]"
+      <span
+        v-for="category in categoriesStore.categories"
+        :key="category.id"
+        class="max-md:flex-shrink-0 md:flex md:items-center md:w-auto"
       >
-        {{ category.name }}
-      </button>
-    </span>
+        <button
+          type="button"
+          @click="toggleCategory(category.name)"
+          :class="[
+            'max-md:px-4 max-md:py-2 max-md:text-sm max-md:font-medium max-md:rounded-full max-md:whitespace-nowrap max-md:border max-md:transition-all max-md:duration-200 md:w-auto md:px-3 md:py-1 md:text-base md:font-normal md:rounded md:cursor-pointer',
+            selectedCategories.includes(category.name)
+              ? 'max-md:bg-main-color max-md:border-main-color max-md:text-white max-md:shadow-sm md:bg-main-color md:text-white'
+              : 'max-md:bg-transparent max-md:border-border-auth-button max-md:text-text-primary max-md:hover:border-main-color max-md:hover:text-main-color md:hover:underline md:bg-transparent md:text-white',
+          ]"
+        >
+          {{ category.name }}
+        </button>
+      </span>
+    </div>
   </div>
 </template>

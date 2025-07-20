@@ -214,6 +214,15 @@ const routes = [
           requiresAdmin: true,
         },
       },
+      {
+        path: '/admin/reports',
+        name: 'AdminReports',
+        component: ReportsPage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
     ],
   },
 ]

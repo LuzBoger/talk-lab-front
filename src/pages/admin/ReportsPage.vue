@@ -62,7 +62,7 @@ onMounted(() => {
     </div>
 
     <div v-else>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
         <div
           class="bg-card-bg rounded-xl shadow-lg hover:-translate-y-1 hover:shadow-2xl transition h-full"
         >
@@ -76,19 +76,7 @@ onMounted(() => {
             <p class="text-gray-400">Nombre total d'abonnements actifs</p>
           </div>
         </div>
-        <div
-          class="bg-card-bg rounded-xl shadow-lg hover:-translate-y-1 hover:shadow-2xl transition h-full"
-        >
-          <div class="p-6 text-center">
-            <h4 class="mb-3 text-lg font-semibold text-gray-100">
-              Revenus mensuels
-            </h4>
-            <div class="text-4xl font-bold text-green-400 mb-3">
-              {{ formatPrice(reports.currentMonthRevenue || 0) }} €
-            </div>
-            <p class="text-gray-400">Total des revenus pour le mois en cours</p>
-          </div>
-        </div>
+       
         <div
           class="bg-card-bg rounded-xl shadow-lg hover:-translate-y-1 hover:shadow-2xl transition h-full"
         >

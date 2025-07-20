@@ -13,7 +13,7 @@ const showSideBar = computed(() => {
 <template>
   <div class="flex min-h-screen bg-bg-dark">
     <Sidebar v-if="showSideBar" />
-    <div :class="showSideBar ? 'flex-1 overflow-y-auto h-screen' : 'w-full'">
+    <div :class="showSideBar ? 'flex-1 overflow-y-auto h-screen max-md:pb-16 md:pb-0' : 'w-full'">
       <router-view />
     </div>
   </div>

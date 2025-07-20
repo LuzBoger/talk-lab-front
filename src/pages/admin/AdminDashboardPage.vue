@@ -68,7 +68,7 @@ onMounted(() => {
       {{ errorMessage }}
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
       <div
         class="rounded-xl bg-card-bg shadow-lg p-6 flex flex-col items-center"
       >
@@ -80,19 +80,7 @@ onMounted(() => {
         </h2>
         <p class="text-gray-400 text-sm">Nombre total d'abonnements actifs</p>
       </div>
-      <div
-        class="rounded-xl bg-card-bg shadow-lg p-6 flex flex-col items-center"
-      >
-        <h5 class="mb-2 text-lg font-semibold text-gray-200">
-          Revenus du mois
-        </h5>
-        <h2 class="mb-2 text-4xl font-bold text-blue-400">
-          {{ loading ? '...' : formatPrice(stats.currentMonthRevenue) }} €
-        </h2>
-        <p class="text-gray-400 text-sm">
-          Total des revenus pour le mois en cours
-        </p>
-      </div>
+     
       <div
         class="rounded-xl bg-card-bg shadow-lg p-6 flex flex-col items-center"
       >
