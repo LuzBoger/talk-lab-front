@@ -122,13 +122,7 @@ const formatStatus = (status: string) => {
                 >
                   Annuler
                 </button>
-                <button
-                  v-if="user.hasSubscription"
-                  class="px-3 py-1 rounded bg-cancel-color hover:bg-cancel-hover cursor-pointer text-white font-semibold text-xs transition"
-                  @click="emit('deleteSubscription', user)"
-                >
-                  Supprimer
-                </button>
+               
               </div>
             </td>
           </tr>
