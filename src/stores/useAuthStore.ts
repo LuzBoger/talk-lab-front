@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import authService from '../api/authService'
+import subscriptionService from '../api/subscriptionService'
 import type { LoginCredentials } from '../types/LoginCredentials'
 import type { RegisterData } from '../types/RegisterData'
 import type { User } from '../types/User'
@@ -13,10 +14,36 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthLoading = ref(true)
   const isTwoFactorEnable = ref(false)
   const tempCredentials = ref<LoginCredentials | null>(null)
+  
+  const userHasSubscription = ref(false)
+  const userSubscriptionStatus = ref<string | null>(null)
 
   const setUser = (newUser: User | null) => {
     user.value = newUser
     isAuthenticated.value = !!newUser
+  }
+
+  const loadSubscriptionInfo = async () => {
+    if (!isAuthenticated.value) {
+      userHasSubscription.value = false
+      userSubscriptionStatus.value = null
+      return
+    }
+    
+    try {
+      const response = await subscriptionService.getCurrentSubscription()
+      userHasSubscription.value = response?.status === 'active'
+      userSubscriptionStatus.value = response?.status || null
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        userHasSubscription.value = false
+        userSubscriptionStatus.value = null
+      } else {
+        console.error('Erreur lors de la récupération de l\'abonnement:', error)
+        userHasSubscription.value = false
+        userSubscriptionStatus.value = null
+      }
+    }
   }
 
   const loadUser = async () => {
@@ -26,9 +53,13 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = currentUser
       isAuthenticated.value = !!currentUser
       isTwoFactorEnable.value = !!currentUser?.isTwofactorEnabled
+      
+      await loadSubscriptionInfo()
     } catch (e) {
       user.value = null
       isAuthenticated.value = false
+      userHasSubscription.value = false
+      userSubscriptionStatus.value = null
     } finally {
       isAuthLoading.value = false
     }
@@ -70,10 +101,11 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const logout = async () => {
-    // Nettoyer l'état local AVANT l'appel API
     user.value = null
     isAuthenticated.value = false
     isTwoFactorEnable.value = false
+    userHasSubscription.value = false
+    userSubscriptionStatus.value = null
 
     try {
       await authService.logout()
@@ -81,7 +113,6 @@ export const useAuthStore = defineStore('auth', () => {
       console.error('Erreur lors de la déconnexion:', error)
     }
 
-    // Force la suppression des cookies côté client car le backend les recrée
     setTimeout(() => {
       document.cookie =
         'BEARER=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
@@ -108,13 +139,19 @@ export const useAuthStore = defineStore('auth', () => {
     return true
   }
 
+  const hasSubscription = computed(() => userHasSubscription.value)
+  const subscriptionStatus = computed(() => userSubscriptionStatus.value)
+
   return {
     user,
     isAuthenticated,
     isAuthLoading,
     isTwoFactorEnable,
+    hasSubscription,
+    subscriptionStatus,
     verifyTotp,
     loadUser,
+    loadSubscriptionInfo,
     setUser,
     login,
     loginGoogle,
