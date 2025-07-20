@@ -4,6 +4,8 @@ const props = defineProps<{
   isCommentCanEdit: boolean
   isCommentCanDelete: boolean
   isCommentCanReport: boolean
+  isAdmin?: boolean
+  isOwner?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -46,6 +48,34 @@ const onReport = () => {
       type="button"
       @click="onReport"
       class="cursor-pointer text-white bg-cancel-color hover:bg-cancel-hover px-2 py-1 rounded"
+    >
+      Signaler
+    </button>
+  </div>
+  <div class="flex space-x-4 text-sm text-white">
+    <button
+      v-if="isCommentCanEdit"
+      type="button"
+      @click="onEdit"
+      class="hover:underline"
+    >
+      Modifier
+    </button>
+    <button
+      v-if="isCommentCanDelete"
+      type="button"
+      @click="onDelete"
+      class="cursor-pointer text-white bg-cancel-color hover:bg-cancel-hover px-2 py-1 rounded"
+      :title="isAdmin && !isOwner ? 'Supprimer en tant qu\'admin' : 'Supprimer'"
+    >
+      {{ isAdmin && !isOwner ? 'Supprimer (Admin)' : 'Supprimer' }}
+    </button>
+    <button
+      v-if="isCommentCanReport"
+      type="button"
+      @click="onReport"
+      class="cursor-pointer text-white bg-cancel-color hover:bg-cancel-hover px-2 py-1 rounded"
+"
     >
       Signaler
     </button>

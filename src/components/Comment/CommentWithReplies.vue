@@ -32,11 +32,15 @@ const userCanEdit = () => {
 }
 
 const userCanDelete = () => {
-  return authStore.user?.id === props.comment.publisher.id
+     const isOwner = authStore.user?.id === props.comment.publisher.id
+     const isAdmin = authStore.user?.role?.includes('ROLE_ADMIN')
+     return isOwner || isAdmin
 }
 
 const userCanReport = () => {
-  return authStore.user?.id !== props.comment.publisher.id
+     const isNotOwner = authStore.user?.id !== props.comment.publisher.id
+     const isAdmin = authStore.user?.role?.includes('ROLE_ADMIN')
+     return isNotOwner && !isAdmin
 }
 
 const initiateEditComment = () => {
@@ -131,15 +135,16 @@ const toggleReplyForm = () => {
       <p v-if="error" class="text-red-600 text-sm">{{ error }}</p>
     </div>
 
-    <CommentActions
-      :comment-id="props.comment.id!"
-      :is-comment-can-edit="userCanEdit()"
-      :is-comment-can-report="userCanReport()"
-      :is-comment-can-delete="userCanDelete()"
-      @edit="initiateEditComment"
-      @delete="deleteOneComment"
-      @report="reportOneComment"
-    />
+        <CommentActions 
+            :comment-id="props.comment.id!" 
+            :is-comment-can-edit="userCanEdit()" 
+            :is-comment-can-report="userCanReport()"
+            :is-comment-can-delete="userCanDelete()" 
+            :is-admin="authStore.user?.role?.includes('ROLE_ADMIN')"
+            :is-owner="authStore.user?.id === props.comment.publisher.id"
+            @edit="initiateEditComment" 
+            @delete="deleteOneComment"
+            @report="reportOneComment" />
 
     <button
       type="button"

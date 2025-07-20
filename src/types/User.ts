@@ -5,4 +5,6 @@ export interface User  {
     username?:string
     avatarUrl?: string
     role?: string[]
+    hasSubscription?: boolean
+    subscriptionStatus?: string | null
 }

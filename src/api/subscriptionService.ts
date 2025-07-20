@@ -64,19 +64,9 @@ const subscriptionService = {
       console.error('Erreur lors de la souscription:', error);
       throw error;
     }
-  },
-
-  async changeSubscription(planId: number) {
-    try {
-      const response = await apiClient.post(`/subscription/change/${planId}`);
-      return response.data;
-    } catch (error) {
-      console.error('Erreur lors du changement d\'abonnement:', error);
-      throw error;
-    }
-  },
-
-  async cancelSubscription() {
+      },
+  
+    async cancelSubscription() {
     try {
       const response = await apiClient.post('/subscription/cancel');
       return response.data;

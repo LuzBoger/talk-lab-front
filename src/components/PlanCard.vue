@@ -118,12 +118,10 @@ export default defineComponent({
 
       <button
         v-else
-        class="bg-yellow-400 hover:bg-yellow-500 cursor-pointer text-gray-900 w-full py-3 rounded-md text-base font-semibold transition-colors duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed"
-        @click="$emit('changeSubscription', plan.id)"
-        :disabled="isLoading"
+        class="bg-gray-500 text-white w-full py-3 rounded-md text-base font-semibold cursor-not-allowed"
+        disabled
       >
-        <span v-if="!isLoading">Changer d'abonnement</span>
-        <span v-else>Traitement...</span>
+        Plan disponible
       </button>
 
       <p

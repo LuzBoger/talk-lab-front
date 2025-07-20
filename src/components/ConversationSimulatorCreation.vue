@@ -12,7 +12,9 @@ import MessageContainer from './preview/MessageContainer.vue';
 import BottomBar from './preview/BottomBar.vue';
 import clsx from 'clsx';
 import { useConversationSimulator } from '../composables/useConversationSimulator';
+import { useAuthStore } from '../stores/useAuthStore';
 const sim = useConversationSimulator();
+const authStore = useAuthStore();
 const optionsBat = ['full', 'green', 'yellow', 'red']
 const optionsSignal = ['Bien', 'Moyen']
 
@@ -215,10 +217,13 @@ function handleCategorySave(categories: number[]) {
             class="bg-main-color hover:bg-main-color-hover text-black px-4 py-2 rounded-md cursor-pointer w-full sm:w-auto">
             Enregistrer les modifications
           </button>
-          <button type="button" @click="sim.openPublishModal"
+          <button v-if="authStore.hasSubscription" type="button" @click="sim.openPublishModal"
             class="bg-publish-button hover:bg-publish-button-hover px-4 py-2 rounded-md cursor-pointer w-full sm:w-auto">
             Publier la conversation
           </button>
+          <div v-else class="bg-gray-500 text-white px-4 py-2 rounded-md cursor-not-allowed w-full sm:w-auto text-center">
+            Un abonnement est requis pour publier une conversation
+          </div>
         </div>
         <button v-if="sim.status.value === 'published' && sim.conversationId.value" type="button"
           @click="sim.deleteConversaiton"

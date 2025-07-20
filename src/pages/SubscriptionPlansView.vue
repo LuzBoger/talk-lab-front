@@ -78,31 +78,7 @@ export default defineComponent({
         this.isSubscribing = false
       }
     },
-    async changeSubscription(planId: number) {
-      if (
-        !confirm(
-          "Êtes-vous sûr de vouloir changer d'abonnement ? L'ancien abonnement sera annulé et vous serez redirigé vers le paiement.",
-        )
-      ) {
-        return
-      }
 
-      try {
-        this.isSubscribing = true
-
-        await stripeService.redirectToCheckout(planId)
-      } catch (error: any) {
-        console.error(
-          "Erreur lors du changement d'abonnement avec Stripe:",
-          error,
-        )
-        const errorMessage =
-          error.response?.data?.message ||
-          'Une erreur est survenue lors de la redirection vers le paiement. Veuillez réessayer plus tard.'
-        alert(errorMessage)
-        this.isSubscribing = false
-      }
-    },
   },
 })
 </script>
@@ -133,7 +109,6 @@ export default defineComponent({
           :is-loading="isSubscribing"
           class="h-full flex"
           @subscribe="subscribe"
-          @change-subscription="changeSubscription"
         />
       </div>
     </div>

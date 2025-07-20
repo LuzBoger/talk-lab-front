@@ -51,16 +51,20 @@ const authService = {
     }
   },
 
-    async loginWithGoogle(token: string) {
+  async loginWithGoogle(token: string) {
     try {
-      const response  = await apiClient.post('/login-google', {
-        id_token: token
-      }, { withCredentials: true });
-      return response.data;
-      } catch(error :any) {
-        console.error('Erreur de connexion Google:', error);
-        throw error;
-      }
+      const response = await apiClient.post(
+        '/login-google',
+        {
+          id_token: token,
+        },
+        { withCredentials: true },
+      )
+      return response.data
+    } catch (error: any) {
+      console.error('Erreur de connexion Google:', error)
+      throw error
+    }
   },
 
   async logout() {

@@ -31,6 +31,7 @@ const SubscriptionListPage = () =>
 const SubscriptionManagementPage = () =>
   import('../pages/admin/SubscriptionManagementPage.vue')
 const ReportsPage = () => import('../pages/admin/ReportsPage.vue')
+const AdminReportsPage = () => import('../pages/admin/AdminReportsPage.vue')
 
 const routes = [
   {

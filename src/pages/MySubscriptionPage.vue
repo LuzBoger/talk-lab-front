@@ -359,22 +359,12 @@ export default defineComponent({
                     }}</span>
                   </div>
                 </div>
-                <router-link
-                  to="/subscription/plans"
-                  class="inline-block bg-publish-button hover:bg-publish-button-hover text-black px-6 py-3 rounded font-semibold transition"
-                >
-                  🔄 Reprendre un abonnement
-                </router-link>
+                <p class="text-gray-400 font-medium">
+                  Votre abonnement a été annulé.
+                </p>
               </div>
             </template>
-            <template v-else>
-              <router-link
-                to="/subscription/plans"
-                class="bg-validate-button hover:bg-validate-button-hover text-gray-900 px-6 py-3 rounded font-semibold transition"
-              >
-                Voir les plans disponibles
-              </router-link>
-            </template>
+            
           </div>
 
           <div
@@ -382,24 +372,8 @@ export default defineComponent({
             class="bg-bg-dark/30 rounded-xl p-6 mt-8"
           >
             <h4 class="text-white font-semibold mb-4">
-              ℹ️ Politique de changement et de résiliation
+              ℹ️ Politique de résiliation
             </h4>
-            <div class="mb-4">
-              <strong class="block text-yellow-400 mb-1"
-                >🔄 Changement de plan :</strong
-              >
-              <p class="text-gray-300">
-                Pour changer votre plan, vous devez attendre la fin de votre
-                période actuelle
-                <span
-                  v-if="subscriptionHistory && subscriptionHistory.length > 0"
-                >
-                  (fin le
-                  <strong>{{ formatDate(subscriptionHistory[0].endAt) }}</strong
-                  >) </span
-                >. Le nouveau plan prendra effet automatiquement à cette date.
-              </p>
-            </div>
             <div>
               <strong class="block text-red-400 mb-1">❌ Résiliation :</strong>
               <p class="text-gray-300">
@@ -419,12 +393,7 @@ export default defineComponent({
         <p class="text-gray-300 mb-4">
           Vous n'avez actuellement aucun abonnement actif.
         </p>
-        <router-link
-          to="/subscription/plans"
-          class="bg-validate-button hover:bg-validate-button-hover text-white px-6 py-3 rounded transition"
-        >
-          Voir les plans disponibles
-        </router-link>
+       
       </div>
 
       <div

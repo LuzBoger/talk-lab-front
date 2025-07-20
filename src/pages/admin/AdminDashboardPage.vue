@@ -134,6 +134,12 @@ onMounted(() => {
             >
               Voir les rapports détaillés
             </router-link>
+            <router-link
+              to="/admin/comments"
+              class="inline-flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-500 text-white font-semibold rounded-lg px-6 py-3 transition"
+            >
+              Gérer les commentaires
+            </router-link>
           </div>
         </div>
       </div>
