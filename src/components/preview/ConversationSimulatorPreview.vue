@@ -56,11 +56,10 @@ const startRecording = async () => {
   canvas.width = Math.round(previewRect.width)
   canvas.height = Math.round(previewRect.height)
 
-  // 1. Capture vidéo du canvas
+  // Capture vidéo du canvas
   const videoStream = canvas.captureStream(15) // 15 FPS
 
-  // 2. Capture audio du site via Web Audio API
-  // Suppose que tu as une balise <audio id="site-audio">
+  // Capture audio du site via Web Audio API
   const audioElement = vocalAudioRef.value
   let combinedStream: MediaStream
   if (audioElement) {
@@ -69,9 +68,9 @@ const startRecording = async () => {
     destination = audioCtx.createMediaStreamDestination()
     audioSource = audioCtx.createMediaElementSource(audioElement)
     audioSource.connect(destination)
-    audioSource.connect(audioCtx.destination) // Pour entendre le son aussi
+    audioSource.connect(audioCtx.destination)
 
-    // 3. Combine vidéo + audio
+    // Combine vidéo + audio
     combinedStream = new MediaStream([
       ...videoStream.getVideoTracks(),
       ...destination.stream.getAudioTracks(),
@@ -81,7 +80,7 @@ const startRecording = async () => {
     combinedStream = videoStream
   }
 
-  // 4. Enregistre
+  // Enregistrement
   recordedChunks.value = []
   mediaRecorder.value = new MediaRecorder(combinedStream)
   mediaRecorder.value.ondataavailable = (e) => {

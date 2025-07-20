@@ -1,10 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 <template>
   <section class="w-full py-20">
     <div
-      class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+      class="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
     >
-      <div class="text-center md:text-left">
+      <div class="text-center">
         <h1
           class="text-2xl md:text-4xl font-bold text-white leading-tight mb-6"
         >
@@ -21,7 +22,7 @@
           Commencer maintenant
         </router-link>
       </div>
-      <div class="hidden md:block">
+      <div class="hidden md:flex justify-center">
         <img
           src="../../assets/images/presentation.jpg"
           alt="Illustration"
