@@ -5,7 +5,7 @@ import { ref, computed } from 'vue'
 import { useHead } from '@vueuse/head'
 const route = useRoute()
 
-const baseUrl = 'http://localhost:5173'
+const baseUrl = import.meta.env.VITE_BASE_URL
 const pageTitle = ref<string>('Accueil')
 const fullUrl = computed(() => `${baseUrl}${route.fullPath}`)
 
