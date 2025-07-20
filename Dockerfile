@@ -6,7 +6,7 @@ WORKDIR /app
 ARG VITE_API_URL=https://talklab.fr/api
 ARG VITE_BASE_URL=https://talklab.fr
 ARG VITE_API_2FA_URL=https://talklab.fr/twofactor
-ARG VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
+ARG VITE_GOOGLE_CLIENT_ID=523525147188-89ftltikud192it0r1iuu4sq024qiqo1.apps.googleusercontent.com
 
 ENV NODE_ENV=$NODE_ENV
 ENV VITE_API_URL=$VITE_API_URL
