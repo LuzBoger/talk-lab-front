@@ -145,70 +145,100 @@ function handlePlayVocal(audioEl: HTMLAudioElement) {
 </script>
 
 <template>
-  <div class="w-fit flex flex-col gap-4">
-    <div
-      ref="previewRef"
-      class="w-preview h-preview flex flex-col justify-between bg-white font-sans-sf"
-    >
-      <!-- ...le reste de ton contenu... -->
-      <div>
-        <PreviewHeader
-          :Hour="props.conversation.content.startTime"
-          :signalSelected="props.conversation.content.signal"
-          :networks="props.conversation.content.reseau"
-          :batSelected="props.conversation.content.batteryLevel"
-        />
-        <UserInfo
-          :interlocutorName="props.conversation.content.interlocutor_name"
-          :interlocutorUsername="
-            props.conversation.content.interlocutor_username
-          "
-          :interlocutorAvatar="
-            props.conversation.content.interlocutor_avatar ?? undefined
-          "
-        />
-        <MessageContainer
-          :messages="
-            (props.conversation.content.messages ?? []).map((msg) => ({
-              ...msg,
-              time: msg.time ?? undefined,
-              reaction: msg.reaction ?? undefined,
-            }))
-          "
-          :interlocutorAvatar="
-            props.conversation.content.interlocutor_avatar ?? undefined
-          "
-          @play-vocal="handlePlayVocal"
-        />
+  <div class="flex flex-wrap gap-8">
+    <!-- Preview principale -->
+    <div class="w-fit flex flex-col gap-4">
+      <div
+        ref="previewRef"
+        class="w-preview h-preview flex flex-col justify-between bg-white font-sans-sf"
+      >
+        <!-- ...le reste de ton contenu... -->
+        <div>
+          <PreviewHeader
+            :Hour="props.conversation.content.startTime"
+            :signalSelected="props.conversation.content.signal"
+            :networks="props.conversation.content.reseau"
+            :batSelected="props.conversation.content.batteryLevel"
+          />
+          <UserInfo
+            :interlocutorName="props.conversation.content.interlocutor_name"
+            :interlocutorUsername="
+              props.conversation.content.interlocutor_username
+            "
+            :interlocutorAvatar="
+              props.conversation.content.interlocutor_avatar ?? undefined
+            "
+          />
+          <MessageContainer
+            :messages="
+              (props.conversation.content.messages ?? []).map((msg) => ({
+                ...msg,
+                time: msg.time ?? undefined,
+                reaction: msg.reaction ?? undefined,
+              }))
+            "
+            :interlocutorAvatar="
+              props.conversation.content.interlocutor_avatar ?? undefined
+            "
+            @play-vocal="handlePlayVocal"
+          />
+        </div>
+        <div class="flex flex-col items-center">
+          <BottomBar />
+          <div
+            class="min-w-32 max-w-32 min-h-[5px] mb-1.5 rounded-full bg-black"
+          ></div>
+        </div>
       </div>
-      <div class="flex flex-col items-center">
-        <BottomBar />
-        <div
-          class="min-w-32 max-w-32 min-h-[5px] mb-1.5 rounded-full bg-black"
-        ></div>
+      <button
+        @click="captureDiv"
+        class="w-full px-4 py-2 bg-validate-button hover:bg-validate-button-hover cursor-pointer text-white rounded font-semibold"
+      >
+        Prendre un screenshot
+      </button>
+      <!-- Canvas caché pour la capture vidéo -->
+      <canvas ref="canvasRef" style="display: none"></canvas>
+      <button
+        v-if="!isRecording"
+        @click="startRecording"
+        class="w-full mb-2 px-4 py-2 bg-validate-button hover:bg-validate-button-hover cursor-pointer text-white rounded font-semibold"
+      >
+        BETA Démarrer l'enregistrement vidéo (no audio)
+      </button>
+      <button
+        v-else
+        @click="stopRecording"
+        class="w-full mb-2 px-4 py-2 bg-cancel-color hover:bg-cancel-hover cursor-pointer text-white rounded font-semibold"
+      >
+        Arrêter et télécharger l'enregistrement
+      </button>
+    </div>
+    <div
+      class="w-[350px] h-fit bg-card-bg rounded-lg shadow-md p-6 flex flex-col gap-4"
+    >
+      <h2 class="text-xl font-bold mb-2 text-white">
+        Titre : {{ props.conversation.title }}
+      </h2>
+      <p class="text-gray-100 mb-2">
+        Description : {{ props.conversation.description }}
+      </p>
+      <div
+        v-if="
+          props.conversation.categoriesId &&
+          props.conversation.categoriesId.length
+        "
+      >
+        <h3 class="font-semibold mb-2 text-white">Catégories :</h3>
+        <ul class="flex gap-2">
+          <li
+            v-for="cat in props.conversation.categoriesId"
+            :key="cat.id"
+            class="text-sm text-white"
+          >
+            {{ cat.name }}
+          </li>
+        </ul>
       </div>
     </div>
-    <button
-      @click="captureDiv"
-      class="w-full px-4 py-2 bg-validate-button hover:bg-validate-button-hover cursor-pointer text-white rounded font-semibold"
-    >
-      Prendre un screenshot
-    </button>
-    <!-- Canvas caché pour la capture vidéo -->
-    <canvas ref="canvasRef" style="display: none"></canvas>
-    <button
-      v-if="!isRecording"
-      @click="startRecording"
-      class="w-full mb-2 px-4 py-2 bg-validate-button hover:bg-validate-button-hover cursor-pointer text-white rounded font-semibold"
-    >
-      BETA Démarrer l'enregistrement vidéo (no audio)
-    </button>
-    <button
-      v-else
-      @click="stopRecording"
-      class="w-full mb-2 px-4 py-2 bg-cancel-color hover:bg-cancel-hover cursor-pointer text-white rounded font-semibold"
-    >
-      Arrêter et télécharger l'enregistrement
-    </button>
   </div>
 </template>

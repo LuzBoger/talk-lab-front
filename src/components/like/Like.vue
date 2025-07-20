@@ -7,7 +7,7 @@ import {
   addLike,
   removeLike,
 } from '../../api/conversation'
-import HandThumbUp from '../icon/HandThumbUp.vue'
+import clsx from 'clsx'
 import type { Likers } from '../../types/Likers'
 import LikeIcon from '../icon/LikeIcon.vue'
 
@@ -75,7 +75,12 @@ onMounted(async () => {
       <span
         v-if="currentUserId"
         @click.stop="openModal"
-        class="text-sm text-gray-300 hover:text-white cursor-pointer"
+        :class="
+          clsx(
+            'text-sm text-gray-300 hover:text-white cursor-pointer',
+            isLiked ? 'text-green-500' : 'text-gray-300',
+          )
+        "
       >
         {{ likesCount }}
       </span>

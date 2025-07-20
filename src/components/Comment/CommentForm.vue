@@ -26,6 +26,7 @@ const onSubmit = () => {
     return
   }
   emit('submit', content.value.trim())
+  content.value = ''
 }
 
 const onCancel = () => {
@@ -34,12 +35,12 @@ const onCancel = () => {
 </script>
 
 <template>
-  <div class="mb-4">
+  <div class="mb-4 self-end">
     <textarea
       v-model="content"
       rows="4"
       placeholder="Ecrivez un commentaire pour la conversation...."
-      class="w-full border rounded p-2 text-white"
+      class="w-full border border-gray-700 p-2 text-white rounded-lg"
     >
     </textarea>
     <div class="mt-2 flex space-x-2">
