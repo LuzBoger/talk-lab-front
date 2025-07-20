@@ -1,4 +1,4 @@
-import type { CommentStatusEnum } from "../enums/CommentStatusEnum";
+import type { CommentStatusEnum } from "../../enums/CommentStatusEnum";
 
 export interface CommentCreation {
   content: string;

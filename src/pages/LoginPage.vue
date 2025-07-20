@@ -4,9 +4,13 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/useAuthStore'
 import LoginIcon from '../components/icon/LoginIcon.vue'
 import ArrowIcon from '../components/icon/ArrowIcon.vue'
-import LoadingSpinnerIcon from '../components/icon/LoadingSpinnerIcon.vue'
 import TwoFactorModal from '../components/2FA/TwoFactorModal.vue'
 import {useHead} from '@vueuse/head';
+import type { LoginCredentials } from '../types/login/LoginCredentials'
+import type { LoginCredentialsError } from '../types/login/LoginCredentialsError'
+import * as yup from 'yup'
+import { loginSchema } from '../validation/loginSchema'
+import LoginForm from '../components/LoginForm.vue'
 
 useHead({
   title: 'Connexion',
@@ -20,26 +24,56 @@ useHead({
 const router = useRouter()
 const authStore = useAuthStore()
 
-const email = ref('')
-const password = ref('')
+const form = ref<LoginCredentials>({
+  email: '',
+  password: ''
+})
+
+const errors = ref<LoginCredentialsError>({
+  emailError: '',
+  passwordError: ''
+})
+const resetErrors = () => {
+  errors.value = {
+    emailError: '',
+    passwordError: '',
+
+  }
+}
+
 const errorMessage = ref('')
 const loading = ref(false)
 const showModalTwoFactor = ref(false)
 const errorMessageModal = ref('')
 
+const validateForm = async () => {
+  resetErrors()
+  try {
+    await loginSchema.validate(form.value, { abortEarly: false });
+    return true;
+  } catch (err: any) {
+    err.inner.forEach((error: yup.ValidationError) => {
+      const errorField = `${error.path}Error` as keyof LoginCredentialsError;
+      errors.value[errorField] = error.message;
+    });
+    return false;
+  }
+};
+
 const login = async () => {
-  if (!email.value || !password.value) {
-    errorMessage.value = 'Veuillez remplir tous les champs'
+  loading.value = true
+  errorMessage.value = ''
+  const isValid = await validateForm()
+  if (!isValid) {
+    loading.value = false
     return
   }
 
-  loading.value = true
-  errorMessage.value = ''
 
   try {
     await authStore.login({
-      email: email.value,
-      password: password.value,
+      email: form.value.email,
+      password: form.value.password,
     })
 
     if (authStore.isTwoFactorEnable) {
@@ -140,59 +174,13 @@ onMounted(() => {
             <span class="font-semibold">Email</span>, c'est rapide et simple.
           </p>
 
-          <form class="w-full flex flex-col gap-3" @submit.prevent="login">
-            <div
-              v-if="errorMessage"
-              class="bg-error-message-light text-error-message p-2 rounded text-center text-sm font-semibold"
-            >
-              {{ errorMessage }}
-            </div>
-
-            <div class="">
-              <label
-                for="email"
-                class="block mb-1 text-white text-xs font-medium"
-                >E-mail</label
-              >
-              <input
-                type="email"
-                id="email"
-                v-model="email"
-                placeholder="exemple@mail.com"
-                required
-                class="w-full p-2.5 border border-gray-800 rounded-lg bg-card-bg text-white text-sm"
-              />
-            </div>
-
-            <div>
-              <label
-                for="password"
-                class="block mb-1 text-white text-xs font-medium"
-                >Mot de passe</label
-              >
-              <input
-                type="password"
-                id="password"
-                v-model="password"
-                placeholder="******"
-                required
-                class="w-full p-2.5 border border-gray-800 rounded-lg bg-card-bg text-white text-sm"
-              />
-            </div>
-
-            <button
-              type="submit"
-              :disabled="loading || showModalTwoFactor"
-              class="w-full p-2.5 bg-validate-button hover:bg-validate-button-hover text-white rounded-lg font-semibold text-sm mt-2.5 disabled:bg-gray-500 disabled:cursor-not-allowed cursor-pointer"
-            >
-              <span v-if="loading" class="inline-block mr-2 align-middle">
-                <LoadingSpinnerIcon
-                  :className="'animate-spin h-5 w-5 text-white'"
-                />
-              </span>
-              Se connecter
-            </button>
-          </form>
+          <LoginForm
+          :form="form"
+          :error-message="errorMessage"
+          :errors="errors"
+          :loading="loading"
+          @submit="login"
+          />
 
           <div class="text-center text-white relative font-semibold">Ou</div>
 

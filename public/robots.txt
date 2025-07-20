@@ -4,6 +4,7 @@ Disallow: /profil/
 Disallow: /create-conversation
 Disallow: /edit-conversation/
 Disallow: /view-conversation/
+Disallow: /admin/
 
 Disallow: /login
 Disallow: /register

@@ -31,6 +31,14 @@ const SubscriptionListPage = () =>
 const SubscriptionManagementPage = () =>
   import('../pages/admin/SubscriptionManagementPage.vue')
 const ReportsPage = () => import('../pages/admin/ReportsPage.vue')
+const CategoryListPage = () =>
+  import('../pages/admin/categories/CategoryPage.vue')
+const CategoryCreatePage = () =>
+  import('../pages/admin/categories/CategoryCreatePage.vue')
+const CategoryEditPage = () =>
+  import('../pages/admin/categories/CategoryEditPage.vue')
+const CommentPage = () => import('../pages/admin/comment/CommentPage.vue')
+
 
 const HomePagePublic = () => import('../pages/indexPublic.vue')
 const routes = [
@@ -44,15 +52,15 @@ const routes = [
         component: HomePage,
       },
       {
-      path: '/accueil',
-      name: "Page Accueil publique",
-      component: HomePagePublic,
+        path: '/accueil',
+        name: 'Page Accueil publique',
+        component: HomePagePublic,
       },
-      {
-        path: '/categories',
-        name: 'Catégories',
-        component: Categories,
-      },
+      // {
+      //   path: '/categories',
+      //   name: 'Catégories',
+      //   component: Categories,
+      // },
       {
         path: '/decouverte',
         name: 'Découverte des conversations publiques',
@@ -153,7 +161,6 @@ const routes = [
         path: '/subscription/plans',
         name: 'SubscriptionPlans',
         component: SubscriptionPlansView,
-        // Page publique - accessible sans connexion
       },
       {
         path: '/subscription/my-subscription',
@@ -234,6 +241,42 @@ const routes = [
           requiresAdmin: true,
         },
       },
+      {
+        path: '/admin/categories',
+        name: 'CategoryList',
+        component: CategoryListPage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
+      {
+        path: '/admin/categories/new',
+        name: 'CategoryCreate',
+        component: CategoryCreatePage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
+      {
+        path: '/admin/categories/:id/edit',
+        name: 'CategoryEdit',
+        component: CategoryEditPage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
+      {
+        path: '/admin/comment',
+        name: 'CommentPage',
+        component: CommentPage,
+        meta: {
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
+      },
     ],
   },
 ]
@@ -259,17 +302,15 @@ router.beforeEach(async (to, _from, next) => {
     return
   }
 
-  if(to.path === '/') {
-    if(!isAuthenticated) {
-      next("/accueil")
+  if (to.path === '/') {
+    if (!isAuthenticated) {
+      next('/accueil')
       return
     }
-  } else if(to.path === "/accueil" && isAuthenticated) {
+  } else if (to.path === '/accueil' && isAuthenticated) {
     next('/')
     return
   }
-
-
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login')

@@ -1,6 +1,5 @@
-import type { CommentStatusEnum } from "../enums/CommentStatusEnum";
-import type { Conversation } from "./Conversation";
-import type { User } from "./User";
+import type { CommentStatusEnum } from "../../enums/CommentStatusEnum";
+import type { User } from "../User"
 
 export interface Comment {
     id?: number;

@@ -1,5 +1,5 @@
-import type { Comment } from "../types/Comment";
-import type { CommentCreation } from "../types/CommentCreation";
+import type { Comment } from "../types/comment/Comment";
+import type { CommentCreation } from "../types/comment/CommentCreation";
 import { apiClient } from "../utils/apiClient";
 
 
@@ -30,5 +30,15 @@ export const reportComment = async (commentId: number) : Promise<void> => {
 
 export const getPendingComments = async (): Promise<Comment[]> => {
 const response = await apiClient.get('/pending-comment')
+    return response.data
+}
+
+export const validateComment = async (commentId: number) => {
+    const response = await apiClient.post(`/validate-comment/${commentId}`)
+    return response.data
+}
+
+export const rejectComment = async (commentId: number) => {
+    const response = await apiClient.post(`/reject-comment/${commentId}`)
     return response.data
 }

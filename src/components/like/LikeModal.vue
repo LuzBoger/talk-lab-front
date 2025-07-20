@@ -54,7 +54,7 @@ watch(
         :key="liker.id"
         class="border-b py-2"
       >
-        {{ liker.name }}
+        {{ liker.username }}
       </li>
     </ul>
     <Pagination

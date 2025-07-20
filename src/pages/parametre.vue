@@ -5,6 +5,12 @@ import QRCode from '../components/2FA/QRCode.vue';
 import { useAuthStore } from '../stores/useAuthStore';
 import Input from '../components/2FA/Input.vue';
 import {useHead} from '@vueuse/head';
+import PasswordUpdateForm from '../components/PasswordUpdateForm.vue';
+import {toast } from 'vue3-toastify'
+import type { PasswordPayload } from '../types/updateProfil/PasswordPaylaod';
+import type { UpdatePasswordError } from '../types/updateProfil/UpdatePasswordError';
+import { updatePasswordSchema } from '../validation/updatePasswordSchema'
+import { updateUserPassword } from '../api/userProfile';
 
 useHead({
   title: 'Parametres',
@@ -13,7 +19,44 @@ useHead({
   ]
 })
 
+const form = ref<PasswordPayload>({
+    newPassword : '',
+    confirmPassword: ''
+})
 
+const errors = ref<UpdatePasswordError>({
+  newPasswordError: '',
+  confirmPasswordError: ''
+})
+
+const updatePassword = async () => {
+  errors.value = { newPasswordError: '', confirmPasswordError: '' }
+  try {
+    await updatePasswordSchema.validate(
+      { newPassword: form.value.newPassword, confirmPassword: form.value.confirmPassword },
+      { abortEarly: false }
+    )
+
+    await updateUserPassword({ newPassword: form.value.newPassword, confirmPassword: form.value.confirmPassword })
+    toast.success('Le mot de passe a bien été mis à jour.')
+
+    form.value.newPassword = ''
+    form.value.confirmPassword = ''
+  } catch (err: any) {
+    if (err.inner) {
+      err.inner.forEach((validationError: any) => {
+        if (validationError.path === 'newPassword') {
+          errors.value.newPasswordError = validationError.message
+        }
+        if (validationError.path === 'confirmPassword') {
+          errors.value.confirmPasswordError = validationError.message
+        }
+      })
+    } else {
+      toast.error('Une erreur est survenue.')
+    }
+  }
+}
 const authStore = useAuthStore()
 
 const secret = ref<string>("")
@@ -69,7 +112,11 @@ console.log(url.value)
 <template>
 
 <div class="max-w-4xl mx-auto p-6 text-white">
-    <h1 class="text-2xl font-bold mb-6">Authentification à deux facteurs</h1>
+    <h1 class="text-2xl font-bold mb-6">Mes paramètres</h1>
+    
+    <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6">Authentification à deux facteurs</h2>
+
       
     <div v-if="!isActive && !authStore.isTwoFactorEnable" class="flex items-center gap-4 mb-6">
         <span>2FA désactivée</span>
@@ -105,6 +152,14 @@ console.log(url.value)
             </div>
         </div>
     </div>
+    </section>
+    <section>
+        <h2 class="text-2xl font-bold mb-6">Modification du mot de passe</h2>
+        <PasswordUpdateForm
+        :form="form"
+        :errors="errors"
+        @update="updatePassword" />
+    </section>
 
 </div>
 </template>

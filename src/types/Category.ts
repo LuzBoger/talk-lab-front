@@ -1,5 +1,6 @@
 export interface Category {
-    id :number 
+    id? :number 
     name: string
     shortName:string
+    createdAt?: string
 }

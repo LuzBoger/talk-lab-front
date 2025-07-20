@@ -2,12 +2,10 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { fetchCommentsByConversationId, addComment } from '../../api/comment';
-import type { Comment } from '../../types/Comment';
-import CommentWithReplies from './CommentWithReplies.vue';
+import type { Comment } from '../../types/comment/Comment';
 import { CommentStatusEnum } from '../../enums/CommentStatusEnum';
 import CommentForm from './CommentForm.vue';
-
-
+import CommentWithReplies from './CommentWithReplies.vue';
 const route = useRoute();
 const conversationId = Number(route.params.id)
 const comments = ref<Comment[]>([])

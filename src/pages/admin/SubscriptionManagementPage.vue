@@ -8,6 +8,15 @@ import type {
 } from '../../api/adminSubscriptionService'
 import AdminUsersTable from '../../components/admin/AdminUsersTable.vue'
 import AdminSubscriptionsTable from '../../components/admin/AdminSubscriptionsTable.vue'
+import {useHead} from '@vueuse/head';
+
+useHead({
+  title: 'Gestion des abonnements - Admin',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },   
+  ]
+})
+
 
 export default defineComponent({
   name: 'SubscriptionManagementPage',

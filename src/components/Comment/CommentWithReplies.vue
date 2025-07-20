@@ -1,12 +1,13 @@
 <script setup lang="ts">
 
-import { ref, } from 'vue';
+import { ref } from 'vue';
 import CommentActions from './CommentActions.vue';
-import type { Comment } from '../../types/Comment';
+import type { Comment } from '../../types/comment/Comment';
 import { editComment, deleteComment, reportComment, addComment } from '../../api/comment';
 import { CommentStatusEnum } from '../../enums/CommentStatusEnum';
 import { useAuthStore } from '../../stores/useAuthStore';
 import CommentForm from './CommentForm.vue';
+import {toast} from 'vue3-toastify'
 
 
 const authStore = useAuthStore();
@@ -70,11 +71,14 @@ const deleteOneComment = async () => {
 }
 
 const reportOneComment = async () => {
-    try {
-        await reportComment(props.comment.id!)
-    } catch(err) {
-        error.value = 'Erreur lors du signalement du commentaire';
-    }
+  try {
+    await reportComment(props.comment.id!);
+    toast.success( "Commentaire signalé avec succès !");
+  } catch(err: any) {
+    const message = "Erreur lors du signalement du commentaire";
+    error.value = message;
+    toast.error(message);
+  }
 }
 
 const addReply = async (content: string) => {
