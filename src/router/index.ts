@@ -44,15 +44,11 @@ const routes = [
         component: HomePage,
       },
       {
-      path: '/accueil',
-      name: "Page Accueil publique",
-      component: HomePagePublic,
+        path: '/accueil',
+        name: 'Page Accueil publique',
+        component: HomePagePublic,
       },
-      {
-        path: '/categories',
-        name: 'Catégories',
-        component: Categories,
-      },
+
       {
         path: '/decouverte',
         name: 'Découverte des conversations publiques',
@@ -259,17 +255,15 @@ router.beforeEach(async (to, _from, next) => {
     return
   }
 
-  if(to.path === '/') {
-    if(!isAuthenticated) {
-      next("/accueil")
+  if (to.path === '/') {
+    if (!isAuthenticated) {
+      next('/accueil')
       return
     }
-  } else if(to.path === "/accueil" && isAuthenticated) {
+  } else if (to.path === '/accueil' && isAuthenticated) {
     next('/')
     return
   }
-
-
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login')
