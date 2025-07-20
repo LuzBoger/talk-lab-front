@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import AboutTalkLabs from '../components/Home/AboutTalkLabs.vue';
-import Comments from '../components/Home/Comments.vue';
-import Conversation from '../components/Home/Conversation.vue';
-import FeaturesSection from '../components/Home/FeaturesSection.vue';
-import HeroSection from '../components/Home/HeroSection.vue';
-import LogoIcon from '../components/icon/LogoIcon.vue';
+import AboutTalkLabs from '../components/Home/AboutTalkLabs.vue'
+import Comments from '../components/Home/Comments.vue'
+import Conversation from '../components/Home/Conversation.vue'
+import FeaturesSection from '../components/Home/FeaturesSection.vue'
+import HeroSection from '../components/Home/HeroSection.vue'
+import LogoIcon from '../components/icon/LogoIcon.vue'
 </script>
 
 <template>
   <div class="min-h-screen">
     <header>
-      <div class="max-md:w-20 max-md:pt-4 max-md:pl-4 md:w-24 md:pt-6 md:pl-6">
+      <div class="flex items-center gap-8 pt-8 pl-8">
         <LogoIcon />
+        <span class="text-main-color font-semibold text-2xl">TalkLab</span>
       </div>
     </header>
-    
+
     <HeroSection />
     <AboutTalkLabs />
     <FeaturesSection />
