@@ -11,7 +11,7 @@
           class="bg-card-bg rounded-2xl shadow-lg p-8 text-center flex flex-col items-center"
         >
           <img
-            src="../../assets/images/imageSimulateur.png"
+            src="../../assets/images/imageSimulateur.webp"
             alt="Créer des fausses conversations"
             class="w-72 h-72 object-contain"
           />
@@ -27,7 +27,7 @@
           class="bg-card-bg rounded-2xl shadow-lg p-8 text-center flex flex-col items-center"
         >
           <img
-            src="../../assets/images/socialMedia.jpg"
+            src="../../assets/images/social.webp"
             alt="Réseaux sociaux"
             class="w-72 h-72 object-contain"
           />
@@ -43,7 +43,7 @@
           class="bg-card-bg rounded-2xl shadow-lg p-8 text-center flex flex-col items-center"
         >
           <img
-            src="../../assets/images/share.png"
+            src="../../assets/images/share.webp"
             alt="partager conversation"
             class="mb-6 w-72 h-72 object-contain"
           />

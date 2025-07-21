@@ -41,7 +41,7 @@
 
         <div class="md:w-1/2 flex justify-center">
           <img
-            src="../../assets/images/image.png"
+            src="../../assets/images/image.webp"
             alt="Exemple de fausse conversation créée avec TalkLab"
             class="rounded-xl shadow-lg max-w-full md:max-w-lg w-64"
           />

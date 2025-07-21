@@ -24,8 +24,8 @@
       </div>
       <div class="hidden md:flex justify-center">
         <img
-          src="../../assets/images/presentation.jpg"
-          alt="Illustration"
+          src="../../assets/images/presentation.webp"
+          alt="exemple de conversation"
           class="w-60 max-w-md mx-auto"
         />
       </div>
