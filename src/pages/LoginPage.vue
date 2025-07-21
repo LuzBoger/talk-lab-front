@@ -15,10 +15,10 @@ import LoginForm from '../components/LoginForm.vue'
 useHead({
   title: 'Connexion',
   meta:[
-    {name: 'description', content: 'Connectez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
+    {name: 'description', content: 'Connectez-vous à TalkLab pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
     {name: 'robots', content: 'noindex, nofollow' },
-    {property: 'og:description', content: 'Connectez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
-    { name: 'twitter:description', content:'Connectez-vous à TalkLabs pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.' },
+    {property: 'og:description', content: 'Connectez-vous à TalkLab pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.'},
+    { name: 'twitter:description', content:'Connectez-vous à TalkLab pour accéder au simulateur en ligne et créer votre propre fake conversations ou en découvrait divers conversations.' },
   ]
 })
 const router = useRouter()

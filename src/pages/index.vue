@@ -175,7 +175,7 @@ onMounted(async () => {
     <header class="flex flex-col md:flex-row justify-between items-center m-4">
       <h1 class="text-xl text-white welcome-message-shadow max-md:mb-4">
         Bienvenue sur
-        <span class="font-semibold text-main-color">TalkLabs</span>
+        <span class="font-semibold text-main-color">TalkLab</span>
       </h1>
       <SearchBar v-model="searchQuery" />
     </header>

@@ -42,13 +42,13 @@
         <div class="md:w-1/2 flex justify-center">
           <img
             src="../../assets/images/image.png"
-            alt="Exemple de fausse conversation créée avec TalkLabs"
+            alt="Exemple de fausse conversation créée avec TalkLab"
             class="rounded-xl shadow-lg max-w-full md:max-w-lg w-64"
           />
         </div>
       </div>
       <p class="text-center text-sm text-gray-200 mt-8">
-        Voici un aperçu réaliste d’une conversation générée avec TalkLabs.
+        Voici un aperçu réaliste d’une conversation générée avec TalkLab.
       </p>
     </div>
   </section>

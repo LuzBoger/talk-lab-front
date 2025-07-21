@@ -17,7 +17,7 @@ const categoryName = ref(route.params.categoryName as string | undefined)
 useHead({
   title: `Conversations - ${categoryName}`,
   meta:[
-    { name: 'description', content: `Découvrez les conversations pour la catégorie ${categoryName} sur TalkLabs.` },
+    { name: 'description', content: `Découvrez les conversations pour la catégorie ${categoryName} sur TalkLab.` },
     { property: 'og:description', content: `Découvrez les conversations pour la catégorie ${categoryName}` },
     { name: 'twitter:description', content: `Découvrez les conversations pour la catégorie ${categoryName}` },
   ]

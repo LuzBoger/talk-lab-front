@@ -14,19 +14,18 @@ const showSideBar = computed(() => {
 })
 
 useHead(() => ({
-  titleTemplate: (title: string) =>
-    title ? `${title} | TalkLabs` : 'TalkLabs',
+  titleTemplate: (title: string) => (title ? `${title} | TalkLab` : 'TalkLab'),
   title: pageTitle.value,
   meta: [
     {
       name: 'description',
       content:
-        'TalkLabs est un simulateur en ligne pour créer des conversations fictives ou réalistes sur mobile tout en choissisant votre réseaux sociaux favoris.',
+        'TalkLab est un simulateur en ligne pour créer des conversations fictives ou réalistes sur mobile tout en choissisant votre réseaux sociaux favoris.',
     },
     {
       name: 'keywords',
       content:
-        'TalkLabs, fausse conversation, fictives, réaliste, simulateur en ligne, créer conversations, conversation, fake , réseaux sociaux',
+        'TalkLab, fausse conversation, fictives, réaliste, simulateur en ligne, créer conversations, conversation, fake , réseaux sociaux',
     },
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     { name: 'robots', content: 'index, follow' },
@@ -36,7 +35,7 @@ useHead(() => ({
     {
       property: 'og:description',
       content:
-        'TalkLabs est un simulateur en ligne pour créer des conversations fictives ou réalistes',
+        'TalkLab est un simulateur en ligne pour créer des conversations fictives ou réalistes',
     },
     { property: 'og:type', content: 'website' },
     { property: 'og:image', content: `${baseUrl}/og-image.jpg` },
@@ -45,7 +44,7 @@ useHead(() => ({
     {
       name: 'twitter:description',
       content:
-        'TalkLabs est un simulateur en ligne pour créer des conversations fictives ou réalistes',
+        'TalkLab est un simulateur en ligne pour créer des conversations fictives ou réalistes',
     },
     { name: 'twitter:image', content: `${baseUrl}/twitter-card.jpg` },
   ],

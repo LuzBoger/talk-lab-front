@@ -2,7 +2,7 @@
   <div class="admin-layout">
     <nav class="navbar navbar-dark bg-dark">
       <div class="container">
-        <span class="navbar-brand">TalkLabs Admin</span>
+        <span class="navbar-brand">TalkLab Admin</span>
       </div>
     </nav>
 

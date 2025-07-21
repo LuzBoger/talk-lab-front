@@ -9,7 +9,7 @@
         <h1
           class="text-2xl md:text-4xl font-bold text-white leading-tight mb-6"
         >
-          Créez des fausses conversations avec TalkLabs
+          Créez des fausses conversations avec TalkLab
         </h1>
         <p class="text-lg text-gray-200 mb-8">
           Imaginez des conversations, personnalisez-les, et partagez-les en un

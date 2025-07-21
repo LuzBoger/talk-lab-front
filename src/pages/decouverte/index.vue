@@ -10,9 +10,9 @@ import {useHead} from '@vueuse/head';
 useHead({
   title: 'Découverte des conversations publiques',
   meta:[
-    {name: 'description', content: 'Explorez des conversations publiques créées par les utilisateurs de TalkLabs.' },
-    {property: 'og:description', content: 'Explorez des conversations publiques créées par les utilisateurs de TalkLabs.' },
-    {name: 'twitter:description', content:'Explorez des conversations publiques créées par les utilisateurs de TalkLabs.' },
+    {name: 'description', content: 'Explorez des conversations publiques créées par les utilisateurs de TalkLab.' },
+    {property: 'og:description', content: 'Explorez des conversations publiques créées par les utilisateurs de TalkLab.' },
+    {name: 'twitter:description', content:'Explorez des conversations publiques créées par les utilisateurs de TalkLab.' },
   ]
 })
 const conversationStore = useConversationStore()
