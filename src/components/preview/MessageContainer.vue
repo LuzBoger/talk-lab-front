@@ -37,6 +37,11 @@ const choiceColor = (author: string) => {
     return 'bg-[#efefef] text-black'
   }
 }
+
+// Génère un UUID unique aléatoire pour chaque message
+const generateUUID = () => {
+  return `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+}
 const getMessageRadiusClass = (index: number, currentAuthor: string) => {
   const isFirstMessage = index === 0
   const isLastMessage = index === props.messages.length - 1
@@ -161,7 +166,7 @@ const getMessageRadiusClass = (index: number, currentAuthor: string) => {
   >
     <div
       v-for="(message, index) in messages"
-      :key="'message_' + index"
+      :key="`${index}-${generateUUID()}`"
       :class="[
         'flex',
         message.author === 'user' ? 'place-self-end' : '',
