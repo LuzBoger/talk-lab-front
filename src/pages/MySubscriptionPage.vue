@@ -72,8 +72,6 @@ export default defineComponent({
           try {
             const debugResult = await stripeService.debugUserSituation()
             if (debugResult.auto_association) {
-              successMessage.value =
-                '✅ Abonnement Stripe récupéré et associé automatiquement !'
               setTimeout(() => {
                 fetchSubscriptionDetails(true)
               }, 1000)
@@ -82,8 +80,6 @@ export default defineComponent({
               debugResult.stripe_subscriptions &&
               debugResult.stripe_subscriptions.length > 0
             ) {
-              errorMessage.value =
-                "⚠️ Abonnement trouvé sur Stripe mais non associé. Contactez l'administrateur pour la synchronisation."
             } else {
               subscription.value = null
             }
