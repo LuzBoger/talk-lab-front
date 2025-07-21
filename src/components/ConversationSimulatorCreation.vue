@@ -133,7 +133,7 @@ function handleCategorySave(categories: number[]) {
     <!-- Messages -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <!-- Message user -->
-      <div class="rounded-lg shadow-sm flex flex-col">
+      <div class="rounded-lg shadow-sm flex flex-col relative">
         <label class="block text-sm font-medium text-white mb-2">Votre message</label>
         <div class="relative">
           <div v-if="sim.imageUserSend.value" class="mb-2 w-16 h-16">
@@ -154,7 +154,7 @@ function handleCategorySave(categories: number[]) {
             @audio="sim.onAudioClicked('user')" :is-recording="sim.isRecordingUser.value" />
         </div>
         <EmojiPicker v-if="sim.showEmojiPickerUser.value" :native="true" @select="sim.emojiSelected"
-          class="absolute bottom-28 right-4 z-10"></EmojiPicker>
+          class="absolute bottom-28 right-20 z-10"></EmojiPicker>
         <input type="file" accept="image/*" @change="sim.imageSelected($event, 'user')" :ref="sim.imgInputUser"
           style="display: none;">
         <button type="button" @click="sim.sendUserMessage"
@@ -163,7 +163,7 @@ function handleCategorySave(categories: number[]) {
         </button>
       </div>
       <!-- Message interlocuteur -->
-      <div class="rounded-lg shadow-sm flex flex-col">
+      <div class="rounded-lg shadow-sm flex flex-col relative">
         <label class="block text-sm font-medium text-white mb-2">Son message</label>
         <div class="relative">
           <div v-if="sim.imageInterlocutorSend.value" class="mb-2 w-16 h-16">
@@ -185,7 +185,7 @@ function handleCategorySave(categories: number[]) {
             :is-recording="sim.isRecordingInterlocutor.value" />
         </div>
         <EmojiPicker v-if="sim.showEmojiPickerInterlocutor.value" :native="true" @select="sim.emojiSelected"
-          class="absolute bottom-28 right-4 z-10" />
+          class="absolute bottom-28 left- z-10" />
         <input type="file" accept="image/*" @change="sim.imageSelected($event, 'interlocutor')"
           :ref="sim.imgInputInterlocutor" style="display: none;">
         <button type="button" @click="sim.sendInterlocutorMessage"

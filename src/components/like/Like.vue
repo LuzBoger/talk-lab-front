@@ -94,6 +94,10 @@ onMounted(async () => {
       :conversation-id="props.conversationId"
       :close="closeModal"
     ></slot>
+    <slot 
+      name="favorite"
+      :conversation-id ="props.conversationId"
+    ></slot>
   </div>
 
   <p v-if="error" class="text-red-500 text-sm mt-2">{{ error }}</p>

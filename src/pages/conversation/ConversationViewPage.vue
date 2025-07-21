@@ -7,7 +7,10 @@ import CommentList from '../../components/Comment/CommentList.vue'
 import LikeModal from '../../components/like/LikeModal.vue'
 import Like from '../../components/like/Like.vue'
 import {useHead} from '@vueuse/head';
-
+import { useFavoritesStore } from '../../stores/useFavoritesStore'
+import {toast} from 'vue3-toastify'
+import HeartEmpty from '../../components/icon/HeartEmpty.vue'
+import HeartFilled from '../../components/icon/HeartFilled.vue'
 useHead({
   title: 'Visualisez vos conversation',
   meta:[
@@ -15,11 +18,20 @@ useHead({
   ]
 })
 const conversationStore = useConversationStore()
+const favoriteStore = useFavoritesStore()
 const route = useRoute()
 const id = ref(parseInt(route.params.id as string))
 
 const conversation = computed(() => conversationStore.currentConversation)
-
+const toggleFavorite = async (conversationId: number) => {
+    if (favoriteStore.isFavorite(conversationId)) {
+        await favoriteStore.removeFromFavorites(conversationId)
+        toast.success('La conversation a bien été retiré des favoris')
+    } else {
+        await favoriteStore.addToFavorites(conversationId)
+        toast.success('La conversation a bien été ajouté aux favoris')
+    }
+}
 onMounted(async () => {
   await conversationStore.fetchConversationById(id.value)
 })
@@ -103,6 +115,21 @@ onMounted(async () => {
                   :conversation-id="conversationId" 
                   @close="close" 
                 />
+              </template>
+              <template #favorite="{conversationId}">
+                      <button
+                          type="button"
+                        @click.stop="toggleFavorite(conversationId)"
+                        class="ml-3 cursor-pointer"
+                        :title="
+                          favoriteStore.isFavorite(conversationId)
+                            ? 'Retirer des favoris'
+                            : 'Ajouter aux favoris'
+                        "
+                      >
+                        <HeartFilled v-if="favoriteStore.isFavorite(conversationId)" />
+                        <HeartEmpty v-else />
+                      </button>
               </template>
             </Like>
           </div>
