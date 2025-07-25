@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import AboutTalkLabs from '../components/Home/AboutTalkLabs.vue'
-import Comments from '../components/Home/Comments.vue'
-import Conversation from '../components/Home/Conversation.vue'
-import FeaturesSection from '../components/Home/FeaturesSection.vue'
-import HeroSection from '../components/Home/HeroSection.vue'
+import AboutTalkLabs from '../components/home/AboutTalkLabs.vue'
+import Comments from '../components/home/Comments.vue'
+import Conversation from '../components/home/Conversation.vue'
+import FeaturesSection from '../components/home/FeaturesSection.vue'
+import HeroSection from '../components/home/HeroSection.vue'
 import LogoIcon from '../components/icon/LogoIcon.vue'
 </script>
 
