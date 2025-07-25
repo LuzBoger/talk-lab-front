@@ -25,7 +25,7 @@ useHead(() => ({
     {
       name: 'keywords',
       content:
-        'TalkLab, fausse conversation, fictives, réaliste, simulateur en ligne, créer conversations, conversation, fake , réseaux sociaux',
+        'TalkLab, fake conversation, fictives, réaliste, simulateur en ligne, créer conversations, conversation, fake , réseaux sociaux',
     },
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     { name: 'robots', content: 'index, follow' },
