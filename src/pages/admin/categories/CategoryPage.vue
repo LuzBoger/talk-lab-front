@@ -6,8 +6,16 @@ import { deleteCategory } from '../../../api/category'
 import CategoryTable from '../../../components/admin/categories/CategoryTable.vue'
 import type { Category } from '../../../types/Category'
 import { toast } from 'vue3-toastify'
+import {useHead} from '@vueuse/head';
 
+useHead({
+  title: 'Listes des catégories - Admin',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },   
+  ]
+})
 const { categories, loading, error, fetchCategories } = useCategories()
+
 
 const router = useRouter()
 const handleDeleteCategory = async (category: Category) => {

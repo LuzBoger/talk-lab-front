@@ -6,8 +6,16 @@ import CategoryCreateForm from '../../../components/admin/categories/CategoryCre
 import { addCategory } from '../../../api/category'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
+import {useHead} from '@vueuse/head';
 
+useHead({
+  title: 'Création des catégories - Admin',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },   
+  ]
+})
 const router = useRouter()
+
 
 const form = ref<Category>({
   name: '',

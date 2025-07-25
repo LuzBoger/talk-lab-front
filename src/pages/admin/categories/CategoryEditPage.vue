@@ -6,7 +6,14 @@ import CategoryEditForm from '../../../components/admin/categories/CategoryEditF
 import { editCategory, getCategoryById } from '../../../api/category'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
+import {useHead} from '@vueuse/head';
 
+useHead({
+  title: 'Mise à jour des catégories - Admin',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },   
+  ]
+})
 const route = useRoute()
 const router = useRouter()
 const categoryId = Number(route.params.id)

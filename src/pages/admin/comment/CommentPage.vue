@@ -4,7 +4,14 @@ import { getPendingComments, validateComment, rejectComment } from '../../../api
 import type {Comment} from '../../../types/comment/Comment';
 import CommentTable from '../../../components/admin/comment/CommentTable.vue';
 import {toast} from 'vue3-toastify'
+import {useHead} from '@vueuse/head';
 
+useHead({
+  title: 'Gestion des commentaires - Admin',
+  meta:[
+    {name: 'robots', content: 'noindex, nofollow' },   
+  ]
+})
 const comments = ref<Comment[]>([])
 const loading = ref<boolean>(false)
 const errorMessage = ref<string>('')
