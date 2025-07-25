@@ -77,6 +77,7 @@
             src="https://i.pravatar.cc/48?img=30"
             alt="Avatar @utilisateurX"
             class="w-10 h-10 rounded-full object-cover flex-shrink-0"
+            loading="lazy"
           />
           <div class="flex flex-col justify-between h-full">
             <div>

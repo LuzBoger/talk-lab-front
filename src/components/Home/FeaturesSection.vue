@@ -14,6 +14,7 @@
             src="../../assets/images/imageSimulateur.webp"
             alt="Créer des fausses conversations"
             class="w-72 h-72 object-contain"
+            loading="lazy"
           />
           <h3 class="text-xl font-semibold mb-3 text-gray-200">
             Simulateur réaliste

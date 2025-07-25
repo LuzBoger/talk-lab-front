@@ -44,6 +44,7 @@
             src="../../assets/images/image.webp"
             alt="Exemple de fausse conversation créée avec TalkLab"
             class="rounded-xl shadow-lg max-w-full md:max-w-lg w-64"
+            loading="lazy"
           />
         </div>
       </div>

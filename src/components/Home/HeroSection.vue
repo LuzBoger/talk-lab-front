@@ -27,6 +27,7 @@
           src="../../assets/images/presentation.webp"
           alt="exemple de conversation"
           class="w-60 max-w-md mx-auto"
+          loading="lazy"
         />
       </div>
     </div>
