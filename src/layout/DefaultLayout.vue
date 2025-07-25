@@ -38,15 +38,15 @@ useHead(() => ({
         'TalkLab est un simulateur en ligne pour créer des conversations fictives ou réalistes',
     },
     { property: 'og:type', content: 'website' },
-    { property: 'og:image', content: `${baseUrl}/og-image.jpg` },
-    { name: 'twitter:card', content: 'summary_large_image' },
+    { property: 'og:image', content: '../../public/logo.svg' },
+    { name: 'twitter:card', content: '../../public/logo.svg' },
     { name: 'twitter:title', content: pageTitle.value },
     {
       name: 'twitter:description',
       content:
         'TalkLab est un simulateur en ligne pour créer des conversations fictives ou réalistes',
     },
-    { name: 'twitter:image', content: `${baseUrl}/twitter-card.jpg` },
+    { name: 'twitter:image', content: '../../public/logo.svg' },
   ],
   link: [
     { rel: 'icon', href: '../../public/logo.svg' },
