@@ -6,7 +6,7 @@ import { useHead } from '@vueuse/head'
 const route = useRoute()
 
 const baseUrl = import.meta.env.VITE_BASE_URL
-const pageTitle = ref<string>('Créez des fakes conversations avec notre simulateur')
+const pageTitle = ref<string>('Créez des fake conversations avec notre simulateur')
 const fullUrl = computed(() => `${baseUrl}${route.fullPath}`)
 
 const showSideBar = computed(() => {
