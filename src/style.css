@@ -1,1 +1,27 @@
 @import 'tailwindcss';
+@theme {
+  --color-sidebar-bg: #1a192c;
+  --color-text-primary: #e3e3e3;
+  --color-toggle-button-bg: rgb(26 25 44 / 0.8);
+  --color-toggle-button-hover: #1a192c;
+  --color-border-auth-button: #2e2b55;
+  --color-auth-button-hover: #444071;
+  --color-signup-button: #6c63ff;
+  --color-dropdown-bg: #2e2b55;
+  --color-dropdown-hover: #444071;
+  --color-avatar-border: #6c63ff;
+  --color-card-bg: #23233F;
+  --color-author-text: #aaa;
+  --color-tag-yellow: #FFBF00;
+  --color-tag-green: #549601;
+  --color-tag-red: #FF5C5C;
+  --color-tag-purple: #9747FF;
+  --color-errror-message-light: #fde8e8;
+  --color-error-message: #c53030;
+  --color-validate-button: #007f56;
+  --color-validate-button-hover: #006644;
+  --color-main-color: #23CE6B;
+}
+@tailwind utilities;
+
+

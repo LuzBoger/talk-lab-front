@@ -1,16 +1,33 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { onMounted, watch } from 'vue';
+import { useCategoryStore } from './stores/useCategoryStore';
+import { useAuthStore } from './stores/useAuthStore';
+import { useNotificationsStore } from './stores/useNotificationsStore';
+import { useConversationStore } from './stores/useConversationStore';
+import { useFavoritesStore } from './stores/useFavoritesStore';
+
+const categoryStore = useCategoryStore();
+const conversationStore = useConversationStore()
+const notificationStore = useNotificationsStore()
+const favoritesStore = useFavoritesStore()
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  await categoryStore.fetchCategories()
+  await conversationStore.fetchPublicConversations()
+  console.log("Public conversation:",  await conversationStore.fetchPublicConversations())
+})
+
+watch(() => authStore.isAuthenticated, async (newVal) => {
+  if (newVal) {
+    await notificationStore.loadAllNotifications();
+    await favoritesStore.fetchFavorites()
+
+  }
+}, { immediate: true });
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <div class="bg"></div>
-  <HelloWorld msg="Vite + Vue" />
+
+<router-view></router-view>
 </template>
